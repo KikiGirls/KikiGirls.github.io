@@ -236,6 +236,17 @@
 <li><p>列表推导式是一种简洁的语法，用于从一个或多个可迭代对象创建新的列表。它由一对方括号 [] 组成，在方括号内部包含一个表达式，后跟一个 for 循环或多个 for 循环，用于迭代可迭代对象，并生成新的列表元素。<br>以下是列表推导式的一般形式：<br>[expression for item in iterable]<br>其中：<br>expression 是一个表达式，用于对可迭代对象中的每个元素进行操作，生成新的列表元素。<br>item 是一个变量，表示可迭代对象中的每个元素。<br>iterable 是一个可迭代对象，如列表、元组、集合等。<br>列表推导式还可以包含条件语句，以过滤或转换可迭代对象中的元素。例如：<br>[expression for item in iterable if condition]<br>在这种情况下，只有满足条件的元素才会被包含在生成的列表中。<br>以下是一些列表推导式的示例：<br>创建一个包含 1 到 5 的平方的列表<br>squares &#x3D; [x**2 for x in range(1, 6)]<br>创建一个包含字符串长度大于 3 的元素的列表<br>words &#x3D; [“apple”, “banana”, “orange”, “pear”, “grape”]<br>long_words &#x3D; [word for word in words if len(word) &gt; 3]<br>创建一个包含字母 ‘a’ 的元素的列表<br>letters &#x3D; [‘a’, ‘b’, ‘c’, ‘d’, ‘e’]<br>a_letters &#x3D; [letter for letter in letters if letter &#x3D;&#x3D; ‘a’]<br>以上示例展示了列表推导式的基本用法，你可以根据需要自由组合列表推导式的表达式和条件来生成新的列表。</p>
 </li>
 </ul>
+<h2 id="lab05"><a href="#lab05" class="headerlink" title="lab05"></a>lab05</h2><ul>
+<li>如果树是以列表嵌套的方式存在，通常可以使用递归来遍历树的节点。每个节点都表示为列表，其中第一个元素是节点的值，而其余元素是该节点的子节点。<br>下面是一个示例，展示了如何使用递归来遍历列表嵌套表示的树：<br>python<br>Copy code</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def traverse_tree(tree):</span><br><span class="line">    if not tree:</span><br><span class="line">        return</span><br><span class="line">    # 打印当前节点的值</span><br><span class="line">    print(tree[0])</span><br><span class="line">    # 递归遍历子节点</span><br><span class="line">    for child in tree[1:]:</span><br><span class="line">        traverse_tree(child)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在递归函数中，如果我们在处理子节点的递归调用时加上了 return 语句，那么在处理完一个子节点后就会立即返回，导致无法继续处理其他子节点。这会导致只有一个子节点被处理，而其他子节点被忽略。<br>考虑到递归的特性，我们希望递归调用能够遍历整个树的所有节点，而不仅仅是当前节点的一个子节点。因此，在递归函数中，我们通常不在处理子节点的递归调用处加上 return 语句，这样递归调用就会继续执行，直到所有子节点都被处理完毕，然后再返回到上一级调用处。<br>在之前提供的修改后的代码中，我已经将 traverse 函数修改为适当地处理子节点的递归调用，而不是在处理子节点时立即返回。这样就能够保证遍历整个树的所有节点。</p>
+</li>
+<li><p>程序员设计ADT来抽象信息的存储和计算方式，这样最终用户就不需要知道构造函数和选择器是如何实现的。抽象数据类型的性质允许任何使用它们的人假设函数已正确编写，并按描述工作</p>
+</li>
+</ul>
 
         </div>
 
