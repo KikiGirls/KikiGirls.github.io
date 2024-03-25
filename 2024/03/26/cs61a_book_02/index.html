@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>使用数据构建抽象 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">使用数据构建抽象</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 26, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61a/">Cs61a</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="使用数据构建抽象"><a href="#使用数据构建抽象" class="headerlink" title="使用数据构建抽象"></a>使用数据构建抽象</h1><h2 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h2><p>有效使用内置数据类型和用户定义的数据类型是数据处理型应用（data processing applications）的基础。</p>
+<h3 id="2-1-1原始数据类型"><a href="#2-1-1原始数据类型" class="headerlink" title="2.1.1原始数据类型"></a>2.1.1原始数据类型</h3><p>Python 中的每个值都有一个类（class）来确定它的类型。拥有相同类的值，行为也相同。</p>
+<h2 id="2-2-数据抽象"><a href="#2-2-数据抽象" class="headerlink" title="2.2 数据抽象"></a>2.2 数据抽象</h2><p>数据抽象与函数抽象类似。数据抽象可以将复合数据值的使用方式与其构造细节隔离开来。程序的“操作抽象数据”和“定义具体表示”两个部分，</p>
+<h3 id="2-2-3抽象屏障"><a href="#2-2-3抽象屏障" class="headerlink" title="2.2.3抽象屏障"></a>2.2.3抽象屏障</h3><table>
+<thead>
+<tr>
+<th align="center">该程序的一部分</th>
+<th align="center">把有理数当作</th>
+<th align="center">仅使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">使用有理数进行计算</td>
+<td align="center">整个数据值</td>
+<td align="center">add_rational, mul_rational, rationals_are_equal, print_rational</td>
+</tr>
+<tr>
+<td align="center">创建有理数或操作有理数</td>
+<td align="center">分子和分母</td>
+<td align="center">rational, numer, denom</td>
+</tr>
+<tr>
+<td align="center">为有理数实现选择器和构造器</td>
+<td align="center">二元列表</td>
+<td align="center">列表字面量和元素选择</td>
+</tr>
+</tbody></table>
+<p>在上面的每一层中，最后一列中的函数会强制实施抽象屏障（abstraction barrier）。这些功能会由更高层次调用，并使用较低层次的抽象实现。</p>
+<p>当程序中有一部分本可以使用更高级别函数但却使用了低级函数时，就会违反抽象屏障。例如，计算有理数平方的函数最好用 mul_rational 实现，它不对有理数的实现做任何假设.<br>抽象屏障使程序更易于维护和修改。依赖于特定表示的函数越少，想要更改该表示时所需的更改就越少 </p>
+<h3 id="2-2-4"><a href="#2-2-4" class="headerlink" title="2.2.4"></a>2.2.4</h3><p>我们可以使用选择器和构造器的集合以及一些行为条件来表达抽象数据。只要满足行为条件（比如上面的除法属性），选择器和构造器就构成了一种数据的有效表示。抽象屏障下的实现细节可能会改变，但只要行为没有改变，那么数据抽象就仍然有效，并且使用该数据抽象编写的任何程序都将保持正确。</p>
+<p>比如我们不需要知道什么是一对，我们只需要将两个值绑定在一起。对的属性就是绑定在一起的两个值。只要不改变这个属性，无论我们用什么办法去实现绑定都是可以的</p>
+<h2 id="2-3序列"><a href="#2-3序列" class="headerlink" title="2.3序列"></a>2.3序列</h2><p>一组有顺序的值的集合（有长度，有索引）</p>
+<p>列表推导式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;map expression&gt; for &lt;name&gt; in &lt;sequence expression&gt; if &lt;filter expression&gt;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-6树"><a href="#2-3-6树" class="headerlink" title="2.3.6树"></a>2.3.6树</h3><p>一般来说，如果某种数据值组合得到的结果也可以用相同的方法进行组合，则该方法具有闭包属性。</p>
+<p>一个树有一个根标签（root label）和一系列分支（branch）。树的每个分支都是一棵树，没有分支的树称为叶子（leaf）。树中包含的任何树都称为该树的子树（例如分支的分支）。树的每个子树的根称为该树中的一个节点（node）。</p>
+<p>树的数据抽象由构造函数 tree、选择器 label 和 branches 组成。</p>
+<h3 id="2-3-7-链表"><a href="#2-3-7-链表" class="headerlink" title="2.3.7 链表"></a>2.3.7 链表</h3><p>link(1, link(2, link(3, link(4, empty))))</p>
+<h2 id="2-4可变数据"><a href="#2-4可变数据" class="headerlink" title="2.4可变数据"></a>2.4可变数据</h2><p>对象有属性（attributes）的概念，可以理解为该对象中某个值的名字。和其它许多编程语言一样，我们在 Python 中使用点语法来访问一个对象中的某个属性。</p>
+<h3 id="2-4-2"><a href="#2-4-2" class="headerlink" title="2.4.2"></a>2.4.2</h3><p>像数字这样的基本数据类型的实例是不可变（immutable）的。它们所代表的值，在程序运行期间是不可以更改的。 另一方面，列表就是可变的（mutable）</p>
+<p>数据共享和身份（Sharing and Identity 变量 chinese 也被改变了，因为它和变量 suits 绑定到时同一个列表！<br>尽管两个列表的元素值相同，但他们仍然可能是完全不同的两个列表对象,前者是检验的是对象的内存地址，而后者只是判断内容是否相同。</p>
+<p>元组。 元组是指 Python 内置类型 tuple 的实例对象，其是不可变序列。我们可以将不同数据用逗号分隔，用这种字面量的方式即可以创建一个元组。括号并不是必须的，但是一般都会加上<br>和列表相同，元组有确定的长度，并支持元素索引。元组还有一些与列表相同的方法，比如 count 和 index,尽管无法修改元组的元素，但是如果元组中的元素本身是可变数据，那我们也是可以对该元素进行操作的</p>
+<h3 id="2-4-3-字典"><a href="#2-4-3-字典" class="headerlink" title="2.4.3 字典"></a>2.4.3 字典</h3><p>字典类型也有一些限制：</p>
+<p>字典的 key 不可以是可变数据，也不能包含可变数据<br>一个 key 只能对应一个 value</p>
+<p>字典中一个很有用的方法是 get，它返回指定 key 在字典中对应的 value；如果该 key 在字典中不存在，则返回默认值。get 方法接收两个参数，一个 key，一个默认值</p>
+<p>与列表类似，字典也有推导式语法。其中，key 和 value 使用冒号分隔。字典推导式会创建一个新的字典对象。</p>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>{x: x*x for x in range(3,6)}<br>{3: 9, 4: 16, 5: 25}</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="2-4-4局部状态"><a href="#2-4-4局部状态" class="headerlink" title="2.4.4局部状态"></a>2.4.4局部状态</h3><p>当 balance 属性为声明为 nonlocal 后，每当它的值发生更改时，相应的变化都会同步更新到 balance 属性第一次被声明的位置。回想一下，在没有 noncal 声明之前，所有对 balance 的重新赋值操作都会在当前环境的第一帧中绑定。非局部语句指示名称不会出现在第一个（局部）帧或最后一个（全局）帧，而是出现在其他地方。<br>非局部语句（nonlocal statement）会改变 withdraw 函数定义中剩余的所有赋值语句。在将 balance 声明为 nonlocal 后，任何尝试为 balance 赋值的语句，都不会直接在当前帧中寻找并更改 balance，而是找到定义 balance 变量的帧，并在该帧中更新该变量。如果在声明 nonlocal 之前 balance 还没有赋值，则 nonlocal 声明将会报错。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/03/26/Diary_006/">电子日记006周一</a>
+            
+            
+            <a class="next" rel="next" href="/2024/03/24/cs61a/">cs61a笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
