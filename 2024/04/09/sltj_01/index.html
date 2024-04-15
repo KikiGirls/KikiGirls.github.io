@@ -13,7 +13,7 @@
 
 
 
-<title>电子日记008周三 | Hexo</title>
+<title>数理统计001 | Hexo</title>
 
 
 
@@ -123,11 +123,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">电子日记008周三</h1>
+            <h1 class="post-title">数理统计001</h1>
             
                 <div class="post-meta">
                     
@@ -136,14 +201,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 28, 2024&nbsp;&nbsp;0:50:28</a>
+                        Date: <a href="#">April 9, 2024&nbsp;&nbsp;19:08:28</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E7%94%B5%E5%AD%90%E6%97%A5%E5%BF%97/">电子日志</a>
+                                <a href="/categories/%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%AC%AC%E4%BA%8C%E7%AB%A0/">数理统计第二章</a>
                             
                         </span>
                     
@@ -152,7 +217,20 @@
         </header>
 
         <div class="post-content">
-            <p>今天睡过头了，没去上课，不知道有没有签到好烦。下雨了，车都给我打湿了，晚上终于吃的饭，全是很多土豆丝和一点点牛肉盖饭。晚上写了一会cs61a ants。</p>
+            <h1 id="第二章数理统计基础"><a href="#第二章数理统计基础" class="headerlink" title="第二章数理统计基础"></a>第二章数理统计基础</h1><h2 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h2><ul>
+<li>研究对象的全体称总体</li>
+<li>总体的每个成员叫做个体</li>
+<li>总体中部分个体的观测值叫样本</li>
+</ul>
+<h2 id="2-3统计量"><a href="#2-3统计量" class="headerlink" title="2.3统计量"></a>2.3统计量</h2><p>&emsp; 不含有未知数的关于样本的多元函数随机变量叫做 <strong>统计量</strong><br>样本均值的样本值 $\bar{X}$ 为 $\bar{x}$ </p>
+<p>&emsp; 若 $EX &#x3D; \mu ,DX &#x3D; \sigma^{2} $ 则 $ E \bar{X} &#x3D; \mu D \bar{X}   &#x3D;  \frac{\sigma^{2}}{n} $</p>
+<h2 id="2-5抽样分布"><a href="#2-5抽样分布" class="headerlink" title="2.5抽样分布"></a>2.5抽样分布</h2><ul>
+<li>统计量的分布叫做抽样分布</li>
+</ul>
+<h3 id="2-5-1卡方分布"><a href="#2-5-1卡方分布" class="headerlink" title="2.5.1卡方分布"></a>2.5.1卡方分布</h3><p>&emsp; $X_n $ 是n个独立且同服从于标准正态分布的随机变量，则随机变量l $\chi ^{2} &#x3D; \sum X^{2}_i$ 被称为自由度为 n的 $\Chi$   分布 $\mathbb{E}\chi^{2} &#x3D; n , D\chi^{2}&#x3D;2n$<br>这个分布具有线性可加性</p>
+<h3 id="2-5-2-t分布"><a href="#2-5-2-t分布" class="headerlink" title="2.5.2 t分布"></a>2.5.2 t分布</h3><p>&emsp; $X ~ N (0,1), Y ~ \chi ^{2}(n)$ 则称随机变量 $T &#x3D; \frac{X}{Y^{0.5}} n ^{0.5}$ 服从自由度为n 的t分布记为 $ T~ t(n)  $</p>
+<h3 id="2-5-3F分布"><a href="#2-5-3F分布" class="headerlink" title="2.5.3F分布"></a>2.5.3F分布</h3><p>$ F (n,m) &#x3D; \frac{\chi^{2}(n)}{\chi^{2}(m)}$</p>
+<h2 id="2-6抽样分布定理"><a href="#2-6抽样分布定理" class="headerlink" title="2.6抽样分布定理"></a>2.6抽样分布定理</h2><p>对于 $ X_n \sim  N (\mu,\sigma^{2}) $ 有 $\bar{X} \sim  N (\mu, \frac{\sigma^{2}}{n})$</p>
 
         </div>
 
@@ -195,8 +273,10 @@
         </section>
         <section class="post-nav">
             
+                <a class="prev" rel="prev" href="/2024/04/15/Diary_012/">电子日记011周日</a>
             
-            <a class="next" rel="next" href="/2024/03/27/Diary_007/">电子日记007周二</a>
+            
+            <a class="next" rel="next" href="/2024/04/08/Diary_011/">电子日记010周日</a>
             
         </section>
 
