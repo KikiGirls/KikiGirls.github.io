@@ -262,7 +262,12 @@
 <h2 id="多项式的带余除法"><a href="#多项式的带余除法" class="headerlink" title="多项式的带余除法"></a>多项式的带余除法</h2><blockquote>
 <p>设 $p,s \in P(F) $ 且 $s \neq 0$ 存在唯一的多项式 $q,r \in P(F)$ 使得：<br>$$<br>p&#x3D;sq+r<br>$$<br>且 $\operatorname{dag}r&lt;\operatorname{dag}s$</p>
 </blockquote>
-<p>下面用线性代数的知识证明<br>1.我们定义一个映射<br>$$<br>T:P(F)<em>{n-m}\times P(F)</em>{m-1} \to P(F)<em>{n}<br>$$<br>为<br>$$<br>T(q,r)&#x3D;sq+r<br>$$<br>很容易证明这个映射是线性映射。<br>若 $(q,r)\in \operatorname{null}T$ 那么也就是 $sq+r&#x3D;0$ 因为 $\operatorname{dag}sq&gt;\operatorname{dag}r$ 这代表 $(q,r)&#x3D;0$ 即 $\operatorname{null}T&#x3D;0$ 所以 $T$ 是单射<br>2. 又因为<br>$$<br>\operatorname{dim}P(F)</em>{n-m}+\operatorname{dim}P(F)<em>{m-1}&#x3D;\operatorname{dim}P(F)</em>{n}<br>$$<br>那么我们可以得到：<br>$$<br>\operatorname{range}T&#x3D;P(F)<br>$$<br>那么 $T$ 是满射。<br>3. 由上可知这个映射是一一对应的，那么就存在且唯一。</p>
+<p>下面用线性代数的知识证明<br>1.我们定义一个映射<br>$$<br>T:P(F)<em>{n-m}\times P(F)</em>{m-1} \to P(F)_{n}<br>$$</p>
+<p>为 </p>
+<p>$$<br>T(q,r)&#x3D;sq+r<br>$$</p>
+<p>很容易证明这个映射是线性映射。<br>若 $(q,r)\in \operatorname{null}T$ 那么也就是 $sq+r&#x3D;0$ 因为 $\operatorname{dag}sq&gt;\operatorname{dag}r$ 这代表 $(q,r)&#x3D;0$ 即 $\operatorname{null}T&#x3D;0$ 所以 $T$ 是单射<br>2. 又因为 </p>
+<p>$$<br>\operatorname{dim}P(F)<em>{n-m}+\operatorname{dim}P(F)</em>{m-1}&#x3D;\operatorname{dim}P(F)_{n}<br>$$</p>
+<p>那么我们可以得到：<br>$$<br>\operatorname{range}T&#x3D;P(F)<br>$$<br>那么 $T$ 是满射。<br>3. 由上可知这个映射是一一对应的，那么就存在且唯一。</p>
 <h2 id="多项式的零点"><a href="#多项式的零点" class="headerlink" title="多项式的零点"></a>多项式的零点</h2><blockquote>
 <p>多项式的每一个零点对应一个一次因式<br>设 $p \in P(F),\lambda \in F$ 则 $p(\lambda)&#x3D;0$ 当且仅当 $p(z)&#x3D;(z-\lambda)q(z)$</p>
 </blockquote>
