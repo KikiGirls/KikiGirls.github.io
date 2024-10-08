@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>使用数据构建抽象 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">使用数据构建抽象</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 26, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61a/">Cs61a</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="使用数据构建抽象"><a href="#使用数据构建抽象" class="headerlink" title="使用数据构建抽象"></a>使用数据构建抽象</h1><h2 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h2><p>有效使用内置数据类型和用户定义的数据类型是数据处理型应用（data processing applications）的基础。</p>
+<h3 id="2-1-1原始数据类型"><a href="#2-1-1原始数据类型" class="headerlink" title="2.1.1原始数据类型"></a>2.1.1原始数据类型</h3><p>Python 中的每个值都有一个类（class）来确定它的类型。拥有相同类的值，行为也相同。</p>
+<h2 id="2-2-数据抽象"><a href="#2-2-数据抽象" class="headerlink" title="2.2 数据抽象"></a>2.2 数据抽象</h2><p>数据抽象与函数抽象类似。数据抽象可以将复合数据值的使用方式与其构造细节隔离开来。程序的“操作抽象数据”和“定义具体表示”两个部分，</p>
+<h3 id="2-2-3抽象屏障"><a href="#2-2-3抽象屏障" class="headerlink" title="2.2.3抽象屏障"></a>2.2.3抽象屏障</h3><table>
+<thead>
+<tr>
+<th align="center">该程序的一部分</th>
+<th align="center">把有理数当作</th>
+<th align="center">仅使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">使用有理数进行计算</td>
+<td align="center">整个数据值</td>
+<td align="center">add_rational, mul_rational, rationals_are_equal, print_rational</td>
+</tr>
+<tr>
+<td align="center">创建有理数或操作有理数</td>
+<td align="center">分子和分母</td>
+<td align="center">rational, numer, denom</td>
+</tr>
+<tr>
+<td align="center">为有理数实现选择器和构造器</td>
+<td align="center">二元列表</td>
+<td align="center">列表字面量和元素选择</td>
+</tr>
+</tbody></table>
+<p>在上面的每一层中，最后一列中的函数会强制实施抽象屏障（abstraction barrier）。这些功能会由更高层次调用，并使用较低层次的抽象实现。</p>
+<p>当程序中有一部分本可以使用更高级别函数但却使用了低级函数时，就会违反抽象屏障。例如，计算有理数平方的函数最好用 mul_rational 实现，它不对有理数的实现做任何假设.<br>抽象屏障使程序更易于维护和修改。依赖于特定表示的函数越少，想要更改该表示时所需的更改就越少 </p>
+<h3 id="2-2-4"><a href="#2-2-4" class="headerlink" title="2.2.4"></a>2.2.4</h3><p>我们可以使用选择器和构造器的集合以及一些行为条件来表达抽象数据。只要满足行为条件（比如上面的除法属性），选择器和构造器就构成了一种数据的有效表示。抽象屏障下的实现细节可能会改变，但只要行为没有改变，那么数据抽象就仍然有效，并且使用该数据抽象编写的任何程序都将保持正确。</p>
+<p>比如我们不需要知道什么是一对，我们只需要将两个值绑定在一起。对的属性就是绑定在一起的两个值。只要不改变这个属性，无论我们用什么办法去实现绑定都是可以的</p>
+<h2 id="2-3序列"><a href="#2-3序列" class="headerlink" title="2.3序列"></a>2.3序列</h2><p>一组有顺序的值的集合（有长度，有索引）</p>
+<p>列表推导式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;map expression&gt; for &lt;name&gt; in &lt;sequence expression&gt; if &lt;filter expression&gt;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-6树"><a href="#2-3-6树" class="headerlink" title="2.3.6树"></a>2.3.6树</h3><p>一般来说，如果某种数据值组合得到的结果也可以用相同的方法进行组合，则该方法具有闭包属性。</p>
+<p>一个树有一个根标签（root label）和一系列分支（branch）。树的每个分支都是一棵树，没有分支的树称为叶子（leaf）。树中包含的任何树都称为该树的子树（例如分支的分支）。树的每个子树的根称为该树中的一个节点（node）。</p>
+<p>树的数据抽象由构造函数 tree、选择器 label 和 branches 组成。</p>
+<h3 id="2-3-7-链表"><a href="#2-3-7-链表" class="headerlink" title="2.3.7 链表"></a>2.3.7 链表</h3><p>link(1, link(2, link(3, link(4, empty))))</p>
+<h2 id="2-4可变数据"><a href="#2-4可变数据" class="headerlink" title="2.4可变数据"></a>2.4可变数据</h2><p>对象有属性（attributes）的概念，可以理解为该对象中某个值的名字。和其它许多编程语言一样，我们在 Python 中使用点语法来访问一个对象中的某个属性。</p>
+<h3 id="2-4-2"><a href="#2-4-2" class="headerlink" title="2.4.2"></a>2.4.2</h3><p>像数字这样的基本数据类型的实例是不可变（immutable）的。它们所代表的值，在程序运行期间是不可以更改的。 另一方面，列表就是可变的（mutable）</p>
+<p>数据共享和身份（Sharing and Identity 变量 chinese 也被改变了，因为它和变量 suits 绑定到时同一个列表！<br>尽管两个列表的元素值相同，但他们仍然可能是完全不同的两个列表对象,前者是检验的是对象的内存地址，而后者只是判断内容是否相同。</p>
+<p>元组。 元组是指 Python 内置类型 tuple 的实例对象，其是不可变序列。我们可以将不同数据用逗号分隔，用这种字面量的方式即可以创建一个元组。括号并不是必须的，但是一般都会加上<br>和列表相同，元组有确定的长度，并支持元素索引。元组还有一些与列表相同的方法，比如 count 和 index,尽管无法修改元组的元素，但是如果元组中的元素本身是可变数据，那我们也是可以对该元素进行操作的</p>
+<h3 id="2-4-3-字典"><a href="#2-4-3-字典" class="headerlink" title="2.4.3 字典"></a>2.4.3 字典</h3><p>字典类型也有一些限制：</p>
+<p>字典的 key 不可以是可变数据，也不能包含可变数据<br>一个 key 只能对应一个 value</p>
+<p>字典中一个很有用的方法是 get，它返回指定 key 在字典中对应的 value；如果该 key 在字典中不存在，则返回默认值。get 方法接收两个参数，一个 key，一个默认值</p>
+<p>与列表类似，字典也有推导式语法。其中，key 和 value 使用冒号分隔。字典推导式会创建一个新的字典对象。</p>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>{x: x*x for x in range(3,6)}<br>{3: 9, 4: 16, 5: 25}</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="2-4-4局部状态"><a href="#2-4-4局部状态" class="headerlink" title="2.4.4局部状态"></a>2.4.4局部状态</h3><p>当 balance 属性为声明为 nonlocal 后，每当它的值发生更改时，相应的变化都会同步更新到 balance 属性第一次被声明的位置。回想一下，在没有 noncal 声明之前，所有对 balance 的重新赋值操作都会在当前环境的第一帧中绑定。非局部语句指示名称不会出现在第一个（局部）帧或最后一个（全局）帧，而是出现在其他地方。<br>非局部语句（nonlocal statement）会改变 withdraw 函数定义中剩余的所有赋值语句。在将 balance 声明为 nonlocal 后，任何尝试为 balance 赋值的语句，都不会直接在当前帧中寻找并更改 balance，而是找到定义 balance 变量的帧，并在该帧中更新该变量。如果在声明 nonlocal 之前 balance 还没有赋值，则 nonlocal 声明将会报错。</p>
+<h2 id="2-5-面向对象编程"><a href="#2-5-面向对象编程" class="headerlink" title="2.5 面向对象编程"></a>2.5 面向对象编程</h2><p>类就像一个模板，对象是按照模板（类）生成的实例，对象有属性，方法可以对属性改变。<br>初始化对象的方法在 Python 中有一个特殊的名称 <strong>init</strong> (“init”的每一测都有两个下划线)，称为类的构造函数（constructor）。<br>class 语句中的 <suite> 包含 def 语句，def 语句为类的对象定义新方法。</p>
+<p>class 语句中的 <suite> 包含 def 语句，def 语句为类的对象定义新方法。</p>
+<p>点表达式由表达式、点和名称组成：<expression>.<name><br><expression> 可以是任何有效的 Python 表达式，但 <name> 必须是简单名称（而不是计算结果为名称的表达式）。点表达式的计算结果为作为 <expression> 值的对象的 <name> 的属性值。</p>
+<p>hasattr来测试对象是否具有指定的属性</p>
+<p> getattr 也可以按名称返回对象的属性。它是点表示法的函数等效物</p>
+<p> 对象的属性包括其所有实例属性，以及其类中定义的所有属性（包括方法）。方法是需要特殊处理的类的属性。</p>
+<p>在对象上调用方法时，该对象将作为第一个参数隐式传递给该方法，绑定在self当中。这是用点自动绑定的</p>
+<p>我们可以通过两种方式调用 deposit ：作为函数和作为绑定方法。在前一种情况下，我们必须显式地为 self 参数提供一个参数。在后一种情况下， self 参数会自动绑定。</p>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Account.deposit(spock_account, 1001)	# 函数 deposit 接受两个参数<br>1011<br>spock_account.deposit(1000) 			# 方法 deposit 接受一个参数<br>2011</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>计算点表达式：</p>
+<p>点表达式左侧的 <expression> ，生成点表达式的对象。<br><name> 与该对象的实例属性匹配；如果存在具有该名称的属性，则返回属性值。<br>如果实例属性中没有 <name> ，则在类中查找 <name>，生成类属性。<br>除非它是函数，否则返回属性值。如果是函数，则返回该名称绑定的方法。</p>
+<p>实例属性在类属性之前，就像本地名称在环境中优先于全局名称一样</p>
+<p>命名约定：类名通常使用 CapWords 约定（也称为 CamelCase，因为名称中间的大写字母看起来像驼峰）编写。方法名称遵循使用下划线分隔的小写单词命名函数的标准约定。</p>
+<p>在某些情况下，有一些实例变量和方法与对象的维护和一致性相关，我们不希望对象的用户看到或使用。它们不是类定义的抽象的一部分，而是实现的一部分。Python 的约定规定，如果属性名称以下划线开头，则只能在类本身的方法中访问它，而不是用户访问。</p>
+<p>如果对象是实例，则赋值将设置实例属性。如果对象是类，则赋值将设置类属性。由于此规则，对对象的属性的赋值不会影响其类的属性</p>
+<p>如果我们分配给帐户实例的命名属性 interest，我们将创建一个与现有类属性同名的新实例属性。<br>但是，class 属性的 interest 仍保留其初始值，该值将针对其他账号（实例）返回。<br>对类属性 interest 的更改将影响到 spock_account ，但 kirk_account 的实例属性将不受影响。<br>术语基类（base class）也常叫父类（parent class）和超类（superclass），而子类（subclass）也叫孩子类（child class）。</p>
+<p>在类中查找名称。</p>
+<p>如果它命名在指定类中的属性，则返回属性值。<br>否则，在该类的父类中查找该名称的属性。</p>
+<p>对象的类始终保持不变。尽管在 Account 类中找到了 deposit 方法，但调用 deposit 时，3 绑定到 CheckingAccount 的实例，而不是 Account 的实例。</p>
+<p>接口。在面向对象的程序中，不同类型的对象将共享相同的属性名称是极其常见的。对象接口是这些属性的属性和条件的集合。例如，所有帐户都必须具有采用数值参数的 deposit 和 withdraw 方法，以及 balance 属性。类 Account 和类 CheckingAccount 都实现此接口。继承（Inheritance）专门以这种方式促进名称共享。在某些编程语言（如 Java）中，必须显式声明接口实现。在其他对象（如 Python、Ruby 和 Go）中，任何具有适当名称的对象都实现了接口。</p>
+<p>例如，假设我们运行彩票，我们希望将 5 美元存入每个帐户列表。以下实现不假定有关这些帐户类型的任何内容，因此同样适用于具有 deposit 方法的任何类型的对象：</p>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def deposit_all(winners, amount&#x3D;5):<br>        for account in winners:<br>            account.deposit(amount)			# 这里调用的是实例 account 的 deposit 方法<br>            # 对于不同实例来说，它们的 deposit 方法可能不同。这个例子相对于下面来讲，更加具有健壮性<br>上面的函数 deposit_all 仅假设每个 account 满足帐户对象抽象，因此它将与也实现此接口的任何其他帐户类一起使用。假设特定的帐户类将违反帐户对象抽象的抽象屏障。例如，以下实现不一定适用于新类型的帐户：</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def deposit_all(winners, amount&#x3D;5):<br>        for account in winners:<br>            Account.deposit(account, amount)   # 这里调用的是类 Account 中的 deposit 方法</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="2-5-7多继承"><a href="#2-5-7多继承" class="headerlink" title="2.5.7多继承"></a>2.5.7多继承</h3><p>Python 支持子类从多个基类继承属性的概念，这种语言功能称为多重继承（multiple inheritance）。</p>
+<p>但是，当引用不明确时，例如对 Account 和 CheckingAccount 中定义的 withdraw 方法的引用，该怎么办？下图描述了 AsSeenOnTVAccount 个类的继承图。每个箭头都指向从子类到基类。对于像这样的简单“菱形”形状，Python 会从左到右解析名称，然后向上解析名称。在此示例中，Python 按顺序检查以下类中的属性名称，直到找到具有该名称的属性：继承排序问题没有正确的解决方案，因为在某些情况下，我们可能更愿意将某些继承类置于其他类之上。但是，任何支持多重继承的编程语言都必须以一致的方式选择某些排序，以便该语言的用户可以预测其程序的行为。</p>
+<p>进一步阅读。Python 使用称为 C3 方法解析排序的递归算法解析此名称。可以在所有类上使用 mro 方法查询任何类的方法解析顺序。</p>
+<h3 id="2-5-8对象的作用"><a href="#2-5-8对象的作用" class="headerlink" title="2.5.8对象的作用"></a>2.5.8对象的作用</h3><p>Python 的对象系统提供了一种方便而灵活的方法来创建和操作对象，使程序员能够更好地组织和管理复杂的程序。</p>
+<h2 id="2-6"><a href="#2-6" class="headerlink" title="2.6"></a>2.6</h2><p>没看</p>
+<h2 id="2-7对象抽象"><a href="#2-7对象抽象" class="headerlink" title="2.7对象抽象"></a>2.7对象抽象</h2><p>对象系统允许程序员更高效地建立并使用抽象数据描述。其也设计为允许在同一个程序中存在多种抽象数据表现形式。</p>
+<p>对象抽象的一个核心概念就是泛型函数，这种函数能够接受多种不同类型的值。我们将思考三种不同的用于实现泛型函数的技术：共享接口，类型派发和类型强制转换。<br>Python 规定所有的对象都应该生成两个不同的字符串表示：一种是人类可读的文本，另一种是 Python 可解释的表示式。字符串的构造函数，即 str，返回一个人类可读的字符串。如果可能，repr 函数返回一个 Python 可解释的表达式，<br>不存在对原始值的字符串表示时，Python 通常生成一个被尖括号包围的描述。</p>
+<p>python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>repr(min)<br>‘<built-in function min></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>定义 repr 函数带来了一个新的挑战：我们想要它正确地应用于所有的数据类型，即使是那些实现 repr 时还不存在的类型。我们希望它是一个通用的或者多态（polymorphic）的函数，可以被应用于数据的多种（多）不同形式（态）。</p>
+<p>在这情况下，对象系统提供了一种优雅的解决方案：repr 函数总是在其参数值上调用一个名为 <strong>repr</strong> 的方法。<br>通过在用户定义类中实现这个相同的方法，我们可以将 repr 函数的适用范围扩展到将来我们创建的任何类。这个例子突出了点表达式的另一个优势，那就是它们提供了一种机制，可以把现有的函数的作用域扩展到新的对象类型。<br>这些能够应对多种类型的函数（多态函数）是一个更通用原则的例子：某些函数应该能够适用于多种数据类型。此外，创建这样一个函数的一种方式是使用在每个类中都有不同定义的共享属性名称，这就意味着这些函数在不同的类中会有不同的行为。</p>
+<h3 id="2-7-2Z专用方法"><a href="#2-7-2Z专用方法" class="headerlink" title="2.7.2Z专用方法"></a>2.7.2Z专用方法</h3><p>在 Python 中，某些特殊名称会在特殊情况下被 Python 解释器调用。例如，类的 <strong>init</strong> 方法会在对象被创建时自动调用。<strong>str</strong> 方法会在打印时自动调用，<strong>repr</strong> 方法会在交互式环境显示其值的时候自动调用。</p>
+<p> Python 中的所有对象都拥有真假值。默认情况下，用户定义类的对象被认为是真值，但是专门的 <strong>bool</strong> 方法可以用于覆盖这种行为。如果一个对象定义了 <strong>bool</strong> 方法，那么 Python 就会调用这个方法来确定它的真假值。</p>
+<p> 可调用对象。在 Python 中函数是一等对象，因此它们被作为数据进行传递，并且像其他对象那样拥有属性。Python 还允许我们定义像函数一样可以被“调用的对象”，只要在对象中包含一个 <strong>call</strong> 方法。通过这个方法，我们可以定义一个行为像高阶函数的类。</p>
+<h3 id="2-7-3多重表示"><a href="#2-7-3多重表示" class="headerlink" title="2.7.3多重表示"></a>2.7.3多重表示</h3><p> 接口。对象属性是一种消息传递的形式，它允许不同的数据类型以不同的方式响应相同的信息。从不同的类中引发类似的行为的一组共享信息是一种强大的抽象方法。接口是一组共享的属性名称，以及对它们的行为的规范。对于复数来说，实现算术运算所需要的接口包括四个属性：real、imam、magnitude 和 angle。</p>
+<p> Python 有一种简单的计算属性的特性，可以通过零参数函数实时的计算属性。@property 修饰符允许函数在没有调用表达式语法（表达式后跟随圆括号）的情况下被调用。Complex 类存储了 real 和 imag 属性并在需要时计算 magnitude 和 angle 属性。</p>
+<h3 id="2-7-4-泛型函数"><a href="#2-7-4-泛型函数" class="headerlink" title="2.7.4 泛型函数"></a>2.7.4 泛型函数</h3><p> Complex.add 方法是泛型的，因为它可以接受 ComplexRI 或 ComplexMA 作为值。通过确保 ComplexRI 和 ComplexMA 共用同一个接口</p>
+<p>类型派发。一种实现跨类型操作的方式是选择基于函数或方法的参数类型来选择相应的行为。类型派发的思想是写一个能够检查它所收到的参数的类型的函数，然后根据参数类型执行恰当的代码。</p>
+<p>对于算术运算，我们会提供一个 type_tag 的属性给 Rational 和 Complex 实例，这个属性拥有一个字符串值。当两个值 x 和 y 有相同的 type_tag 时，我们可以直接使用 x.add(y) 来结合它们，否则我们需要跨类型操作</p>
+<p>通常不同的数据类型并不是完全不相关的，可能存在一些方法将一种类型视为另一种类型。这个过程被称为强制转换。</p>
+<h2 id="2-8效率"><a href="#2-8效率" class="headerlink" title="2.8效率"></a>2.8效率</h2><p>效率指的是表示或处理所使用的计算资源，例如计算函数结果或表示对象所需的时间和内存量。这些数量可以根据实现的细节而大大不同。</p>
+<h3 id="2-8-1-测量效率"><a href="#2-8-1-测量效率" class="headerlink" title="2.8.1 测量效率"></a>2.8.1 测量效率</h3><p>这个高阶的 count 函数返回一个与其参数等效的函数，并且还维护一个 call_count 属性。通过这种方式，我们可以检查 fib 函数被调用的次数。</p>
+<p>在计算表达式时，解释器会保存所有活动的环境，以及这些环境引用的所有值和帧。我们称一个环境是活动的，如果它为正在计算的某个表达式提供了评估上下文。每当为其创建第一个帧的函数调用最终返回时，环境将变为非活动状态。</p>
+<p>高阶函数 count_frames 用于跟踪尚未返回的函数调用次数 open_count 。它通过在计算过程中记录当前活动的函数调用次数来实现。max_count 属性是 open_count 曾经达到的最大值，它对应于在计算过程中同时处于活动状态的最大帧数。</p>
+<p>总结一下， fib 函数的空间要求（以活动帧数衡量）比输入小一个单位，这往往是较小的。而以递归调用次数衡量的时间要求比输出大，这往往是巨大的。</p>
+<h3 id="2-8-3-增长阶数"><a href="#2-8-3-增长阶数" class="headerlink" title="2.8.3 增长阶数"></a>2.8.3 增长阶数</h3><p>Theta（θ）符号通常在算法分析中用来表示算法的渐进复杂度，特别是在表示算法的最佳情况和最差情况的渐进上界时。如果我们有一个算法，最好情况下的时间复杂度是 O(nlogn)，最差情况下的时间复杂度是 Ω(nlogn)，那么我们就可以说这个算法的时间复杂度是 Θ(nlogn)</p>
+<p>常数项：常数项不影响计算过程的增长阶。因此，例如，<br>作为上界和下界。为了简洁起见，增长阶中常数通常被忽略。</p>
+<p>对数：对数的底数不影响计算过程的增长阶。例如，</p>
+<p>log10(n) 具有相同的增长阶。改变对数的底数等价于乘以一个常数因子。</p>
+<p>嵌套：当内部的计算过程在外部过程的每一步中重复执行时，整个过程的增长阶是外部和内部过程的步骤数的乘积</p>
+<p>为简洁起见，增长阶中的低阶项通常被忽略，所以我们不会在<br>theta 表达式中看到求和。<br>低阶项。随着计算过程的输入增长，计算中增长最快的部分将主导总的资源使用。<br>Θ<br>Θ 符号捕捉了这种直觉。总的来说，除了增长最快的项外，其他项都可以忽略而不影响增长阶。</p>
+<h2 id="2-9递归对象"><a href="#2-9递归对象" class="headerlink" title="2.9递归对象"></a>2.9递归对象</h2><p>对象可以以其他的对象作为自己的属性值。当这个类下的对象实例有一个属性的值还属于这个类时，这个对象就是一个递归对象。</p>
+<h3 id="2-9-1链表"><a href="#2-9-1链表" class="headerlink" title="2.9.1链表"></a>2.9.1链表</h3><p>Memoization 通常用于递归函数或计算密集型函数，特别是在递归函数中，它可以显著提高性能，避免对相同参数的重复计算。</p>
+<p>在 Python 中，您可以使用装饰器或字典等数据结构来实现 memoization。</p>
+<p>因为我们对 set1 的每个元素执行了是否在 set2 的完整扫描。但是对于有序表示，我们可以使用更聪明的方法：同时遍历两个集合，跟踪 set1 中的元素 e1 和 set2 中的元素 e2。当 e1 和 e2 相等时，我们将该元素包含在交集中。</p>
+<p>对于此算法我们做以下思考：假设 e1 &lt; e2。由于 e2 小于 set2 的剩余元素，我们可以立即得出结论：e1 不可能出现在 set2 的剩余元素中，因此不在交集中。因此，我们不再需要考虑 e1。我们丢弃它并继续处理 set1 的下一个元素。当 e2 &lt; e1 时，类似的逻辑查询 set2 的下一个元素</p>
+<p>内置的 Python 集合不能包含可变数据类型，如列表、字典或其他集合。为了允许嵌套集，Python 还有一个内置的不可变 frozenset 类，它与 set 类共享方法，但不包括改变方法和操作符。</p>
+<p>cs61a不能进入了</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/03/27/Diary/Diary_007/">电子日记007周二</a>
+            
+            
+            <a class="next" rel="next" href="/2024/03/26/Diary/Diary_006/">电子日记006周一</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

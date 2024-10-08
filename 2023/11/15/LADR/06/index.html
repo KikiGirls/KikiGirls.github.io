@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>Linear ALgebra Done Right Chapter 2 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linear ALgebra Done Right Chapter 2</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 15, 2023&nbsp;&nbsp;0:01:07</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Linear-Algebra-Done-Right-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Linear Algebra Done Right 学习笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="第二章-有限维线性空间"><a href="#第二章-有限维线性空间" class="headerlink" title="第二章 有限维线性空间"></a>第二章 有限维线性空间</h1><hr>
+<blockquote>
+<p>这一章，更深入的定义了一些基本概念</p>
+</blockquote>
+<hr>
+<h2 id="1-张成空间和线性无关"><a href="#1-张成空间和线性无关" class="headerlink" title="1.张成空间和线性无关"></a>1.张成空间和线性无关</h2><h3 id="1-1线性组合和张成空间"><a href="#1-1线性组合和张成空间" class="headerlink" title="1.1线性组合和张成空间"></a>1.1线性组合和张成空间</h3><hr>
+<p>我们这样定义线性组合 </p>
+<blockquote>
+<p>形如 $a_1v_1+a_2v_2+\cdots+a_nv_n$ 的向量，就叫做 $v_1,v_2,\cdots,v_n$    的线性组合。其中 $a_1,a_2,\cdots,a_n\in F$ </p>
+</blockquote>
+<p>我们这样定义张成空间 </p>
+<blockquote>
+<p>一组向量所有的线性组合构成的集合称为这组向量的张成空间。<br>$$<br>span(v_1,v_2,\cdots,v_n)&#x3D;{ a_1v_1+a_2v_2+\cdots+a_nv_n:a_1,a_2,\cdots,a_n\in F }<br>$$</p>
+</blockquote>
+<p><strong>命题1.1.1</strong>  </p>
+<blockquote>
+<p>$V$ 中一组向量的张成空间是包含这组向量的最小子空间</p>
+</blockquote>
+<hr>
+<p>$\quad$ 很容易证明 $span(v_1,v_2,\cdots,v_n)$ 是子空间。那么包含每个 $v_i$ 的子空间必定包含 $span (v_1,v_2,\cdots,v_n)$ 故这是最小的子空间。</p>
+<hr>
+<p>定义：张成 </p>
+<blockquote>
+<p>若 $span(V_1,V_2,\cdots,V_n)&#x3D;V$ 那么就称这组向量张成 $V$ </p>
+</blockquote>
+<p>定义：有限维 </p>
+<blockquote>
+<p>如果一个向量空间可以被某个向量组张成，那么我们就称这个向量空间是有限维的。（每个组都必须是有限长度的）</p>
+</blockquote>
+<p>定义：无限维 </p>
+<blockquote>
+<p>如果不是有限维，那么就称为无限维。</p>
+</blockquote>
+<h2 id="1-2线性无关"><a href="#1-2线性无关" class="headerlink" title="1.2线性无关"></a>1.2线性无关</h2><blockquote>
+<p>我们称一组向量是线性无关的，这组向量满足<br>$$<br>a_1v_1+a_2v_2+\cdots+a_nv_n&#x3D;0\to  a_i&#x3D;0,i&#x3D;1,2,\cdots,n<br>$$</p>
+</blockquote>
+<p>规定空组是线性无关的</p>
+<hr>
+<p>线性相关 </p>
+<blockquote>
+<ul>
+<li>如果不是线性无关的就是线性相关的</li>
+<li>也就是说 $\exists a_1,a_2,\cdots,a_n$ 不全为 $0$ 使得<br>$$<br>a_1v_1+a_2v_2+\cdots+a_nv_n&#x3D;0<br>$$</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="引理1-2-1"><a href="#引理1-2-1" class="headerlink" title="引理1.2.1"></a>引理1.2.1</h3><blockquote>
+<p>一组线性相关的向量组，有 $j\in { 1,2\cdots n }$ 使得：<br>$$<br>v_j\in span(v_1,v_2,\cdots,v_{j-1})<br>$$<br>以及去掉 $v_j$ 张成空间不变</p>
+</blockquote>
+<p>$\quad$ 证明</p>
+<hr>
+<p>由于这组向量是线性相关的，那么 $\exists a_1,a_2,\cdots,a_n$ 不全为 $0$ 使得 $a_1v_1+a_2v_2+\cdots+a_nv_n&#x3D;0$ 我们可以设 $j$ 是满足 $a_j\neq 0$  的最大者，那么两遍同时除以 $a_j$ 就可以得到 $v_j\in span(v_1,v_2,\cdots,v_{j-1})$ 将其去掉后前 $j$  项的张成空间不变，那么加上后面 $n-j$ 项的张成空间也不变</p>
+<hr>
+<h3 id="1-2-2线性无关组的长度小于张成组的长度"><a href="#1-2-2线性无关组的长度小于张成组的长度" class="headerlink" title="1.2.2线性无关组的长度小于张成组的长度"></a>1.2.2线性无关组的长度小于张成组的长度</h3><blockquote>
+<p>在 $V$ 中每一组线性无关组小于每一组张成组的长度。</p>
+</blockquote>
+<h2 id="1-3基"><a href="#1-3基" class="headerlink" title="1.3基"></a>1.3基</h2><blockquote>
+<p>一组向量线性无关而又张成 $V$ 就称为 $V$ 的基</p>
+</blockquote>
+<h3 id="1-3-1基的判定"><a href="#1-3-1基的判定" class="headerlink" title="1.3.1基的判定"></a>1.3.1基的判定</h3><blockquote>
+<p>$v_1,v_2,\cdots,v_n$ 是 $V$ 的基 $\iff$  $\forall v\in V$ 可以唯一的写成<br>$$<br>v&#x3D;a_1v_1+a_2v_2+\cdots+a_nv_n<br>$$<br>$a_1,a_2,\cdots,a_n\in F$</p>
+</blockquote>
+<h3 id="1-3-2张成组可以简化为基"><a href="#1-3-2张成组可以简化为基" class="headerlink" title="1.3.2张成组可以简化为基"></a>1.3.2张成组可以简化为基</h3><p>$\quad$ 设 $v_1,v_2,\cdots,v_n$ 张成 $V$ 那么第一步，如果 $v_1&#x3D;0$ 就从中去掉 $v_1$ 若不为 $0$  就不变。第二步，若 $v_i\in span(v_1,v_2,\cdots,v_{i-1})$ 就去掉 $v_i$ 若不属于就不变。<br>通过这两步我们去掉了一些不改变张成空间的向量，同时留下了线性无关的向量。这就将张成组简化为基了。</p>
+<h3 id="1-3-3线性无关组可以扩为基"><a href="#1-3-3线性无关组可以扩为基" class="headerlink" title="1.3.3线性无关组可以扩为基"></a>1.3.3线性无关组可以扩为基</h3><p>$\quad $  我们可以将线性无关组与一组张成组合为张成组，那么用上面的步骤，由于线性无关组每一个都不包含于前面向量的张成空间，所以都不会被去掉。那么最后可以得到一组基，这就把线性无关组扩为一组基了。</p>
+<h2 id="2-维数"><a href="#2-维数" class="headerlink" title="2.维数"></a>2.维数</h2><h3 id="2-1基的长度唯一"><a href="#2-1基的长度唯一" class="headerlink" title="2.1基的长度唯一"></a>2.1基的长度唯一</h3><hr>
+<p>令 $A,B$ 都是基，那么它们都是线性无关组和张成组。张成组 $A$ 的长度 $\ge $ 线性无关组 $B$ 的长度。同时线性无关组 $A$ 的长度 $\le $ 张成组 $B$  的长度。于是 $A,B$ 的长度相等</p>
+<hr>
+<h3 id="2-2维数"><a href="#2-2维数" class="headerlink" title="2.2维数"></a>2.2维数</h3><p>既然基的长度相等那么我们就可以定义这个长度 </p>
+<blockquote>
+<p>有限维空间$V$的基的长度叫做维数，记作 $\operatorname{dim}V$</p>
+</blockquote>
+<h3 id="2-3子空间的维数"><a href="#2-3子空间的维数" class="headerlink" title="2.3子空间的维数"></a>2.3子空间的维数</h3><p>子空间的维数小于等于原空间的维数<br>子空间的基是原空间的线性无关组，故小于等于原空间基的长度</p>
+<blockquote>
+<p>若 $U$ 是 $V$的子空间，那么 $\operatorname{dim}U\le \operatorname{dim}V$</p>
+</blockquote>
+<h3 id="2-4长度为-operatorname-dim-V-的线性无关组是基"><a href="#2-4长度为-operatorname-dim-V-的线性无关组是基" class="headerlink" title="2.4长度为 $\operatorname{dim}V$的线性无关组是基"></a>2.4长度为 $\operatorname{dim}V$的线性无关组是基</h3><p>线性无关组可以扩为基，又线性无关组的长度为基的长度。那么扩充过程没有添加如何向量，也就是说原线性无关组就是基。<br>同理我们可以得 <strong>长度为 $\operatorname{dim}V$的张成组是基</strong></p>
+<h3 id="2-5和空间的维数"><a href="#2-5和空间的维数" class="headerlink" title="2.5和空间的维数"></a>2.5和空间的维数</h3><blockquote>
+<p>设 $U_1,U_2$ 是 $V$ 的子空间，那么<br>$$<br>\operatorname{dim}U_1+U_2&#x3D;\operatorname{dim}U_1+\operatorname{dim}U_2-\operatorname{dim}U_1\cap U_2<br>$$</p>
+</blockquote>
+<p>$\quad$  证明<br>设 $w_1,w_2,\cdots,w_n$ 是 $U_1\cap U_2$  的基，那么分别加上 $u_1,u_2,\cdots,u_j$ 和 $v_1,v_2,\cdots,v_k$ 可扩为 $U_1,U_2$ 的基。<br>下面我们证明上面三个向量组为， $U_1+U_2$  的基<br>显然上面的三个向量组合起来为 $U_1+U_2$ 的张成组，那么我们需要证明它们线性无关，假设<br>$$<br>a_1w_1+a_2w_2+\cdots+a_nw_n+b_1v_1+b_2v_2+\cdots+b_kv_k+c_1u_1+c_2u_2+\cdots+c_ju_j&#x3D;0<br>$$<br>上式可以写为<br>$$<br>b_1v_1+b_2v_2+\cdots+b_kv_k&#x3D;-(a_1w_1+a_2w_2+\cdots+a_nw_n+c_1u_1+c_2u_2+\cdots+c_ju_j)<br>$$<br>因为右边是 $U_1$  基的线性组合，那么 $b_1v_1+b_2v_2+\cdots+b_kv_k\in U_1$ 又 $b_1v_1+b_2v_2+\cdots+b_kv_k$ 是 $U_2$ 线性无关组的组合，所以  $b_1v_1+b_2v_2+\cdots+b_kv_k\in U_2$.即属于 $U_2\cap U_1$  这代表它可以表示为 $U_1\cap U_2$  基的线性组合，即<br>$$<br>b_1v_1+b_2v_2+\cdots+b_kv_k&#x3D;d_1w_1+d_2w_2+\cdots+d_nw_n<br>$$<br>又 $v$ 和 $w$ 是 $U_2$ 的基，那么他们线性无关，于是 $b_i&#x3D;d_i&#x3D;0.(i&#x3D;1,2,\cdots,n)$,同理可以得到 $a&#x3D;b&#x3D;c&#x3D;0$ 于是他们线性无关。那么命题得证</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/11/15/LADR/07/">Linear ALgebra Done Right Chapter 3</a>
+            
+            
+            <a class="next" rel="next" href="/2023/11/12/LADR/05/">蓝以中高代学习笔记第六章第一节</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

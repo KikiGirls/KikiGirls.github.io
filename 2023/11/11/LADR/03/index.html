@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>概率导论学习笔记Chapter4 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">概率导论学习笔记Chapter4</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 11, 2023&nbsp;&nbsp;1:01:07</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%A6%82%E7%8E%87%E5%AF%BC%E8%AE%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">概率导论学习笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="概率导论学习笔记"><a href="#概率导论学习笔记" class="headerlink" title="概率导论学习笔记"></a>概率导论学习笔记</h1><h2 id="随机变量函数的概率密度函数"><a href="#随机变量函数的概率密度函数" class="headerlink" title="随机变量函数的概率密度函数"></a>随机变量函数的概率密度函数</h2><hr>
+<p>Chapter 4.第一节随机变量函数的概率密度函数</p>
+<hr>
+<p>在本节里我们主要考虑，$Y&#x3D;g(X)$ 的概率密度函数$f_{Y}(y)$</p>
+<p>一般来说，当我们知道 $f_{X}(x)$ 后我们用两步来求$f_{Y}(y)$<br>$(1).求F_{Y}(y)$<br>$$<br>F_{Y}(y)&#x3D;P(g(X)\leq y)&#x3D;\int_{[x|g(x)\leq y]} f_{X}(x)dx<br>$$<br>(2).对 $F_{Y}$ 求导<br>$$<br>f_{Y}(y)&#x3D;{\frac {dF_{Y}} {dy}}(y)<br>$$<br>这样就可以算出我们要求的关于Y的概率密度函数</p>
+<h3 id="线性函数"><a href="#线性函数" class="headerlink" title="线性函数"></a>线性函数</h3><blockquote>
+<p>这是一种特殊情况</p>
+</blockquote>
+<p>对于Y&#x3D;aX+b<br>我们可以看做 $f_{x}$进行图像收缩变换得到 $f_{ax}$ 然后再进行平移得到 $f_{ax+b}$ 的图像，也就是 $f_{y}$<br>下面是具体的证明<br>当a大于0的时候<br>$$<br>F_{Y}(y)&#x3D;P(Y \leq y)&#x3D;P(aX+b \leq y)<br>&#x3D;F_{X}({\frac {y-b} {a}})<br>$$<br>第二步<br>$$<br>f_{Y}(y)&#x3D;{\frac {dF_{Y}} {dy}}(y)&#x3D;{\frac {1}{|a|}}f_{X}({\frac {y-b} {a}})<br>$$</p>
+<p>这个绝对值是为了当a为负值的时候加的</p>
+<h3 id="单调函数"><a href="#单调函数" class="headerlink" title="单调函数"></a>单调函数</h3><blockquote>
+<p>当 g(x) 是严格单调函数的时候这也是个特殊情况</p>
+</blockquote>
+<hr>
+<p>严格单调函数<br>当 $ x &lt; x’ 时,成立 g(x)&lt; g(x’)$ 大于时同理</p>
+<hr>
+<p>严格单调函数有一个重要的性质就是它存在逆<br>也就是说在定义域中对于 $y&#x3D;g(x)$ 存在函数h 使得 $x&#x3D;h(y)$</p>
+<p>进一步说，若函数g和h都是可微的那么我们有方便的公式来计算Y的概率密度函数</p>
+<p>假设g是增函数（减函数同理）<br>那么<br>$$<br>\begin{aligned}<br>F_{Y}(y) &amp; &#x3D; P(g(X) \leq y)  \<br>&amp; &#x3D; P(g(X) \leq g(x))  \<br>&amp; &#x3D; P(X \leq x)  \<br>&amp; &#x3D; P(X \leq h(y))  \<br>&amp; &#x3D; F_{X}(h(y))  \<br>\end{aligned}<br>$$<br>然后对y求导<br>$$<br>f_{Y}(y)&#x3D;{\frac {dF_{Y}} {dy}}(y)&#x3D;f_{X}(h(x))|{ \frac {dh} {dy} (y)｜}<br>$$<br>这样就得到公式了</p>
+<h3 id="两个随机变量的函数-Z-g-X-Y"><a href="#两个随机变量的函数-Z-g-X-Y" class="headerlink" title="两个随机变量的函数 $Z&#x3D;g(X,Y)$"></a>两个随机变量的函数 $Z&#x3D;g(X,Y)$</h3><p>这是与一个随机变量时是相似的<br>大多数情况我们需要进行画图才能完成第一步。在这里略</p>
+<h3 id="两个随机变量的和-卷积"><a href="#两个随机变量的和-卷积" class="headerlink" title="两个随机变量的和-卷积"></a>两个随机变量的和-卷积</h3><blockquote>
+<p>这是函数g的特殊情况 也称为卷积<br>$Z&#x3D;g(X,Y)&#x3D;X+Y$<br>现在我们在已知 $f_{X} 和  f_{Y} $ 的情况下来求 $f_{Z}$<br>为了得到Z的概率密度函数，我们可以先求得X和Z的联合密度函数，后通过对X求积分来求得z的函数密度函数。</p>
+</blockquote>
+<p>首先我们有<br>$$<br>\begin{aligned}<br>P (Z \le z|X&#x3D;x) &amp; &#x3D;P(X+Y \le z|X&#x3D;x )\<br>&amp;&#x3D;P(x+Y \le z)\<br>&amp;&#x3D;P(Y \le z-x)<br>\end {aligned}<br>$$<br>x和y是独立的，那么我们在等式两边同时取z(z-x)的微分，可得<br>$$<br>f_{Z|X}(z|x)&#x3D;f_{Y}(z-x)<br>$$<br>那么用条件概率的公式有<br>$$<br>f_{Z,X}(z,x)&#x3D;f_{X}(x)f_{Z|X}(z|x)&#x3D;f_{X}(x)f_{Y}(z-x)dx<br>$$<br>这样就变为 $f_{X}$ 和 $ f_{Y} $的乘积<br>最后积分<br>$$<br>\begin{aligned}<br>f_{Z} &amp; &#x3D; \int <em>{-\infty} ^{+\infty} f</em>{Z,X}(z,x)dx  \<br>&amp; &#x3D; \int <em>{-\infty }^{+\infty}f</em>{X}(x)f_{Y}(z-x)dx  \<br>\end{aligned}<br>$$</p>
+<p>离散情况下变成求和即可。</p>
+<h2 id="协方差相关"><a href="#协方差相关" class="headerlink" title="协方差相关"></a>协方差相关</h2><hr>
+<p>Chapter4 第二节协方差相关</p>
+<hr>
+<p>在本节中我们量化量化两个随机变量之间的关系</p>
+<h3 id="协方差"><a href="#协方差" class="headerlink" title="协方差"></a>协方差</h3><blockquote>
+<p>我们定义协方差  $cov (X,Y)$<br>$$<br>cov(X,Y)&#x3D;E[(X-E(X))(Y-E(Y))]<br>$$</p>
+</blockquote>
+<p>特别的，如果  cov(X,Y)&#x3D;0, 我们就说X和Y是不相关的。<br>从定义中我们很容易看出来，协方差是两个变量之间正负相关的指标。如协方差为正那么就是正相关的，如果为负就为负相关，<br>与方差类似，协方差还有另外一种表达。<br>$$<br>cov(X,Y)&#x3D;E(XY)-E(X)E(Y)<br>$$<br>很容易看出，当X&#x3D;Y时<br>$$<br>cov(X,X)&#x3D;var(X)<br>$$</p>
+<h3 id="独立和相关"><a href="#独立和相关" class="headerlink" title="独立和相关"></a>独立和相关</h3><p>如果说X和Y是相互独立的，那么我们可以得到 $E[XY]&#x3D;E[X]E[Y]$ 于是 $cov(X,Y)&#x3D;0$,但是这个事实反过来不是成立的，当X，Y都为离散变量，如果$\forall y$有<br>$$E[X|Y&#x3D;y]&#x3D;E[X]$$<br>那么此时</p>
+<p>$$ E[XY]&#x3D;\sum_y yp_Y(y)E[X|Y&#x3D;y]&#x3D;E[XY] $$<br>这样X,Y 不一定独立，但它们是不相关的<br>这个对于连续变量也成立</p>
+<h3 id="相关系数"><a href="#相关系数" class="headerlink" title="相关系数"></a>相关系数</h3><p>协方差的符号代表着正负相关性，那么当我们需要判断相关性的绝对大小的时候。我们可以将协方差进行标准化，使其落入【-1，1】之间。这样得到相关系数 $ \rho  &#x3D;(X,Y)$<br>$$<br>\rho&#x3D;\frac{cov(X,Y)}{\sqrt{var(X)var(Y)}}<br>$$</p>
+<h3 id="随机变量和的方差"><a href="#随机变量和的方差" class="headerlink" title="随机变量和的方差"></a>随机变量和的方差</h3><p>类似于平方公式，对于两个随机变量$X_1 ，X_2$我们有<br>$$ var(X_1+X_2)&#x3D;var(X_1)+var(X_2)+2cov(X_1+X_2) $$<br>这个结论是非常好证明的<br>更一般的结论是<br>$$ var(\sum x_i)&#x3D;\sum var(x_i)+\sum_{i\neq j}cov(X_i+X_j)<br>$$</p>
+<h2 id="再论条件期望和条件方差"><a href="#再论条件期望和条件方差" class="headerlink" title="再论条件期望和条件方差"></a>再论条件期望和条件方差</h2><p>一个随机变量X的条件期望  $E(X|Y&#x3D;y)$ 是一个依赖于y的函数，于是  $E(X|Y)$ 是一个关于Y的随机变量。<br>那么这个随机变量的期望：<br>$$<br>\begin{aligned}<br>E[E[X|Y]] &amp; &#x3D; \sum_y E[X|Y&#x3D;y] p_Y(y)  \<br>&amp; &#x3D; E[X]  \<br>\end{aligned}<br>$$<br>连续型同理<br>我们可以这样理解，一组数据的平均值是不会因为你把它分成几个小组再求平均值而改变的。<br>这个法则叫重期望法则。</p>
+<h3 id="将条件期望作为估计量"><a href="#将条件期望作为估计量" class="headerlink" title="将条件期望作为估计量"></a>将条件期望作为估计量</h3><p>我们可以将Y看作可以提供一些关于X的信息，，那么我们可以将条件期望看做，在信息Y下的对X值的估计。记为<br>$$  \hat{X}&#x3D;E[X|Y] $$<br>那么估计误差就为<br>$$  \tilde{X}&#x3D;\hat{X}-X $$<br>显然这个也是个随机变量，而且有<br>$$ E[\tilde{X}|Y] &#x3D; E[(\hat{X}-X)|Y] &#x3D;E(\hat{X}|Y)-E[X|Y]&#x3D;0 $$<br>这说明误差没有偏向，这也可以理解为什么重期望法则可以成立。<br>下面介绍这个误差和估计是不相关的。<br>$$E[\hat{X} \tilde{X}]&#x3D;E[E[\hat{X} \tilde{X}|Y]]&#x3D;0  $$<br>故<br>$$  cov(\hat{X},\tilde{X})&#x3D;E  [\hat{X} \tilde{X}]-E[\hat{X} ]E[\tilde{X}]&#x3D;0-0&#x3D;0 $$<br>这就代表它们是不相关的<br>另外由方差公式有<br>$$ X&#x3D; \hat{X} + \tilde{X} $$<br>$$ var(X)&#x3D;var(\hat{X})+var(\tilde{X}) $$</p>
+<h3 id="条件方差"><a href="#条件方差" class="headerlink" title="条件方差"></a>条件方差</h3><p>$$ var(X|Y) &#x3D; E [(X-E[X])^2|Y] &#x3D; E [\tilde{X}^2|Y] $$<br>那么用重期望法则有<br>$$ var(\tilde{X})&#x3D; E [\tilde{X}^2]&#x3D; E (E  [\tilde{X}^2]|Y)&#x3D; E[var(X|Y)] $$<br>那么上一节的公式就可以写为<br>$$ var(X)&#x3D;var(E[X|Y])+E[var(X|Y)] $$<br>这叫做全方差法则</p>
+<h2 id="矩母函数"><a href="#矩母函数" class="headerlink" title="矩母函数"></a>矩母函数</h2><p>矩母函数可以看做概率的一种表示方式，只不过和概率密度函数和分布列不同，这是函数形式而且不直观。<br>我们定义X的矩母函数为<br>$$ M_X(s)&#x3D;E[ e^{sX}] $$<br>这个函数叫做矩母函数的原因是可以很快求矩，以连续变量X为例。<br>$$ M_X(s)&#x3D;E[ e^{sX}]&#x3D; \int_{-\infty}^{\infty} e^{sx}f_X (x) \mathrm{d}x $$<br>两边取导数<br>$$<br>\begin{aligned}<br>\frac{\mathrm{d}M(s)}{\mathrm{d}s} &amp; &#x3D; \frac{\mathrm{d}}{\mathrm{d}s}\int_{-\infty}^{\infty} e^{sx}f_X (x) \mathrm{d}x  \<br>&amp; &#x3D; \int_{-\infty}^{\infty} \frac{\mathrm{d}}{\mathrm{d}s} e^{sx}f_X (x)\mathrm{d}x  \<br>&amp; &#x3D; \int_{-\infty}^{\infty} e^{sx}x f_X (x) \mathrm{d}x  \<br>\end{aligned}<br>$$<br>当$s&#x3D;0$的时候<br>$$ \frac{\mathrm{d}M(s)}{\mathrm{d}s}|_ {x&#x3D;0}&#x3D;E [X] $$<br>如果取n次导数就有<br>$$ \frac{\mathrm{d}^nM(s)}{\mathrm{d}s^n}|_ {x&#x3D;0}&#x3D;E [X^n] $$</p>
+<p>矩母函数有两个普遍的性质<br>$$ M_X \int_{-\infty}^{\infty}  \mathrm{d}x $$   </p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/11/11/LADR/04/">Linear ALgebra Done Right Chapter 1</a>
+            
+            
+            <a class="next" rel="next" href="/2023/10/24/LADR/01/">Linear ALgebra Done Right Chapter 0</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

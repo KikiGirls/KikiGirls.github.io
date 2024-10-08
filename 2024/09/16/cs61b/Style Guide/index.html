@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>Style Guide | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Style Guide</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 16, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61b/">Cs61b</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>风格指南<br>作者：姚艾伦<br>关于本风格指南的说明：通过运行自动风格检查器可能更容易了解这些规则。（以后将提供有关如何运行自动风格检查器的更多说明。）</p>
+<p>空格<br>每个文件必须以换行符序列结尾。</p>
+<p>文件不得包含水平制表符。仅使用空格进行缩进。</p>
+<p>任何行都不能包含尾随空格。</p>
+<p>不要添加空格：<br>通用类型标识中的“&lt;”和“&gt;”周围（“List”，而不是“列表”，或 “List<Integer>“。<br>前缀运算符“！”，“–”，“++”，一元运算符“-”或一元运算符“+”之后。<br>在标记“；”或后缀运算符“–”和“++”之前。<br>在“(”之后或“)”之前。<br>后 ”。”<br>当你孤独的时候。<br>请添加空格：<br>在“;”、“,”或类型转换之后（例如，“(String) x”，而不是“(String)x”）。<br>围绕二元运算符（例如“*”、“+”）和比较运算符。<br>围绕赋值运算符（例如“&#x3D;”、“+&#x3D;”）。<br>三元条件运算符（“x&gt;0 ? x : -x”）中的“？”和“：”周围。<br>围绕关键字“assert”、“catch”、“do”、“else”、“finally”、“for”、“if”、“return”、“synchronized”、“try”、“while”。<br>一般来说，在操作符前换行（插入换行符），例如</p>
+<p> … + 20 * X<br>     + Y;<br>不要用空格将方法调用中的方法名称与“（”分隔开。但是，在长行中，你可以用换行符和空格（用于缩进）将它们分隔开。<br>缩进<br>基本缩进步骤是 4 个空格。</p>
+<p>按每个块级别的基本缩进步骤缩进代码（块通常用“{”和“}”括起来），例如</p>
+<p> if (x &gt; 0) {<br>     r &#x3D; -x;<br> } else {<br>     r &#x3D; x;<br> }<br>缩进“case”标记超出其封闭“switch”的缩进，例如</p>
+<p> switch (op) {<br>     case ‘+’:<br>         addOpnds(x, y);<br>         break;<br>     default:<br>         ERROR();<br> }<br>通过基本缩进步骤缩进连续行。</p>
+<p>牙套<br>使用 { } 括号括起所有“if”、“while”、“do”和“for”语句。</p>
+<p>将“}”括号放在“else”、“finally”或“catch”的同一行，例如</p>
+<p> if (x &gt; 0) {<br>     y &#x3D; -x;<br> } else {<br>     y &#x3D; x;<br> }<br>将打开块的“{”放在行末。通常，它位于包含它的“if”、“for”、“while”、“switch”、“do”、方法头或类头的末尾。如果行长迫使它移到下一行，请不要缩进，而是将其单独放在一行上。</p>
+<p>评论<br>方法应该有 javadoc 注释来解释行为、参数（使用 @param 标签或其他方式）和返回类型。</p>
+<p>返回非 void 值的方法必须在其 Javadoc 注释中使用“@return”标记或包含单词“return”、“returning”或“returns”的运行文本中的短语来描述它们。</p>
+<p>每个 Javadoc 注释都必须以正确格式的句子开头，以大写字母开头，以句号结尾。</p>
+<p>名字<br>静态最终常量的名称必须全部大写（例如，RED、DEFAULT_NAME）。</p>
+<p>参数、局部变量和方法的名称必须以小写字母开头，或者由单个大写字母组成。</p>
+<p>类型（类）的名称，包括类型参数，必须以大写字母开头。</p>
+<p>包的名称必须以小写字母开头。</p>
+<p>实例变量和非最终类（静态）变量的名称必须以小写字母或“_”开头。</p>
+<p>导入<br>不要使用“import PACKAGE。”，除非包是 java.lang.Math、java.lang.Double 或 org.junit.Assert。“import static CLASS。 ”就可以了。</p>
+<p>不要两次导入同一个类或静态成员。</p>
+<p>不要导入您不使用的类或成员。</p>
+<p>各种 Java 样式约定<br>数组类型应在元素类型名称后加上“[]”，而不是在声明符后。应写“String[] names”，而不是“String names[]”。</p>
+<p>按以下顺序编写方法、类或字段的任何修饰符：<br>公共，受保护或私人。<br>抽象或静态的。<br>最终的、暂时的、或易变的。<br>同步。<br>本国的。<br>strictfp。<br>不要显式地修改多余的方法、字段或类：<br>不要将接口或注释中的方法标记为“公共”或“抽象”。<br>不要将接口或注释中的字段标记为“静态”，“公共”或“最终”。<br>不要将 final 类中的方法标记为“final”。<br>不要将嵌套接口标记为“静态”。<br>不要将空块（‘{ }’，其中只有空格或注释）用于控制语句。有一个例外：catch 块可以仅由具有以下形式的注释组成</p>
+<p>  &#x2F;* Ignore EXCEPTIONNAME. *&#x2F;<br>避免在代码中使用“魔法数字”，只需为其赋予符号名称即可，例如</p>
+<p> public static final MAX_SIZE &#x3D; 100;<br>例外是数字 -10 到 10、0.5、-0.5、0.25、-0.25。</p>
+<p>不要尝试捕获异常 Exception、RuntimeError 或 Error。</p>
+<p>写“b”而不是“b &#x3D;&#x3D; true”，写“！b”而不是“b &#x3D;&#x3D; false”。</p>
+<p>代替</p>
+<p> if (condition) {<br>     return true;<br> } else {<br>     return false;<br> }<br>只需</p>
+<p> return condition;<br>只有类的静态最终字段可以是公共的。其他字段必须是私有的或受保护的。</p>
+<p>仅具有静态方法和字段的类不能具有公共（或默认）构造函数。</p>
+<p>仅具有私有构造函数的类必须声明为“final”。<br>避免容易出错的结构<br>如果一个类覆盖了“equals”，那么它也必须覆盖“hashCode”。</p>
+<p>局部变量和参数不得遮盖字段名称。处理仅控制字段的 getter&#x2F;setter 方法的首选方法是在字段名称前加上“_”，例如</p>
+<p> public double getWidth() {<br>     return _width;<br> }</p>
+<p> public void setWidth(double width) {<br>     _width &#x3D; width;<br> }<br>不要使用嵌套赋值，例如“if ((x &#x3D; next()) !&#x3D; null) …”。虽然这在 C 中很有用，但在 Java 中几乎没有必要。</p>
+<p>在每个“switch”语句中包含一个“default”情况。</p>
+<p>使用“break”语句或以下形式的注释来结束“switch”语句的每个分支</p>
+<p> &#x2F;* fall through *&#x2F;<br>不要用“&#x3D;&#x3D;”比较字符串文字。写</p>
+<p> if (x.equals(“something”))<br>而不是</p>
+<p> if (x &#x3D;&#x3D; “something”)<br>在某些情况下您确实想要使用“&#x3D;&#x3D;”，但您不太可能在本课中遇到它们。</p>
+<p>限制<br>文件长度不得超过 2000 行。</p>
+<p>每行不得超过 100 个字符。</p>
+<p>任何方法都不得超过 80 行。</p>
+<p>任何方法的参数不得超过 8 个。</p>
+<p>每个文件必须只包含一个外部类（嵌套类也可以）。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/09/16/Diary/Diary_023/">电子日记023周一</a>
+            
+            
+            <a class="next" rel="next" href="/2024/09/16/cs61b/cs61b/">cs61b</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

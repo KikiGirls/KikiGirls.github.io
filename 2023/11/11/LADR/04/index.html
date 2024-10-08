@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>Linear ALgebra Done Right Chapter 1 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linear ALgebra Done Right Chapter 1</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 11, 2023&nbsp;&nbsp;17:14:07</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Linear-Algebra-Done-Right-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Linear Algebra Done Right 学习笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h1><hr>
+<blockquote>
+<p>这一章，主要就是介绍定义了一些基本概念</p>
+</blockquote>
+<hr>
+<h2 id="向量空间"><a href="#向量空间" class="headerlink" title="向量空间"></a>向量空间</h2><ul>
+<li>首先在这本书里面  $F$ 代表着实数域和复数域</li>
+</ul>
+<p>那么我们可以给F下定义 </p>
+<blockquote>
+<p>$F^{n}$ 是  $F$ 中的元素组成的长度为n的组的合  集。<br>  $$F^{n}&#x3D;{(x_1 \cdots x_n):x_j \in F \quad j&#x3D;1\cdots n}$$</p>
+</blockquote>
+<p>在这本书里面我们把向量空间定义为带有加法和标量乘法的集合 $V$ 且满足下面性质：</p>
+<hr>
+<ul>
+<li>交换性：  $\forall u,v \in V ,u + v &#x3D; v+u$</li>
+<li>结合性： $\forall u, v, w .\forall a,b \in F$有<br>$$(u+v)+w&#x3D;u+(v+w) \ (ab )v &#x3D;a (bv )$$</li>
+<li>加法单位元： $\exists 0 \in V ,\forall v \in V$ 我们有<br>$$v+0&#x3D;v$$</li>
+<li>加法逆元：$\forall v \in V,\exists w \in V$<br>$$v+w&#x3D;0$$</li>
+<li>乘法单位元：$\forall v \in V,1v&#x3D;v$</li>
+<li>分配率： $\forall a,b \in F,\forall u,v \in V$有<br>$$a(u+v)&#x3D;au+av \ (a+b )v&#x3D;av+bv$$</li>
+</ul>
+<hr>
+<p>下面证明一些性质</p>
+<h3 id="加法单位元唯一"><a href="#加法单位元唯一" class="headerlink" title="加法单位元唯一"></a>加法单位元唯一</h3><p><strong>证明</strong>：</p>
+<hr>
+<p>假设有两个不同的单位元 $0,0’$ 则<br>$$0’&#x3D;0’+0&#x3D;0+0’&#x3D;0$$<br>故只有一个单位元</p>
+<hr>
+<h3 id="加法逆元唯一"><a href="#加法逆元唯一" class="headerlink" title="加法逆元唯一"></a>加法逆元唯一</h3><p><strong>证明</strong>：</p>
+<hr>
+<p>设 $w$ 和 $w’$ 都是 $v \in V$ 的加法逆元，则<br>$$<br>w&#x3D;w+0&#x3D;w+v+w’&#x3D;0+w’&#x3D;w’<br>$$</p>
+<hr>
+<h2 id="子空间"><a href="#子空间" class="headerlink" title="子空间"></a>子空间</h2><blockquote>
+<p>定义：如果 $V$ 的子集 $U$ 也是向量空间，那么我们就称 $U$ 为 $V$ 的子空间</p>
+</blockquote>
+<h3 id="子空间的条件"><a href="#子空间的条件" class="headerlink" title="子空间的条件"></a>子空间的条件</h3><p>子空间当且应当满足以下条件</p>
+<ul>
+<li>$0 \in U$</li>
+<li>$u,v \in U \to u+v\in U$</li>
+<li>$a\in F,u\in U \to au\in U$</li>
+</ul>
+<h3 id="子空间的和"><a href="#子空间的和" class="headerlink" title="子空间的和"></a>子空间的和</h3><p>我们这样定义子空间的和</p>
+<blockquote>
+<p>我们设 $U_1\cdots U_n$ 是 $V$ 的子集，那么它们的和，定义为他们元素的所有线性组合。<br>$$U_1+ \cdots +U_n&#x3D;{u_1+ \cdots +u_n:u_i \in U_i \quad (i&#x3D;1,2,\cdots,n)}$$</p>
+</blockquote>
+<h3 id="直和"><a href="#直和" class="headerlink" title="直和"></a>直和</h3><p>设  $U_1\cdots U_n$ 都是 $V$ 的子空间</p>
+<blockquote>
+<p>它的和称为直和，如果和中每一个元素都可以唯一表示为 $u_1+u_2+\cdots+u_m:u_i\in U_i$<br>那么我们用  $\oplus$ 来替代加号</p>
+</blockquote>
+<h3 id="直和的条件"><a href="#直和的条件" class="headerlink" title="直和的条件"></a>直和的条件</h3><blockquote>
+<p>$U_1,U_2,\cdots,U_n$ 是直和 $\iff$ $0&#x3D;u_1+u_2+\cdots+u_n$ 的唯一方式是 $u_i&#x3D;0\quad \left( i&#x3D;1,2,\cdots,n \right)$</p>
+</blockquote>
+<p><strong>证明</strong>：</p>
+<hr>
+<p>$\to$：显然<br>$\leftarrow$：假设如果 $0&#x3D;u_1+u_2+\cdots+u_m$ 则有  $u_i&#x3D;0$<br>设 $v\in U_1+U_2+\cdots+U_m$  把它写成<br>$$v&#x3D;u_1+u_2+\cdots+u_m$$<br>下面证表示法唯一，设另一种表示法<br>$$v&#x3D;u’_1+u’_2+\cdots+u’_n$$<br>相减得到<br>$$v&#x3D;(u_1-u’_1)  +(u_1-u’_2) +\cdots+(u_1-u’<em>n)$$<br>可得 $u_i&#x3D;u’</em>{i}$ 故表示法唯一。</p>
+<hr>
+<h3 id="两个子空间的直和"><a href="#两个子空间的直和" class="headerlink" title="两个子空间的直和"></a>两个子空间的直和</h3><blockquote>
+<p>设 $U$ 和 $W$ 都是 $V$ 的子空间，则<br>$U\oplus W\iff U\cap W&#x3D;{ 0 }$</p>
+</blockquote>
+<p><strong>证明</strong>：</p>
+<hr>
+<p>$\to$：假设他们的和为直和，设 $v\in U \cap W$ 则有 $v \in U$ 和 $-v\in W$ 那么<br>$$0&#x3D;v+(-v)$$<br>由于他们是直和就有<br>$$v&#x3D;0$$<br>故 $U\cap W&#x3D;{ 0 }$<br>$\leftarrow$:假设 $u\in U,w\in W,0&#x3D;u+w$ 那么现在我们就要证明， $v,w$都为0.<br>那么由上面的式子我们可以得到<br>$$u&#x3D;-w\in W$$<br>那么 $u\in U\cap W \to u&#x3D;0$<br>同理可以得到 $w&#x3D;0$<br>故他们的和为直和</p>
+<hr>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/11/12/LADR/05/">蓝以中高代学习笔记第六章第一节</a>
+            
+            
+            <a class="next" rel="next" href="/2023/11/11/LADR/03/">概率导论学习笔记Chapter4</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

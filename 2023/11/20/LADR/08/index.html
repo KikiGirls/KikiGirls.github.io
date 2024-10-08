@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>Linear ALgebra Done Right Chapter 4 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linear ALgebra Done Right Chapter 4</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 20, 2023&nbsp;&nbsp;23:17:07</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Linear-Algebra-Done-Right-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Linear Algebra Done Right 学习笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="多项式"><a href="#多项式" class="headerlink" title="多项式"></a>多项式</h1><blockquote>
+<p>复共轭的可加性和可乘性 $\overline{w+z} &#x3D; \overline{w}+\overline{z}\quad \overline{wz}&#x3D;\overline{w}\times \overline{z}$</p>
+</blockquote>
+<h2 id="多项式的带余除法"><a href="#多项式的带余除法" class="headerlink" title="多项式的带余除法"></a>多项式的带余除法</h2><blockquote>
+<p>设 $p,s \in P(F) $ 且 $s \neq 0$ 存在唯一的多项式 $q,r \in P(F)$ 使得：<br>$$<br>p&#x3D;sq+r<br>$$<br>且 $\operatorname{dag}r&lt;\operatorname{dag}s$</p>
+</blockquote>
+<p>下面用线性代数的知识证明<br>1.我们定义一个映射<br>$$<br>T:P(F)<em>{n-m}\times P(F)</em>{m-1} \to P(F)_{n}<br>$$</p>
+<p>为 </p>
+<p>$$<br>T(q,r)&#x3D;sq+r<br>$$</p>
+<p>很容易证明这个映射是线性映射。<br>若 $(q,r)\in \operatorname{null}T$ 那么也就是 $sq+r&#x3D;0$ 因为 $\operatorname{dag}sq&gt;\operatorname{dag}r$ 这代表 $(q,r)&#x3D;0$ 即 $\operatorname{null}T&#x3D;0$ 所以 $T$ 是单射<br>2. 又因为 </p>
+<p>$$<br>\operatorname{dim}P(F)<em>{n-m}+\operatorname{dim}P(F)</em>{m-1}&#x3D;\operatorname{dim}P(F)_{n}<br>$$</p>
+<p>那么我们可以得到：<br>$$<br>\operatorname{range}T&#x3D;P(F)<br>$$<br>那么 $T$ 是满射。<br>3. 由上可知这个映射是一一对应的，那么就存在且唯一。</p>
+<h2 id="多项式的零点"><a href="#多项式的零点" class="headerlink" title="多项式的零点"></a>多项式的零点</h2><blockquote>
+<p>多项式的每一个零点对应一个一次因式<br>设 $p \in P(F),\lambda \in F$ 则 $p(\lambda)&#x3D;0$ 当且仅当 $p(z)&#x3D;(z-\lambda)q(z)$</p>
+</blockquote>
+<p>$\quad$ 由带余除法我们可以知道，对于 $(z-\lambda)$ 存在唯一的多项式<br>$$<br>p(z)&#x3D;(z-\lambda)q(z)+r<br>$$<br>带入 $\lambda$ 得上式等于0，那么 $r&#x3D;0$ </p>
+<blockquote>
+<p>多项式最多有不超过n个不同的零点</p>
+</blockquote>
+<p>数学归纳法<br>当 $n&#x3D;1$ 时，有零点 $0$ 或 $1$<br>假设当 $n&#x3D;m$ 时成立<br>在 $n&#x3D;m+1$ 时<br>如果没有零点那么条件成立<br>如果有零点 $\lambda$ 就有分解<br>$$<br>p(z)&#x3D;\left( z-\lambda  \right) q \left( z \right)<br>$$<br>很明显 $\operatorname{dag} q\left( z \right) &lt; m$ 由假设它的零点个数是小于等于 $m$ 的。分解式可以告诉我们 $p\left( z \right) $ 的零点是由 $\lambda$ 和 $q\left( z \right) $ 的零点组成的。于是可以得到 $p\left( z \right) $ 的零点是小于等于它的次数的。</p>
+<hr>
+<h2 id="多项式的分解"><a href="#多项式的分解" class="headerlink" title="多项式的分解"></a>多项式的分解</h2><blockquote>
+<p>每个不是常数的多项式都有零点</p>
+</blockquote>
+<blockquote>
+<p>非常数多项式可以唯一分解为<br>$$<br>p\left( z \right) &#x3D; a\left( z-\lambda_1 \right) \left( z-\lambda_2 \right) \cdots<br>$$</p>
+</blockquote>
+<blockquote>
+<p>在实系数多项式中，零点总是成对出现的</p>
+</blockquote>
+<p>假设 $\lambda$ 是 $p\left( z \right) $ 的零点，那么有<br>$$<br>p\left( \lambda \right) &#x3D;0 \iff p\left( \overline{\lambda} \right) &#x3D; 0<br>$$</p>
+<p>于是如果我们把解限制在实数域上的话，那些负数解形成的因式就可以合并，即<br>$$<br>p\left( z \right) &#x3D; \left( z-\lambda \right) \left( z-\overline{\lambda} \right)q\left( z \right) &#x3D; \left( z^{2} -2Re\lambda z+\left| \lambda \right| ^{2}\right) q \left( z \right)<br>$$</p>
+<p>这样就可以将解限定在实数域上，得到实数域上的分解式<br>$$<br>p\left( x \right) &#x3D; \left( x^{2} + ax+b \right) \cdots \left( x-\lambda_1 \right) \cdots \left( x-\lambda_m \right) \cdots<br>$$</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/03/17/Diary/Diary_001/">电子日记001周日</a>
+            
+            
+            <a class="next" rel="next" href="/2023/11/15/LADR/07/">Linear ALgebra Done Right Chapter 3</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

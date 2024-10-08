@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>cs61b_proj0 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">cs61b_proj0</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 17, 2024&nbsp;&nbsp;21:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61b/">Cs61b</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>cs61B 的第一个项目就是实现 2048 这个小游戏。题目不难，英文不怎么好理解比较困难。</p>
+<h2 id="emptySpaceExists"><a href="#emptySpaceExists" class="headerlink" title="emptySpaceExists"></a>emptySpaceExists</h2><p>判断这个游戏里面有没有空的地方。有就返回ture</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/** Returns true if at least one space on the Board is empty.  </span></span><br><span class="line"><span class="comment"> *  Empty spaces are stored as null. **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">emptySpaceExists</span><span class="params">(Board b)</span> &#123;  </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Fill in this function.  </span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过观察代码发现调用 <code>size()</code> 来得到板子的边界条件，然后如果是空的块的话，<code>tile()</code> 会为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/** Returns the size of the board. */</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> values.length;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Tile <span class="title function_">tile</span><span class="params">(<span class="type">int</span> col, <span class="type">int</span> row)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> board.tile(col, row);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>于是我们就可以遍历每个格子然后判断</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">emptySpaceExists</span><span class="params">(Board b)</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Fill in this function.</span></span><br><span class="line">    <span class="type">int</span> i, j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b.size(); i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; b.size(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (b.tile(i, j) == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="maxTileExists"><a href="#maxTileExists" class="headerlink" title="maxTileExists"></a>maxTileExists</h2><p>判断是否有格子的值达到最高，但我们要注意空格子是没有值的，而不是值为0，所以在遍历的时候要先判断是不是空格子。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">maxTileExists</span><span class="params">(Board b)</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Fill in this function.</span></span><br><span class="line">    <span class="type">int</span> i, j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b.size(); i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; b.size(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (b.tile(i, j) != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (b.tile(i, j).value() == MAX_PIECE)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="atLeastOneMoveExists"><a href="#atLeastOneMoveExists" class="headerlink" title="atLeastOneMoveExists"></a>atLeastOneMoveExists</h2><p>判断是否能够移动<br>条件1，有空格子。条件二，相邻格子有相同的值。</p>
+<p>对条件1，直接使用上一个的函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">atLeastOneMoveExists</span><span class="params">(Board b)</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Fill in this function.</span></span><br><span class="line">    <span class="keyword">if</span> (emptySpaceExists(b)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对于条件2，我们可以让最后一列以外的所有格子检查右边的格子是否有一样的值，这样就完成了横向的检查，纵向的就让除最后一行以外的所有格子检查自己下面的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">atLeastOneMoveExists</span><span class="params">(Board b)</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Fill in this function.</span></span><br><span class="line">    <span class="keyword">if</span> (emptySpaceExists(b)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="type">int</span> i, j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; b.size() - <span class="number">1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (b.tile(i, j).value() == b.tile(i, j + <span class="number">1</span>).value()) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b.size() - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; b.size() - <span class="number">1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (b.tile(i, j).value() == b.tile(i + <span class="number">1</span>, j).value()) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Building-the-Game-Logic"><a href="#Building-the-Game-Logic" class="headerlink" title="Building the Game Logic"></a>Building the Game Logic</h2><h3 id="tilt"><a href="#tilt" class="headerlink" title="tilt"></a>tilt</h3><p>这里要做的就是当我们输入方向键的时候，所有格子要向同一个方向移动，然后有相同的要合并，但是只能合并一次，比如224，移动后只能变为44，而不是8。同时如果这些格子移动了，我们要让变量chenged变成true。</p>
+<p>实际上我们只需处向上的移动，如果我们收到向下指令，我们可以将棋盘倒转，然后再向上移动，最后再倒转回去，在这里已经为我们写好了这个函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tilt</span><span class="params">(Side side)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> changed;</span><br><span class="line">    changed = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span>(side != Side.NORTH)</span><br><span class="line">        board.setViewingPerspective(side);<span class="comment">//将棋盘转为向上</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Modify this.board (and perhaps this.score) to account</span></span><br><span class="line">    <span class="comment">// for the tilt to the Side SIDE. If the board changed, set the</span></span><br><span class="line">    <span class="comment">// changed local variable to true.</span></span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(side != Side.NORTH)</span><br><span class="line">        board.setViewingPerspective(Side.NORTH);<span class="comment">//将棋盘转为原来方向</span></span><br><span class="line">    checkGameOver();</span><br><span class="line">    <span class="keyword">if</span> (changed) &#123;</span><br><span class="line">        setChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> changed;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在我们只需考虑向上的情况了，那么实际上我们也只需要考虑同一列上的移动，不同的列是不影响的。我们对不同的列做一个遍历就可以了</p>
+<p>在向上移动的时候，最上方的格子实际上是不动的，那么我们只需要遍历最上方以后的格子，但由于最下方的格子为0，所以我们就要倒序遍历。</p>
+<p><code> for (int row = size() - 2; row &gt;= 0; row--)</code></p>
+<p>对于某一个具体的格子我们有几种情况，</p>
+<ul>
+<li>它前面有空格，可以往前走</li>
+<li>它前面有和它值不一样的格子。</li>
+<li>它前面有和它值一样的格子，可以合并。</li>
+<li>它前面有和它值一样的格子，但是那个格子已经合并过了。所以只能走到下面的空格子。</li>
+</ul>
+<p>那么我们就要首先判断它前面有几个空格子。它需要往前面走多远。当我们碰到墙壁或者其他有值的格子时候就停止计数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">Far</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (board.tile(col, row) != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">while</span> (row + Far &lt; size()  &amp;&amp; tile(col, row + Far) == <span class="literal">null</span>) &#123;</span><br><span class="line">        Far++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当我们遇到1.2情况的时候我们就可以前进，但是当是4情况的时候怎么办呢，我们就需要判定前面的合并过没，我们引入一个变量，最开始的时候为true，合并过了就变为F,只移动没合并就变为T.这样就可以通过判断这个变量来确定合并过了就不再合并了。<br><code>boolean Merge; Merge = true;</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((row + Far == size() || tile(col, row).value() != tile(col, row + Far ).value() || !Merge) &amp;&amp; Far != <span class="number">1</span>) &#123;</span><br><span class="line">    board.move(col,row + Far - <span class="number">1</span>,tile(col, row));</span><br><span class="line">    Merge = <span class="literal">true</span>;</span><br><span class="line">    changed = <span class="literal">true</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个时候剩下的就是情况2了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tile(col, row).value() == tile(col, row + Far).value() &amp;&amp; Merge) &#123;</span><br><span class="line">    Merge = <span class="literal">false</span>;</span><br><span class="line">    changed = <span class="literal">true</span>;</span><br><span class="line">    score += <span class="number">2</span> * tile(col, row).value();</span><br><span class="line">    board.move(col,row + Far,tile(col, row));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后就是源代码了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tilt</span><span class="params">(Side side)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> changed;</span><br><span class="line">    changed = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span>(side != Side.NORTH)</span><br><span class="line">        board.setViewingPerspective(side);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Modify this.board (and perhaps this.score) to account</span></span><br><span class="line">    <span class="comment">// for the tilt to the Side SIDE. If the board changed, set the</span></span><br><span class="line">    <span class="comment">// changed local variable to true.</span></span><br><span class="line">    <span class="type">boolean</span> Merge;</span><br><span class="line">    Merge = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">col</span> <span class="operator">=</span> <span class="number">0</span>; col &lt; size(); col++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">row</span> <span class="operator">=</span> size() - <span class="number">2</span>; row &gt;= <span class="number">0</span>; row--) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">Far</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (board.tile(col, row) != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">while</span> (row + Far &lt; size()  &amp;&amp; tile(col, row + Far) == <span class="literal">null</span>) &#123;</span><br><span class="line">                    Far++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> ((row + Far == size() || tile(col, row).value() != tile(col, row + Far ).value() || !Merge) &amp;&amp; Far != <span class="number">1</span>) &#123;</span><br><span class="line">                    board.move(col,row + Far - <span class="number">1</span>,tile(col, row));</span><br><span class="line">                    Merge = <span class="literal">true</span>;</span><br><span class="line">                    changed = <span class="literal">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tile(col, row).value() == tile(col, row + Far).value() &amp;&amp; Merge) &#123;</span><br><span class="line">                    Merge = <span class="literal">false</span>;</span><br><span class="line">                    changed = <span class="literal">true</span>;</span><br><span class="line">                    score += <span class="number">2</span> * tile(col, row).value();</span><br><span class="line">                    board.move(col,row + Far,tile(col, row));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(side != Side.NORTH)</span><br><span class="line">        board.setViewingPerspective(Side.NORTH);</span><br><span class="line">    checkGameOver();</span><br><span class="line">    <span class="keyword">if</span> (changed) &#123;</span><br><span class="line">        setChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> changed;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/09/23/cs61b/proj1/">cs61b_proj1</a>
+            
+            
+            <a class="next" rel="next" href="/2024/09/16/Diary/Diary_023/">电子日记023周一</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

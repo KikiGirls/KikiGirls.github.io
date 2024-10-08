@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>复变函数论001 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">复变函数论001</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 18, 2024&nbsp;&nbsp;23:18:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%A4%8D%E5%8F%98%E5%87%BD%E6%95%B0/">复变函数</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>$z&#x3D;x+iy$ 其中 $x&#x3D;\operatorname{Re}z,y&#x3D;\operatorname{Im}z$ </p>
+<ul>
+<li><p>三角不等式<br>$\left\vert z \right\vert  + \left\vert z \right\vert \le \left\vert z+z \right\vert  $<br>$\left\vert \left\vert z \right\vert -\left\vert z \right\vert   \right\vert \le \left\vert z-z \right\vert $</p>
+</li>
+<li><p>辐角<br>$ \tan \theta &#x3D; \frac{x}{y} ,\theta &#x3D; Arg z$ 其中我们规定在区间 $[-\pi,\pi]   $ 的辐角  $argz$ 为主值或者合适值， $ \theta &#x3D; Argz &#x3D; arg z + 2k\pi$</p>
+</li>
+<li><p>三角形式<br>$z &#x3D; r(\cos \theta + i \sin \theta ) $</p>
+</li>
+<li><p>欧拉公式<br>$e ^{i\theta} &#x3D; \cos \theta + i \sin \theta $</p>
+</li>
+<li><p>代数形式<br>$ z&#x3D; x + iy$</p>
+</li>
+<li><p>指数形式<br>$z &#x3D; re^{i arg \theta}$</p>
+</li>
+<li><p>De moiver 公式<br>$z ^{n} &#x3D;  r^{n} e^{i n\theta}$<br>有 $Arg z ^{n}&#x3D; n Arg z$<br>那么当 $ r&#x3D;1$ 时有公式 $(\cos \theta + i \sin \theta)^{n} &#x3D; \cos n \theta + i \sin n \theta$</p>
+</li>
+<li><p>方根<br>求方根就相当于解二项方程 $ w ^{n} &#x3D; z $ ，变形为 $ \rho ^{n} e^{i n \phi} &#x3D; r e ^{ i \theta}  $ ,从而 $ w_k &#x3D; e ^{i \frac{(2k\pi)}{n}} r^{\frac{1}{n}} e ^{i \frac{\theta}{n}}  $ 可以令 $ w_0 &#x3D;  r^{\frac{1}{n}} e ^{i \frac{\theta}{n}} $ $k &#x3D; 0\cdots n-1$那么剩下的根就可以看为它的旋转。</p>
+</li>
+</ul>
+<h2 id="复平面上的点集"><a href="#复平面上的点集" class="headerlink" title="复平面上的点集"></a>复平面上的点集</h2><ul>
+<li><p>去心邻域<br>$N_\rho (z_0) {z_0}$ </p>
+</li>
+<li><p>聚点或极限点<br>$z_0$ 的任意邻域中都集合的无穷多个点</p>
+</li>
+<li><p>孤立点<br>在集合中又不是聚点</p>
+</li>
+<li><p>外点<br>不在集合中也不是聚点</p>
+</li>
+<li><p>$ E$ 的聚点集用 $E’$ 表示</p>
+</li>
+<li><p>闭集<br>聚点全在集合内，即 $E’ \in E  $</p>
+</li>
+<li><p>内点<br>有一邻域的点全含于集合</p>
+</li>
+<li><p>开集<br>里面的点全是内点</p>
+</li>
+<li><p>边界点<br>任意邻域有属于的也有不属于集合的点，就叫边界点。孤立点必是边界点，全体叫做边界，记为 $ \partial E$ </p>
+</li>
+<li><p>有界集<br>全含于一圆内，否则叫无界集</p>
+</li>
+<li><p><strong>区域</strong> ：为开集，而且任意两点可以用折线连接。</p>
+</li>
+<li><p><strong>闭域</strong> :  区域加上边界,记为 $\bar{D}&#x3D;D + C $</p>
+</li>
+</ul>
+<hr>
+<p>&emsp; 边界是闭集， $\partial E’ \in \partial E $<br>令 x 为 $\partial E$ 的聚点，那么取任意它的邻域，由于x为聚点那么肯定存在点 $x_0$ 属于 $\partial E$ ，可以取一个充分小的邻域，使其邻域包含于原来 x 的邻域，那么由于 $x_0$ 属于 $\partial E$ 那它的邻域中有属于 E 的点也有不属于 E 的点，于是 x 的邻域中也有属于E的和不属于E的点，那么 $x \in  \partial E$,于是边界的聚点也属于边界，边界为闭集</p>
+<hr>
+<ul>
+<li><strong>有界集的直径</strong>： $d(E) &#x3D; \sup (\left\vert z-z’ \right\vert z,z’\in E   )$</li>
+<li><strong>连续曲线</strong>: 由方程 $z &#x3D; x(t) + y(t)i    $ 决定的点集，其中 x,y 在 $[\alpha,\beta]  $ 上连续，两端分别为起点和终点。</li>
+<li><strong>简单曲线</strong>：没有重点的曲线</li>
+<li><strong>简单闭曲线</strong>：端点重合</li>
+<li><strong>可求长</strong>：点列折线有上确界</li>
+<li><strong>光滑曲线</strong>：x，y导数存在连续且不为0，光滑曲线必可求长</li>
+<li><strong>单联通区域</strong>：区域内的简单闭曲线内部也属于区域</li>
+</ul>
+<h2 id="复变函数"><a href="#复变函数" class="headerlink" title="复变函数"></a>复变函数</h2><p>&emsp; 设 $z&#x3D;x+y$ $w&#x3D;u+iv$ 那么复变函数 $w&#x3D;f(z)$ 可以写为<br>$$<br>w &#x3D; u (x, y)+iv(x, y)<br>$$</p>
+<p>为指数形式的时候，可以相应写为： $w&#x3D;P(r,\theta)+ iQ(r,\theta)  $ </p>
+<h3 id="极限"><a href="#极限" class="headerlink" title="极限"></a>极限</h3><p><strong>定义</strong> &emsp;设函数 $w&#x3D;f(z)$ 在点集 $E$ 上有定义 $z_0$ 为聚点，那么 $\forall \epsilon &gt; 0 ,\exists \delta&gt;0 $ 只要 $\left\vert z - z_0   \right\vert &lt; \delta$ 那么就有 $\left\vert f(z)-w_0 \right\vert &lt;\epsilon$ 就称 $f(z)$沿E于 $z_0$ 有极限 $w_0$ 记为 $\lim_{z \to z_0}f(z)&#x3D;w_0 $  特别的要从任何地方接近，一元函数只从左右接近。</p>
+<p><strong>定义</strong> 连续的充要条件是两个实二元函数uv也连续</p>
+<hr>
+<p><strong>例</strong>：设 $\lim_{z \to z_0} f(z)&#x3D; \mu$ 证明他在z的某一去心领域有界</p>
+<p>&emsp;   因为 $\lim_{z \to z_0}f(z)&#x3D;\mu $ 所以 $\forall \epsilon &gt; 0  ,\exists  \delta&gt;0 \left\vert z-z_0  \right\vert &lt;\delta$ 有 $\left\vert f(z)-\mu \right\vert &lt;\epsilon$ 由于三角不等式那么就有 $\left\vert f(z) \right\vert  &#x3D; \left\vert f(z) - \mu +\mu   \right\vert  \le \epsilon + \mu$ 于是有界</p>
+<hr>
+<p><strong>例</strong> f在z0连续且不为0，证在某一邻域内恒不为零<br>&emsp; 取 $\epsilon &#x3D; \frac{f(z)}{2}$ 那么有 $\delta &gt;0 $ 当 $\left\vert z-z_0 \right\vert &lt; \delta$ 就有 $\left\vert f(z)-f(z_0) \right\vert &lt; \epsilon$ 在这个邻域内，有 $\left\vert  f(z) \right\vert  &gt; \left\vert f(z_0)  \right\vert - \epsilon &gt; 0 $</p>
+<hr>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/04/18/Diary/Diary_016/">电子日记016周四</a>
+            
+            
+            <a class="next" rel="next" href="/2024/04/17/Diary/Diary_015/">电子日记015周三</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

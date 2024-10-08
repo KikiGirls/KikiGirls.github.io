@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>cs61b | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">cs61b</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 16, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61b/">Cs61b</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>cs61a不能进了，所以开始学61b。</p>
+<p>这是一个关于数据结构的课，用java。</p>
+<p>用<a target="_blank" rel="noopener" href="https://www.gradescope.com作为自动评分机,版本21sp,对于环境配置部分,cs61b使用gradescope作为自动评分机.激活码mb7zpy,学校记得选uc/">https://www.gradescope.com作为自动评分机，版本21sp，对于环境配置部分，CS61B使用GradeScope作为自动评分机。激活码MB7ZPY，学校记得选UC</a> Berkeley</p>
+<h1 id="hw0-java速成"><a href="#hw0-java速成" class="headerlink" title="hw0 java速成"></a>hw0 java速成</h1><p>java变量只能是整数</p>
+<p>Java 中的每个语句后面都必须有一个分号。分号非常重要，因为它告诉 Java 一个语句在哪里结束，另一个语句在哪里开始。</p>
+<p>条件判断的形式 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (boolValue) &#123;</span><br><span class="line">    statements;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>例如 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">pass</span> <span class="operator">=</span> score =&gt; <span class="number">75</span>;</span><br><span class="line"><span class="keyword">if</span> (pass) &#123;</span><br><span class="line">    output(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>double 存储实数的近似值，并String存储字符串。</p>
+<p>java中的数组形式 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">int</span>[] numbers = <span class="keyword">new</span> <span class="title class_">int</span> [<span class="number">3</span>]</span><br><span class="line">numbers[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">numbers[<span class="number">1</span>] = <span class="number">2</span></span><br><span class="line">System.out.println(numbers[<span class="number">1</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>或者其他形式 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">int</span>[] numbers = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>for 循环的格式 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, j = <span class="number">0</span>; i &gt; j; i += <span class="number">1</span>)&#123;</span><br><span class="line">    System.out.println(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>break或continue关键字很有用。该continue语句跳过循环当前迭代的其余部分，有效地直接跳转到增量条件。</p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><p>安装java<br>安装idea</p>
+<h1 id="proj0"><a href="#proj0" class="headerlink" title="proj0"></a>proj0</h1><p>该项目的目的是让您有机会熟悉 Java 和课程中使用的各种工具.</p>
+<p>风格指南<a target="_blank" rel="noopener" href="https://sp21.datastructur.es/materials/guides/style-guide.html">https://sp21.datastructur.es/materials/guides/style-guide.html</a></p>
+<h1 id="java-简介"><a href="#java-简介" class="headerlink" title="java 简介"></a>java 简介</h1><h2 id="1-1要点"><a href="#1-1要点" class="headerlink" title="1.1要点"></a>1.1要点</h2><p>我们的变量 x 必须在使用之前声明，并且必须赋予其类型！<br>我们的循环定义包含在花括号内，而测试的布尔表达式包含在括号内。<br>我们的打印语句只是System.out.print而不是System.out.println。这意味着我们不应该包含换行符（返回）。</p>
+<p>Java 最重要的特性之一是所有变量和表达式都有一个所谓的static type。Java 变量可以包含该类型的值，并且只能包含该类型的值。此外，变量的类型永远不会改变。</p>
+<p><strong>总结,java是静态语言，变量的类型不能改变。</strong></p>
+<p>由于所有 Java 代码都是类的一部分，因此我们必须定义函数，使它们属于某个类。属于类的函数通常称为“方法”。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 由于所有 Java 代码都是类的一部分，因此我们必须定义函数，使它们属于某个类。属于类的函数通常称为“方法”。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LargerDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">larger</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x &gt; y) &#123;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(larger(<span class="number">8</span>, <span class="number">10</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在本课程中，我们将努力保持代码的可读性。良好编码风格的一些最重要特征包括：</p>
+<p>一致的风格（间距、变量命名、括号样式等）<br>大小（行不太宽，源文件不太长）<br>描述性命名（变量、函数、类），例如变量或函数的名称为year或getUserName而不是x或f。<br>避免重复代码：除了少数变化外，几乎不应该有两个几乎相同的重要代码块。<br>在适当的位置添加注释。Java 中的行注释使用&#x2F;&#x2F;分隔符。块注释（又称多行注释）使用 &#x2F;<em>和</em>&#x2F;。</p>
+<h2 id="1-2定义和使用类"><a href="#1-2定义和使用类" class="headerlink" title="1.2定义和使用类"></a>1.2定义和使用类</h2><p>hello world </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello world!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个可以看出java文件的格式</p>
+<p>Java 程序文件均由一个个类构成，体现其面向对象编程的特点<br>类名与文件名相同<br>main 函数为类的主函数，其中String args[]表示 main 函数的参数(记住就行)<br>System.out.println()是 Java 的输出函数，类比 C++中的cout和printf</p>
+<p>函数</p>
+<p>java所有对象都属于类，所以我们在定义函数的时候必须在某个类下面定义函数。这被称为方法<br>public代表这个函数的公共方法 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DogLauncher</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Dog</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">20</span>);</span><br><span class="line">        d.makeNoise();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在这里，实例化是参数化的</p>
+<p>new 是用来创建实例化的对象</p>
+<p>例如数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DogArrayDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">/* Create an array of two dogs. */</span></span><br><span class="line">        Dog[] dogs = <span class="keyword">new</span> <span class="title class_">Dog</span>[<span class="number">2</span>];</span><br><span class="line">        dogs[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">8</span>);</span><br><span class="line">        dogs[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Yipping will result, since dogs[0] has weight 8. */</span></span><br><span class="line">        dogs[<span class="number">0</span>].makeNoise();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Java 允许我们定义两种类型的方法：<br>类方法，又称静态方法。实例方法，又称非静态方法。实例方法是只能由类的特定实例执行的操作。静态方法是类本身执行的操作</p>
+<p>同理，使用static关键字定义的变量即为静态变量，可由类名直接调用</p>
+<p>类Math提供了一种sqrt方法。因为它是静态的，所以我们可以按如下方式调用它：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">x = Math.sqrt(<span class="number">100</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如果sqrt是实例方法，我们就会使用下面尴尬的语法。幸运的sqrt是，这是一个静态方法，所以我们不必在实际程序中这样做。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Math</span> <span class="variable">m</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Math</span>();</span><br><span class="line">x = m.sqrt(<span class="number">100</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>有时，让一个类同时具有实例方法和静态方法会很有意义。例如，假设想要比较两只狗。一种方法是添加一个用于比较狗的静态方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Dog <span class="title function_">maxDog</span><span class="params">(Dog d1, Dog d2)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (d1.weightInPounds &gt; d2.weightInPounds) &#123;</span><br><span class="line">        <span class="keyword">return</span> d1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> d2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>例如，可以通过以下方式调用此方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Dog</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">15</span>);</span><br><span class="line"><span class="type">Dog</span> <span class="variable">d2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">100</span>);</span><br><span class="line">Dog.maxDog(d, d2);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>请注意，我们使用类名进行调用，因为此方法是静态方法。</p>
+<p>我们也可以将其实现maxDog为非静态方法，例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Dog <span class="title function_">maxDog</span><span class="params">(Dog d2)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.weightInPounds &gt; d2.weightInPounds) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> d2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面我们使用关键字this来引用当前对象。例如，可以使用以下命令调用此方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Dog</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">15</span>);</span><br><span class="line"><span class="type">Dog</span> <span class="variable">d2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="number">100</span>);</span><br><span class="line">d.maxDog(d2);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>public：到目前为止，我们所有的方法都以此关键字开头。<br>static：它是一种静态方法，不与任何特定实例相关联。<br>void：它没有返回类型。<br>main：这是方法的名称。<br>String[] args：这是传递给main方法的参数。</p>
+<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><h2 id="2-1"><a href="#2-1" class="headerlink" title="2,1"></a>2,1</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Walrus</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Walrus</span>(<span class="number">1000</span>, <span class="number">8.3</span>);</span><br><span class="line">Walrus b;</span><br><span class="line">b = a;</span><br><span class="line">b.weight = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> y;</span><br><span class="line">y = x;</span><br><span class="line">x = <span class="number">2</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这两个不一样，第一个是把ab都绑定在同一个对象了，后面一不同的数字是不同的对象。所以换对象了</p>
+<p>位</p>
+<p>一个有趣的观察是，72 和 H 都存储为 01001000。这就引发了一个问题：一段 Java 代码如何知道如何解释 01001000？</p>
+<p>答案是通过类型！例如，考虑下面的代码：</p>
+<p>char c &#x3D; ‘H’;<br>int x &#x3D; c;</p>
+<p>如果我们运行此代码，我们会得到：</p>
+<p>H<br>72<br>在这种情况下，x 和 c 变量都包含相同的位（嗯，几乎……），但是 Java 解释器在打印时对它们的处理方式不同。</p>
+<p>Java 中有 8 种基本类型：byte、short、int、long、float、double、boolean 和 char。每种类型都有不同的属性，我们将在整个课程中讨论这些属性，但 short 和 float 除外，因为您可能永远不会使用这两个属性。</p>
+<p>int x; 创建了一个盒子<br>x &#x3D; 2; 将2的位填进这个盒子里面</p>
+<p>引用类型<br>上面我们说了有 8 种基本类型：byte、short、int、long、float、double、boolean、char。其他所有类型（包括数组）都不是基本类型，而是reference type。</p>
+<p>java创建对象只会绑定64位的地址，然后地址再储存信息</p>
+<h2 id="2-2"><a href="#2-2" class="headerlink" title="2.2"></a>2.2</h2><p>这里的 SLList 即为新的列表数据结构，同样的，可以添加得到一系列实用的方法，如addfirst,addlast,getfirst,getlast,但是这时得到的数据结构仍然有不方便以及危险的地方：</p>
+<p>first 结点依然裸奔!<br>空列表无法舒适地 addlast<br>为此，我们继续优化，首先将结点类型改为 private，其次设置哨兵结点(sentinel)，即添加一个始终位于最前端的结点，</p>
+<p>方法嵌套：在 Java 中，一个方法不能在另一个方法内部定义。你在 tilt 方法中嵌套定义了 Rowtilt 方法，这在 Java 中是不允许的。你需要将 Rowtilt 方法移到 tilt 方法外部，作为类的另一个独立方法。</p>
+<p>在 Java 中，不能直接像某些动态类型语言（如 Python 或 JavaScript）那样在运行时给对象添加新的属性。Java 是一种静态类型语言，所有属性（成员变量）必须在类的定义中声明，不能在方法中动态添加新属性。</p>
+<p>在 Java 中，方法之间无法直接访问彼此的局部变量，因为局部变量的作用域是局限于方法内部的。局部变量只能在声明它们的方法内使用，方法外部是无法直接访问或修改的。</p>
+<p>在 Java 中，if 语句可以结合 逻辑运算符 来进行条件判断。常见的逻辑运算符包括：</p>
+<pre><code>1.	或运算符（||）：表示 “或者”。如果任一条件为 true，整个表达式就为 true。
+2.	与运算符（&amp;&amp;）：表示 “并且”。只有当所有条件都为 true 时，整个表达式才为 true。
+3.	非运算符（!）：表示 “取反”。将 true 变为 false，将 false 变为 true。
+</code></pre>
+<h2 id="2-3"><a href="#2-3" class="headerlink" title="2.3"></a>2.3</h2><p>在 SLList 中，我们优化了裸数据结构带来的不便，同时添加了哨兵结点来维持不变性，但是，这样的 Lists 仍然具有一些可以优化的地方：</p>
+<p>addLast时，总会遍历整个链表，如果我的列表长达一百万项，这将浪费时间<br>单向遍历，不利于快速访问元素&#x2F;删除元素，尤其是靠后的元素，每次访问都需要经历不必要的遍历<br>由此，我们引出双向链表——Double Linked List，即DLList</p>
+<p>DLList</p>
+<p>添加前向指针(这个说法不严谨但是我先这么写)，使得列表变成可以双向访问的类型：</p>
+<p>public class IntNode {<br>    public IntNode prev;<br>    public int item;<br>    public IntNode next;<br>}<br>JAVA<br>同时为末端结点同样设置一个哨兵结点，由此得到的数据结构会类似下面的拓扑图：<br>也可以首尾共用一个哨兵结点，实现环形结构：</p>
+<p>最后，加入“模板”(在 C++里是模板)，使得我们的列表“通用化”——</p>
+<p>一个可以容纳任何类型的通用 DLList 看起来如下：</p>
+<p>public class DLList<BleepBlorp> {<br>    private IntNode sentinel;<br>    private int size;</p>
+<pre><code>public class IntNode &#123;
+    public IntNode prev;
+    public BleepBlorp item;
+    public IntNode next;
+    ...
+&#125;
+...
+</code></pre>
+<p>}<br>JAVA<br>现在我们已经定义了一个 DLList 类的通用版本，我们还必须使用特殊的语法来实例化这个类。为此，在声明时，我们将所需的类型放在尖括号内，并在实例化时使用空的尖括号。例如：</p>
+<p>1<br>2<br>DLList<String> d2 &#x3D; new DLList&lt;&gt;(“hello”);<br>d2.addLast(“world”);<br>JAVA<br>由于泛型仅适用于引用类型，我们无法将原始类型如 int 或 double 放入尖括号中，例如 <int> 。相反，我们使用原始类型的引用版本，在 int 情况下是 Integer ，例如。</p>
+<p>1<br>2<br>DLList<Integer> d1 &#x3D; new DLList&lt;&gt;(5);<br>d1.insertFront(10);<br>JAVA<br>有关使用通用类型的更多细微差别，我们将把它们推迟到本书的后面章节。现在，请使用以下经验法则：</p>
+<p>在实现数据结构的.java 文件中，在类名之后的文件顶部只需指定一次泛型类型名称。<br>在其他 .java 文件中，使用您的数据结构时，在声明时指定特定的期望类型，并在实例化时使用空的尖括号运算符。<br>如果您需要实例化一个泛型到原始类型，请使用它们的原始等效项 Integer ， Double ， Character ， Boolean ， Long ， Short ， Byte 或 Float 。<br>细节：在实例化时，您也可以在尖括号内声明类型，尽管这并非必需，只要您也在同一行上声明变量。换句话说，下面的代码行是完全有效的，即使右侧的 Integer 是多余的。</p>
+<p>1<br>DLList<Integer> d1 &#x3D; new DLList<Integer>(5);</p>
+<h2 id="2-4"><a href="#2-4" class="headerlink" title="2.4"></a>2.4</h2><p>数组创建有三种有效符号。</p>
+<p>x &#x3D; new int[3];<br>y &#x3D; new int[]{1, 2, 3, 4, 5};<br>int[] z &#x3D; {9, 10, 11, 12, 13};</p>
+<p>以下代码展示了我们将用于处理数组的所有关键语法。尝试<br>int[] z &#x3D; null;<br>int[] x, y;</p>
+<p>x &#x3D; new int[]{1, 2, 3, 4, 5};<br>y &#x3D; x;<br>x &#x3D; new int[]{-1, 2, 5, 4, 99};<br>y &#x3D; new int[3];<br>z &#x3D; new int[0];<br>int xL &#x3D; x.length;</p>
+<p>String[] s &#x3D; new String[6];<br>s[4] &#x3D; “ketchup”;<br>s[x[3] - x[1]] &#x3D; “muffins”;</p>
+<p>int[] b &#x3D; {9, 10, 11};<br>System.arraycopy(b, 0, x, 3, 2);<br>最后一行演示了将信息从一个数组复制到另一个数组的一种方法。System.arraycopy需要五个参数：</p>
+<p>用作源的数组<br>从源数组中哪里开始<br>用作目标的数组<br>目标数组的起始位置<br>要复制多少个项目</p>
+<p>在 Java 中，所谓的 2D 数组实际上只是一个数组的数组。它们遵循我们已经学过的对象规则，但让我们回顾一下这些规则，以确保我们理解它们的工作原理。</p>
+<p>数组的数组的语法可能有点令人困惑。考虑代码int[][] bamboozle &#x3D; new int[4][]。这将创建一个名为的整数数组bamboozle。具体来说，这将创建四个内存框，每个内存框都可以指向一个整数数组（长度未指定）。</p>
+<p>数组和类都可用于组织一堆记忆盒。在这两种情况下，记忆盒的数量都是固定的，即数组的长度不能改变，就像类字段不能添加或删除一样。</p>
+<p>数组和类中的记忆盒之间的主要区别：</p>
+<p>数组框使用符号进行编号和访问[]，类框使用点符号进行命名和访问。<br>数组框必须全部为同一类型。类框可以为不同类型。<br>这些差异的一个特别显著的影响是，[]符号允许我们在运行时指定我们想要的索引。例如，考虑下面的代码：</p>
+<p>int indexOfInterest &#x3D; askUserForInteger();<br>int[] x &#x3D; {100, 101, 102, 103};<br>int k &#x3D; x[indexOfInterest];<br>System.out.println(k);<br>如果我们运行此代码，我们可能会得到类似这样的结果：</p>
+<p>$ javac arrayDemo<br>$ java arrayDemo<br>What index do you want? 2<br>102</p>
+<p>与其他语言中的数组相比，Java 数组：</p>
+<p>没有用于“切片”的特殊语法（例如在 Python 中）。<br>无法缩小或扩大（例如在 Ruby 中）。<br>没有成员方法（例如在 Javascript 中）。<br>必须仅包含相同类型的值（与 Python 不同）。</p>
+<h2 id="2-5-Alist"><a href="#2-5-Alist" class="headerlink" title="2.5 Alist"></a>2.5 Alist</h2>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/09/16/cs61b/Style%20Guide/">Style Guide</a>
+            
+            
+            <a class="next" rel="next" href="/2024/05/27/Diary/Diary_022/">电子日记022周日</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

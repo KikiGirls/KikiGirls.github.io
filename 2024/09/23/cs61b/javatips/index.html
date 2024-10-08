@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>语法之类的 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">语法之类的</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 23, 2024&nbsp;&nbsp;18:19:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61b/">Cs61b</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <ul>
+<li><p>Java 自带的 Cloneable 接口可以用于对象的浅拷贝。若要实现深拷贝，需在 clone() 方法中手动拷贝对象的内部可变引用类型字段。</p>
+</li>
+<li><p>驼峰命名（Camel Case）是一种常见的命名规范，通常用于编程中定义变量、函数或类名。其特点是：<br>  •	第一个单词以小写字母开头。<br>  •	后续的每个单词首字母大写。<br>  •	不使用空格或下划线来分隔单词。</p>
+</li>
+<li><p>这个错误是因为在类的某个作用域中，局部变量或方法参数的名称与类中的字段名称相同，从而隐藏了类字段。为了避免这个问题，你需要使用不同的名字来区分局部变量或方法参数与类字段，或者可以使用 this 关键字来明确指定你访问的是类的字段。</p>
+</li>
+</ul>
+<p>解决方案：<br>1.	使用不同的名称：你可以将方法参数或局部变量的名称改为不与类字段冲突的名字。<br>2.	使用 this 关键字：如果你想继续使用相同的名字，可以在类字段前加上 this 来明确表示你指的是类的字段，而不是方法参数或局部变量</p>
+<ul>
+<li><p>在你的 equals 方法中有一个问题，变量 other 在两个 if 语句块中定义了两次，因此在块之外是不可见的。你需要确保 other 是在 if-else 结构之外定义的，这样在后续代码中能够访问到。另外，需要将 other 定义为 Deque&lt;?&gt; 类型，因为你想要比较两个实现 Deque 接口的类。</p>
+</li>
+<li><p>如果 if-else 语句很简单，你可以使用三元运算符来简化代码：<br>int a &#x3D; 5;<br>String result &#x3D; (a &gt; 3) ? “a 大于 3” : “a 小于或等于 3”;<br>System.out.println(result);</p>
+</li>
+<li><ol start="5">
+<li>静态方法<br>静态方法属于类本身，而不是类的某个实例，可以通过类名直接调用。<br>public static int square(int x) {<br>  return x * x;<br>}<br>int result &#x3D; MyClass.square(5);  &#x2F;&#x2F; result 的值为 25</li>
+</ol>
+</li>
+<li><p>break 语句可以用于提前终止循环，即使循环条件仍然为 true。</p>
+</li>
+<li><ol start="4">
+<li>while 循环结合 continue</li>
+</ol>
+</li>
+</ul>
+<p>continue 语句用于跳过当前循环的剩余部分，并继续下一次迭代。</p>
+<ul>
+<li><ol start="5">
+<li>do-while 循环</li>
+</ol>
+</li>
+</ul>
+<p>do-while 是另一种循环，它至少会执行一次，即使条件为 false。它的语法如下：</p>
+<p>do {<br>    &#x2F;&#x2F; 循环体<br>} while (条件);</p>
+<p>即使条件一开始为 false，但 do-while 循环确保了循环体至少会执行一次。输出结果：<br>int i &#x3D; 10;<br>do {<br>    System.out.println(“i is: “ + i);<br>    i++;<br>} while (i &lt; 5);</p>
+<ul>
+<li><p>在 Java 中，不能动态地在方法内给对象添加新属性。你可以通过以下方式实现类似的效果：</p>
+<p>  •	在类中定义属性并使用方法修改它们。<br>  •	使用 Map 结构存储动态属性。<br>  •	使用继承扩展类以增加新的属性。<br>  •	使用组合模式在其他类中添加额外属性。</p>
+</li>
+<li><p>在 Java 中，局部变量无法在方法之间直接传递和修改。但可以通过以下几种方法来实现相同的效果：</p>
+<p>  •	使用类的成员变量：让方法共享同一个实例变量，直接修改。<br>  •	通过参数传递对象的引用：通过传递引用类型对象的参数，在方法中修改对象的属性。<br>  •	使用返回值：通过方法返回修改后的值，并用这个值更新原变量。<br>  •	使用数组或集合：数组和集合是引用类型，传递后可以修改它们的内容。</p>
+</li>
+<li><pre><code>•	||：表示 “或”，只要其中一个条件为 true，整个条件为 true。
+</code></pre>
+<p>  •	&amp;&amp;：表示 “与”，所有条件为 true，整个条件才为 true。<br>  •	!：表示 “非”，将条件的真假值取反。</p>
+</li>
+<li><p>for (int item : deque) {<br>  System.out.println(item);  &#x2F;&#x2F; 输出: 1 2 3<br>}<br>通过实现 Iterable<T> 接口并提供 iterator() 方法，你的 LinkedListDeque 对象就可以支持增强的 for-each 循环，或其他基于 Iterator 的操作。<br>Iterator 是 Java 中的一个接口，用于遍历集合中的元素（如 List、Set、Deque 等）。它提供了一种标准化的方式来访问集合中的元素，而无需了解底层数据结构的实现细节。</p>
+<p>  •	遍历集合：使用 Iterator，你可以顺序访问集合中的每一个元素，而不需要关心集合是链表、数组还是其他类型的结构。<br>  •	提高代码可读性：通过迭代器，代码可以更加简洁和可维护。<br>  •	安全删除元素：Iterator 允许在遍历过程中安全地删除集合中的元素（使用 remove() 方法）。</p>
+</li>
+<li><pre><code>•	System.out.println()：自动换行，适合简单的输出。
+</code></pre>
+<p>  •	System.out.print()：不换行，适合拼接连续输出。<br>  •	System.out.printf()：用于格式化输出，可以控制输出的格式、精度和对齐。</p>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/09/23/cs61b/proj1/">cs61b_proj1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

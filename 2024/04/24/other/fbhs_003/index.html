@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>复变函数论003 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">复变函数论003</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 24, 2024&nbsp;&nbsp;0:50:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%A4%8D%E5%8F%98%E5%87%BD%E6%95%B0/">复变函数</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="复变函数的积分"><a href="#复变函数的积分" class="headerlink" title="复变函数的积分"></a>复变函数的积分</h1><h2 id="复积分的概念和简单性质"><a href="#复积分的概念和简单性质" class="headerlink" title="复积分的概念和简单性质"></a>复积分的概念和简单性质</h2><p><strong>周线</strong>：逐段光滑的简单闭曲线，逆时针为正</p>
+<p>&emsp; <strong>定义</strong>设 $z&#x3D;z(t)$ 而 $f(z)$ 沿着曲线有定义，那我们可以取分店 $z_n$ 然后在每段当中取 $\mu_k$ 做成和数 </p>
+<p>$$<br>S_n&#x3D;\sum f (\mu_k)\Delta z_k<br>$$</p>
+<p>如果这个和有极限并等于 $J$  那么我们就可以认为 </p>
+<p>$$<br>J&#x3D; \int_C f(z) \mathrm{d}z<br>$$</p>
+<p>C叫做积分路径 $C$ 表示正方向积分， $C-$ 表示负方向积分，积分的值和路径有关</p>
+<p>若连续，那么可积</p>
+<hr>
+<p>&emsp;我们设 $z_k&#x3D; x_k + i y_k, f(\mu_k) &#x3D; u(a,b)+iv(a,b)$,那么 </p>
+<p>$$<br>S_n&#x3D;\sum f(\mu_k)\Delta z &#x3D; \sum(u_k+ i v_k)(\Delta x_k+i\Delta y_k) &#x3D; \sum u_k\Delta x -v_k\Delta y_k+i\sum v_k \Delta x_k+ u_k \Delta y_k<br>$$</p>
+<p>又因为函数连续，故这两个都可积，所以元积分也存在 </p>
+<p>$$<br>\int f(z) \mathrm{d}z&#x3D; \int u \mathrm{d}x-v\mathrm{d}y + i \int v\mathrm{d}x + u \mathrm{d} y<br>$$</p>
+<p>这就说明复变函数的积分可以化为实部和虚部的积分来计算，也可以这样来理解 </p>
+<p>$$<br>\int f (z)\mathrm{d}z&#x3D; \int u+iv(\mathrm{d}x+i \mathrm{d}y)<br>$$</p>
+<hr>
+<p>&emsp; 令C表示a到b的任意曲线<br><strong>i</strong>： $f(z)&#x3D;1,\to \sum f(\mu_k) \Delta z_k &#x3D; \sum \Delta z_k &#x3D; b-a \to  \int_C\mathrm{d}z&#x3D;b-a$</p>
+<p><strong>ii</strong>：  $\int z \mathrm{d}z &#x3D; \frac{1}{2}(a^{2}-b^{2})$</p>
+<hr>
+<h3 id="积分计算问题"><a href="#积分计算问题" class="headerlink" title="积分计算问题"></a>积分计算问题</h3><p>&emsp;设路径 $C:z&#x3D; z(t)&#x3D;x(t) + i y(t),$ 假设 $f(z)$ 沿着这个路径连续，令 $f[z(t)]&#x3D; u(t)+ iv(t)$,由上一节的我们可以得到 </p>
+<p>$$<br>\int _C f(z)\mathrm{d}z&#x3D; \int^\beta_\alpha f[z(t)]z’(t)\mathrm{d}t<br>$$</p>
+<p>这个方法叫参数方程法</p>
+<hr>
+<p>$$<br>\int _C \frac{\mathrm{d}z}{(z-a)^{n}} &#x3D; 2 \pi i ,n&#x3D;1 \&#x3D;0 ,(n\neq 1,n \in \mathbb{Z})<br>$$<br>这里c表示以a为圆心，$\rho$ 为半径的圆周<br>&emsp; 设c参数方程为： $z-a&#x3D; \rho e^{ i\theta}$,那么 </p>
+<p>$$<br>\int _C \frac{\mathrm{d}z}{(z-a)^{n}} &#x3D; \int _C \frac{i \rho  e ^{i \theta}\mathrm{d}\theta}{\rho ^{n} e^{in \theta}} &#x3D; \int ^{2\pi}_0 \frac{i}{\rho ^{n-1} e ^{-i\theta(n-1)}} \mathrm{d}\theta &#x3D; \frac{i}{\rho ^{n-1}} \int ^{2\pi}_0 \cos (\theta(n-1))\mathrm{d}\theta + i \sin (\theta(n-1))\mathrm{d}\theta &#x3D; 0<br>$$</p>
+<p>当 n &#x3D;1 的时候 </p>
+<p>$$<br>\int_C \frac{\mathrm{d}z}{z-a} &#x3D; \int_C \frac{i\rho e^{i\theta}\mathrm{d}\theta}{\rho e ^{ i \theta}} &#x3D; i \int^{2\pi}_0 \mathrm{d}\theta &#x3D;2 \pi i<br>$$</p>
+<hr>
+<h3 id="基本性质"><a href="#基本性质" class="headerlink" title="基本性质"></a>基本性质</h3><p><strong>积分估值</strong>：若f连续且 $\left\vert f(z) \right\vert \le M$ L为C的长，那么有 </p>
+<p>$$<br>\left\vert \int_C f(z)\mathrm{d}z \right\vert \le ML<br>$$</p>
+<h2 id="柯西积分定理"><a href="#柯西积分定理" class="headerlink" title="柯西积分定理"></a>柯西积分定理</h2><p><strong>定理</strong>：设函数在平面上的单联通区域解析，对于任意一条周线，积分都为0<br><strong>推论</strong>：在单联通区域解析，积分和路径无关。</p>
+<h2 id="不定积分"><a href="#不定积分" class="headerlink" title="不定积分"></a>不定积分</h2><p>$$<br>F(z)&#x3D; \int^{z}_{z_0}f(\mu)\mathrm{d}\mu<br>$$</p>
+<p><strong>定理</strong>：设f在单连通区域解析，那么F也解析，且 $F’(z)&#x3D;f(z)$</p>
+<h2 id="柯西积分的推广"><a href="#柯西积分的推广" class="headerlink" title="柯西积分的推广"></a>柯西积分的推广</h2><p><strong>定理</strong>：设 c 是一条周线，D为c的内部，函数在d &#x3D; d+c上解析，那么周线积分为0<br><strong>定理</strong>：设c为一条周线，d为内部，在d上解析，连续到c，那么积分为0<br><strong>定理</strong>：在复周线内解析，连续到周线，那么积分为0 </p>
+<h2 id="柯西积分公式"><a href="#柯西积分公式" class="headerlink" title="柯西积分公式"></a>柯西积分公式</h2><p><strong>定理</strong>：设 $D$ 的边界是周线或者复周线，函数在其内解析，连续到周线。那么有 </p>
+<p>$$<br>f(z)&#x3D;\frac{1}{2 \pi i} \int _C \frac{f(\mu)}{\mu - z} \mathrm{d} \mu<br>$$</p>
+<hr>
+<p><strong>证明</strong><br>&emsp; 固定z，做一个圆包含于区域，那么有 $\int _C \frac{f(\mu)}{\mu-z}\mathrm{d}\mu &#x3D; \int _\rho \frac{f(\mu)}{\mu-z}\mathrm{d}\mu $ 这里用复杂积分替换圆，那么我们有 $2 \pi i &#x3D; \int _\rho \frac{1}{\mu-z}\mathrm{d}\mu $</p>
+<p>$$<br>\left\vert \int _\rho \frac{f(\mu)}{\mu-z}\mathrm{d}\mu - 2 \pi i f(z) \right\vert &#x3D;\left\vert\int _\rho \frac{f(\mu)}{\mu-z}\mathrm{d}\mu- \int _\rho \frac{f(z)}{\mu-z}\mathrm{d}\mu \right\vert &#x3D;\left\vert \int_\rho \frac{f(\mu )  -f(z)}{\mu -z}  \mathrm{d} \mu \right\vert<br>$$</p>
+<p>又有 $\exists \delta&gt;0  $ 使 $\left\vert z-\mu \right\vert &lt;\delta  $ 有 $\left\vert f(\mu)-f(z) \right\vert &lt;\frac{\epsilon}{2\pi}$,那么上面的就不超过 $\frac{\epsilon}{2 \pi \rho}*2\pi \rho &#x3D; \epsilon$,于是极限就等于</p>
+<hr>
+<p>我们可以改写为 $\int _c \frac{f(\mu)}{\mu -z}\mathrm{d}\mu &#x3D; 2\pi i f(z)$ 来计算某些周线积分。</p>
+<hr>
+<p>平均值定理，解析函数在圆心的值等于他在圆周上值的算数平均</p>
+<p>$$<br>f(z_0) &#x3D;  \frac{2}{2 \pi} \int^{(2\pi)}_0 f(z_0+Re^{i\mu})\mathrm{d}\mu<br>$$</p>
+<p><strong>证明</strong><br>设 $ C $  表示圆周 $\left\vert \mu-z_0  \right\vert &#x3D; R;\mu &#x3D; z_0+ R e^{i\theta} \to \mathrm{d} \mu &#x3D;i R e^{i \theta} \mathrm{d}\theta $ 由柯西积分公式得到 </p>
+<p>$$<br>f(z_0)  &#x3D; \frac{1}{2 \pi i } \int _C \frac{f\mu}{\mu-z_0} \mathrm{d}\mu&#x3D; \frac{1}{2 \pi i} \int _C \frac{f(z_0+ R e ^{i \theta })}{Re ^{ i \theta}}i R e^{i \theta} \mathrm{d}\theta &#x3D; f(z_0) &#x3D;  \frac{1}{ \pi} \int^{(2\pi)}_0 f(z_0+Re^{i\mu})\mathrm{d}\mu<br>$$</p>
+<hr>
+<p>设函数在闭园上解析，如果有 a&gt;0 在圆周上的点 $\left\vert f(z) &gt; a \right\vert ,\left\vert f(0) \right\vert &gt; a$  那么圆内至少有一个零点，</p>
+<p><strong>反证法</strong>：假设院内没有零点，由题目圆上也没有零点，那么 $F(z) &#x3D; \frac{1}{f(z)}$ 解析。由平均值定理。 $F(0) &#x3D; \frac{1}{2 \pi } \int F(R e ^{i\theta}) \mathrm{d}\theta   $ 就有 $\frac{1}{a} &lt; F(0) &lt;2\pi \frac{1}{2\pi} \frac{1}{a}$  矛盾</p>
+<hr>
+<p><strong>解析函数的无穷可微性</strong>$f^{(n)}(z)&#x3D;\frac{n!}{2 \pi i} \int \frac{f(\mu)}{(\mu-z)^{n+1}}\mathrm{d}\mu$可以将公式改写为  </p>
+<p>$$<br>\int \frac{f(\mu)}{(\mu-z)^{n+1}}\mathrm{d}\mu&#x3D; f^{(n)}(z) \frac{2\pi i}{n!}<br>$$</p>
+<p>这可以算一些周线积分，这个只能用在唯一奇点，多了不行。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/04/24/Diary/Diary_018/">电子日记018周二</a>
+            
+            
+            <a class="next" rel="next" href="/2024/04/22/Diary/Diary_017/">电子日记017周一</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
