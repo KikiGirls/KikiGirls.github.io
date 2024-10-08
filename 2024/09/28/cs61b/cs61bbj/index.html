@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>cs61b | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">cs61b</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 28, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Cs61b/">Cs61b</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="8-高效编程"><a href="#8-高效编程" class="headerlink" title="8.高效编程"></a>8.高效编程</h1><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Big O（大 O）</td>
+<td>描述算法在输入规模增大时，最坏情况下的运行时间或空间复杂度的上限。</td>
+<td>线性搜索：O(N)</td>
+</tr>
+<tr>
+<td>Big Omega（大 Ω）</td>
+<td>描述算法在最好的情况下，运行时间或空间复杂度的下限。</td>
+<td>线性搜索的最佳情况：Ω(1)</td>
+</tr>
+<tr>
+<td>Big Theta（大 Θ）</td>
+<td>描述算法运行时间或空间复杂度的精确边界（既是上限也是下限）。</td>
+<td>线性搜索的总体情况：Θ(N)</td>
+</tr>
+<tr>
+<td>Big O 并不表示最坏情况</td>
+<td>虽然常用于最坏情况，但 Big O 只表示上限，仍然可以使用 Big Theta 来描述最坏情况。</td>
+<td>使用 Big Theta 描述最坏情况</td>
+</tr>
+<tr>
+<td>Big Omega 并不表示最佳情况</td>
+<td>Big Omega 表示下限，并不专指最佳情况，仍然可以使用 Big Theta 来描述最佳情况。</td>
+<td>使用 Big Theta 描述最佳情况</td>
+</tr>
+<tr>
+<td>摊销分析</td>
+<td>一种用于证明一系列操作的平均操作成本的分析方法。</td>
+<td>动态数组插入的平均时间复杂度 O(1)</td>
+</tr>
+</tbody></table>
+<h1 id="9-不相交集"><a href="#9-不相交集" class="headerlink" title="9.不相交集"></a>9.不相交集</h1><p>如果两个集合没有共同元素，则它们被称为不相交集合。不相交集合（或并查集）数据结构跟踪划分为多个不相交集合的固定数量的元素。该数据结构有两种操作：</p>
+<p>connect(x, y)：连接x和y。也称为union<br>isConnected(x, y)：如果x和y是连通的（即属于同一集合），则返回 true。</p>
+<p>不相交集设计的四次迭代：快速查找 → 快速合并 → 加权快速合并 (WQU) → 带路径压缩的 WQU。<br>使用数组实现，数组的坐标代表值</p>
+<p><strong>快速查找</strong>：将同一类的都给相同的值。<br><strong>快速合并</strong>：将坐标的值设为它的上一个节点，根节点设为-1<br><strong>加权快速合并</strong>：合并的时候将小的并到大的上面去，根节点储存size<br><strong>路径压缩</strong>：将使用函数find的时候经过的节点都绑到根节点上面</p>
+<table>
+<thead>
+<tr>
+<th>Implementation</th>
+<th>isConnected</th>
+<th>connect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quick Find</td>
+<td>Θ(N)</td>
+<td>Θ(1)</td>
+</tr>
+<tr>
+<td>Quick Union</td>
+<td>O(N)</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>Weighted Quick Union (WQU)</td>
+<td>O(log N)</td>
+<td>O(log N)</td>
+</tr>
+<tr>
+<td>WQU with Path Compression</td>
+<td>O(α(N))*</td>
+<td>O(α(N))*</td>
+</tr>
+</tbody></table>
+<h1 id="10-ADT"><a href="#10-ADT" class="headerlink" title="10.ADT"></a>10.ADT</h1><p>抽象数据类型（ADT）是根据操作而不是实现来定义的。</p>
+<p>几个有用的ADT：</p>
+<ul>
+<li>不相交集，映射，集合，列表。</li>
+<li>Java 提供了 Map、Set、List 接口以及一些实现。</li>
+</ul>
+<p>我们已经看到了两种实现 Set（或 Map）的方法：</p>
+<ul>
+<li>ArraySet:o(N) operations in the worst case.</li>
+<li>BST:o(logN) operations if tree is balanced.</li>
+</ul>
+<p>BST 实现：</p>
+<ul>
+<li>搜索和插入很简单（但插入有点棘手）。</li>
+<li>删除更具挑战性。典型的方法是“Hibbard 删除”。</li>
+</ul>
+<p><strong>BST</strong></p>
+<p>可以将 BST 视作是有序的二叉树，这在搜索的时候非常方便与迅速</p>
+<p>类比二分查找，当我们想要查找 BST 中的数据的时候，思路是同样的：</p>
+<p>和当前结点的值比大小，若是则返回<br>若是小于待查值，则往右拐<br>若是大于待查值，则往左拐<br>速度贼快！如果树很茂密，那么树的高度 H &#x3D; log N，即意味着查找用时也是 log N</p>
+<p>添加的思路是同样的</p>
+<p>删除操作则需要分类讨论：</p>
+<ul>
+<li>被删除结点无子节点</li>
+<li>被删除结点有一个子节点</li>
+<li>被删除结点有两个子节点</li>
+</ul>
+<p>若无子节点，直接删除即可</p>
+<p>若有一个子节点，子承父业</p>
+<p>若有两个子节点，即选择一个新节点替换之，另外一个就添加到新结点的下面。</p>
+<h1 id="12-哈希表"><a href="#12-哈希表" class="headerlink" title="12.哈希表"></a>12.哈希表</h1><p>经过我们从 BST-BT-LLRB 的不断优化，查询的运行用时已经被我们做到了 log N 的境界，那么，还能进一步变强吗？(或者以空间换时间？)</p>
+<p>基本思路是直接使用数组来替代上面那么复杂的数据结构——以空间换时间！直接用数组的 index 代表数据，用 true&#x2F;false 代表是否被存储——</p>
+<p>如何适用除数字以外的其他数据？——使用 ASCII！或者 Unicode！<br>不可避免的冲突？——内部使用 List 结构！<br>内存开销巨大？运行时不稳定？——使用限定大小且动态增长的数组！同时进一步改进我们的 Hashcode!,考虑负载率也就是元素除以使用的下标。</p>
+<p>哈希码具有三个必要属性，</p>
+<ul>
+<li>它必须是整数</li>
+<li>如果我们.hashCode()对一个对象运行两次，它应该返回相同的数字</li>
+<li>考虑的两个对象.equal()必须具有相同的哈希码。</li>
+<li>另外哈希应该尽量均匀分布</li>
+</ul>
+<h1 id="13-堆和优先级队列"><a href="#13-堆和优先级队列" class="headerlink" title="13.堆和优先级队列"></a>13.堆和优先级队列</h1><p>我们使用堆来实现优先级队列，快速找到最小值或者最大值。<br>堆是改良的二叉搜索树。<br>我们将二叉最小堆定义为完整的并遵循最小堆属性：</p>
+<ul>
+<li>最小堆：每个节点都小于或等于其两个子节点</li>
+<li>完整：仅底层缺少项目（如果有），所有节点都尽可能位于左边。</li>
+</ul>
+<p>我们用堆要实现PQadt的三个方法。</p>
+<ul>
+<li>add：暂时添加到堆尾。沿层次结构向上移动到适当位置。<br>如果子节点 &lt; 父节点，则下浮涉及交换节点</li>
+<li>getSmallest：返回堆的根这保证了我们的最小堆属性是最小的</li>
+<li>removeSmallest：将堆中的最后一个项交换到根。将层次结构下沉到适当的位置。如果父节点 &gt; 子节点，则下沉涉及交换节点。与最小的子节点交换以保留最小堆属性。</li>
+</ul>
+<p><strong>堆的具体实现</strong></p>
+<p>我们要将堆二维展开然后放进数组当中</p>
+<p>比如像<br>a<br>bc<br>defg</p>
+<p>输入到数组当中就变为<br>【a，b，c,d,e，f,g】</p>
+<p>像这样做后其实下标就可以代表父级关系。<br>下标 * 2 就是左边子，加一就变成右边<br>除以二就得到父的坐标</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">(<span class="type">int</span> k)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (keys[parent(k)] ≻ keys[k]) &#123;</span><br><span class="line">       swap(k, parent(k));</span><br><span class="line">       swim(parent(k));              </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码我们就可以实现如何交换父和子了。</p>
+<p>与其他的实现方式对比：</p>
+<table>
+<thead>
+<tr>
+<th>Methods</th>
+<th>Ordered Array</th>
+<th>Bushy BST</th>
+<th>Hash Table</th>
+<th>Heap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>add</strong></td>
+<td>Θ(𝑁)</td>
+<td>Θ(log𝑁)</td>
+<td>Θ(1)</td>
+<td>Θ(log𝑁)</td>
+</tr>
+<tr>
+<td><strong>getSmallest</strong></td>
+<td>Θ(1)</td>
+<td>Θ(log𝑁)</td>
+<td>Θ(𝑁)</td>
+<td>Θ(1)</td>
+</tr>
+<tr>
+<td><strong>removeSmallest</strong></td>
+<td>Θ(𝑁)</td>
+<td>Θ(log𝑁)</td>
+<td>Θ(𝑁)</td>
+<td>Θ(log𝑁)</td>
+</tr>
+</tbody></table>
+<h1 id="14-简要总结"><a href="#14-简要总结" class="headerlink" title="14.简要总结"></a>14.简要总结</h1><p>到目前为止，我们讨论的所有数据结构都是为了解决搜索问题。我们学过的每个数据结构都用于以在特定场景中提高搜索效率的方案存储信息。</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Store Operation(s)</th>
+<th>Primary Retrieval Operation</th>
+<th>Retrieve By</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>List</strong></td>
+<td>add(key), insert(key, index)</td>
+<td>get(index)</td>
+<td>index</td>
+</tr>
+<tr>
+<td><strong>Map</strong></td>
+<td>put(key, value)</td>
+<td>get(key)</td>
+<td>key identity</td>
+</tr>
+<tr>
+<td><strong>Set</strong></td>
+<td>add(key)</td>
+<td>containsKey(key)</td>
+<td>key identity</td>
+</tr>
+<tr>
+<td><strong>PQ</strong></td>
+<td>add(key)</td>
+<td>getSmallest()</td>
+<td>key order (aka key size)</td>
+</tr>
+<tr>
+<td><strong>Disjoint Sets</strong></td>
+<td>connect(int1, int2)</td>
+<td>isConnected(int1, int2)</td>
+<td>two integer values</td>
+</tr>
+</tbody></table>
+<p>这些是抽象数据类型。这意味着我们定义行为，而不是实现。我们也可以有很多种实现方法。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/09/29/Diary/Diary_024/">电子日记024周日</a>
+            
+            
+            <a class="next" rel="next" href="/2024/09/23/cs61b/javatips/">语法之类的</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
