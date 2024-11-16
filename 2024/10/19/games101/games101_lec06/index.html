@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_lec06Antialiasing and Z-Buffering(反走样) | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_lec06Antialiasing and Z-Buffering(反走样)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 19, 2024&nbsp;&nbsp;0:23:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="1-抗锯齿"><a href="#1-抗锯齿" class="headerlink" title="1.抗锯齿"></a>1.抗锯齿</h1><p>在上节课我们提到了锯齿。</p>
+<p><img src="/img/games101/lec06/image.png" alt="alt text"></p>
+<p>我们会发现这些和我们想要的三角形相差很大。这是因为我们采样太慢，造成太多走样。</p>
+<p>所谓走样，也就是丢失了采样对象的信息，就比如我们对一个函数进行采样</p>
+<p><img src="/img/games101/lec06/image%20copy.png" alt="alt text"></p>
+<p>为什么导致采样和原来的不一样呢，是因为我们采样太慢，没有能记录下采样间隔中函数的快速变化。</p>
+<p>那么我们有什么办法解决呢<br>当然是提高采样率。但是采样率不能无限提高。我们需要想一些另外的办法。</p>
+<p>我们接下来引入一些概念。</p>
+<p><strong>时域与频域</strong><br>频域是描述信号在频率方面特性时用到的一种坐标系</p>
+<p>时域是描述数学函数或物理信号对时间的关系的一种坐标系</p>
+<p><strong>傅里叶级数展开</strong><br>傅里叶变换会将时域转化为频域</p>
+<p><img src="/img/games101/lec06/image%20copy%202.png" alt="alt text"></p>
+<p>这里其实是说明我们可以通过变换将函数表示为正弦余弦的加权和，随着展开式越来越多，越来越接近我们想要表达的函数。</p>
+<p><img src="/img/games101/lec06/image%20copy%203.png" alt="alt text"></p>
+<p>这个和采样就是相同的模拟过程。采样频率越高，函数越精准。</p>
+<p><strong>傅里叶频域图</strong></p>
+<p>在图像当中，我们知道有些地方颜色变得缓慢，而有些地方颜色变得很快。那么就可以把他们的频率分成低频和高频。我们可以画出一个图</p>
+<p><img src="/img/games101/lec06/image%20copy%204.png" alt="alt text"></p>
+<p>右边的图就是傅里叶频域图，越中心就代表越低频。</p>
+<p><strong>滤波</strong><br>删除特定的频率被称之为滤波</p>
+<p>高通滤波：只显示高频信息（只显示边界-锐化，将低频信息盖住</p>
+<p>低通滤波：只显示低频滤波（画面变模糊，将高频信息盖住</p>
+<p>这两个概率都很好理解，我们把变化慢的地方过滤掉就会只剩边界，把变化快的地方过滤掉，那么画面就会没有边界变得模糊。</p>
+<p><img src="/img/games101/lec06/image%20copy%205.png" alt="alt text"></p>
+<p><strong>卷积</strong><br>滤波&#x3D;卷积（&#x3D;平均）</p>
+<p>简化的定义：结果为相邻数的平均值</p>
+<p>定理：时域的卷积等于频域的乘积</p>
+<p><img src="/img/games101/lec06/image%20copy%206.png" alt="alt text"></p>
+<p><strong>滤波&#x3D;卷积</strong></p>
+<p>我们可以看见卷积是一个求平均的过程，那么注定那些变化快的，或者说是极值。会被平均掉，也就是被过滤掉了。</p>
+<p>同时这里有个很重要的信息就是，我们实际上是利用了没有被采样到的地方的值，如果我们先对一个图片进行卷积又或者说是模糊。那么我们实际上利用了这个函数更多的信息。所以当然会近似的更准确。</p>
+<p>那么也同时可以理解为什么先采样再模糊是不行的，因为那个信息已经损失掉了。无法被利用。</p>
+<p><img src="/img/games101/lec06/image%20copy%207.png" alt="alt text"></p>
+<p><strong>频谱混叠</strong></p>
+<p><img src="/img/games101/lec06/image%20copy%208.png" alt="alt text"></p>
+<p>由于采样稀疏，因此出现频谱混叠从而出现锯齿（走样）如果屏幕中像素非常多，密集的采样就不容易出现走样。</p>
+<p>因此使用分辨率高的显示器，频谱的搬移间隔大，不容易出现频谱混叠。</p>
+<p>同时，将信息进行低通采样再进行采样即可反走样。</p>
+<p><img src="/img/games101/lec06/image%20copy%209.png" alt="alt text"></p>
+<p><strong>反走样（抗锯齿）</strong><br>解决方法：</p>
+<p>通过将每个像素进行模糊卷积f（x,y）<br>卷积&#x3D;滤波&#x3D;平均<br>然后再对灭个像素的中心取样</p>
+<p>在光栅化一个三角形时，像素颜色的平均值f（x,y）&#x3D; 三角形的覆盖像素的面积</p>
+<p><img src="/img/games101/lec06/image%20copy%2010.png" alt="alt text"></p>
+<p>实际上也是用到了更多的信息。同理我们可以进行超采样。</p>
+<p><strong>超采样抗锯齿</strong>(MSAA)<br>MSAA: Antialiasing By Supersampling</p>
+<p>这是一种对反走样的近似</p>
+<p>将每个像素的内部多增加采样点再进行模糊卷积</p>
+<p><img src="/img/games101/lec06/image%20copy%2011.png" alt="alt text"></p>
+<p>缺点：增加了很多的计算量</p>
+<p><strong>其他的抗锯齿方法FXAA</strong> (Fast Approximate AA) 快速近似抗锯齿图像的快速处理TAA (Temporal AA) 对上一帧进行处理</p>
+<p><strong>超分辨率</strong><br>从低分辨率处理成高分辨率与反走样类似，也是解决了样本不足的问题目前可使用DLSS（深度学习的方法）进行超分辨率处理</p>
+<p><strong>画家算法</strong><br>灵感来源于画优化</p>
+<p>先画（渲染）距离远的，再画（渲染）距离近的。</p>
+<p>问题：难以确定谁在前谁在后</p>
+<p><strong>深度缓冲</strong>（Z-Buffer）<br>深度图-储存每个像素对应的最浅的深度<br>结果图-储存最终的结果</p>
+<p><img src="/img/games101/lec06/image%20copy%2012.png" alt="alt text"></p>
+<p><img src="/img/games101/lec06/%E6%88%AA%E5%B1%8F2024-10-19%2019.39.27.png" alt="alt text"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/10/22/games101/games101_lec07to09/">games_Lec 07~09 - Shading 光照、着色、着色频率、图形管线、纹理映射</a>
+            
+            
+            <a class="next" rel="next" href="/2024/10/19/games101/games101_lec05/">games_lec05Rasterization(光栅化)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

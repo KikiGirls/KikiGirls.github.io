@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_Lec 14(2)-15(1) - 光的传播理论, Basic Radiometry 辐射度量学, 路径追踪与全局光照 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_Lec 14(2)-15(1) - 光的传播理论, Basic Radiometry 辐射度量学, 路径追踪与全局光照</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 1, 2024&nbsp;&nbsp;0:23:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="Whitted-Style-光线追踪的局限"><a href="#Whitted-Style-光线追踪的局限" class="headerlink" title="Whitted-Style 光线追踪的局限"></a>Whitted-Style 光线追踪的局限</h2><p>Whitted-Style Ray Tracing 在计算精确性上无法保证。其核心在于递归计算光线与物体的反射和折射路径，但对复杂光的传播（如间接光和漫反射）处理不足。</p>
+<hr>
+<p>My personal way of learning things:</p>
+<ul>
+<li>WHY, WHAT, then HOW</li>
+</ul>
+<h2 id="辐射度量学-Radiometry-和基于物理的渲染-Physically-Based-Rendering"><a href="#辐射度量学-Radiometry-和基于物理的渲染-Physically-Based-Rendering" class="headerlink" title="辐射度量学 (Radiometry) 和基于物理的渲染 (Physically-Based Rendering)"></a>辐射度量学 (Radiometry) 和基于物理的渲染 (Physically-Based Rendering)</h2><p>辐射度量学提供了测量光的物理单位和方法，构成了<strong>基于物理的渲染</strong>的基础：</p>
+<ul>
+<li><strong>路径追踪 (Path Tracing)</strong> 的基础</li>
+<li><strong>光的测量系统和单位</strong>：定义照明的精确单位</li>
+<li><strong>光的空间特性</strong>：精确测量和描述光在场景中的分布特性</li>
+<li>基础物理量包括：辐射通量 (Radiant Flux)、光强 (Intensity)、辐照度 (Irradiance)、辐射亮度 (Radiance)</li>
+</ul>
+<h3 id="主要物理量定义"><a href="#主要物理量定义" class="headerlink" title="主要物理量定义"></a>主要物理量定义</h3><ol>
+<li><p>**辐射能量 (Radiant Energy)**：电磁辐射的总能量</p>
+<ul>
+<li><strong>符号</strong>：Q</li>
+<li><strong>单位</strong>：J（焦耳，Joule）</li>
+</ul>
+</li>
+<li><p>**辐射通量&#x2F;功率 (Radiant Flux, Power)**：单位时间内发射、反射、透射或接收到的能量</p>
+<ul>
+<li><strong>符号</strong>：ϕ (phi)</li>
+<li><strong>单位</strong>：W（瓦特），lm（流明）</li>
+<li><strong>重要</strong>：单位时间内的能量流动</li>
+</ul>
+</li>
+<li><p>**通量 (Flux)**：单位时间内流经感测器的光子数量</p>
+</li>
+</ol>
+<hr>
+<h2 id="常见光学测量量"><a href="#常见光学测量量" class="headerlink" title="常见光学测量量"></a>常见光学测量量</h2><p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2019.34.40.png" alt="alt text"></p>
+<h3 id="1-光强度-Radiant-or-Luminous-Intensity"><a href="#1-光强度-Radiant-or-Luminous-Intensity" class="headerlink" title="1. 光强度 (Radiant or Luminous Intensity)"></a>1. 光强度 (Radiant or Luminous Intensity)</h3><p>光强度描述点光源在单位立体角内的辐射功率。</p>
+<p><strong>公式</strong>：</p>
+<p>[<br>I(\omega) &#x3D; \frac{\mathrm{d} \Phi}{\mathrm{d} \omega}<br>]</p>
+<ul>
+<li><strong>单位</strong>：W&#x2F;sr 或 lm&#x2F;sr，即 cd（坎德拉，Candela）</li>
+<li><strong>立体角</strong>（sr，steradians）：<ul>
+<li>定义：面积&#x2F;半径^2</li>
+<li><strong>公式</strong>：(\Omega &#x3D; \frac{A}{r^2})</li>
+<li>单位立体角：球面 &#x3D; (4 \pi , \text{sr})</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2019.40.18.png" alt="alt text"></p>
+<h3 id="2-辐照度-Irradiance"><a href="#2-辐照度-Irradiance" class="headerlink" title="2. 辐照度 (Irradiance)"></a>2. 辐照度 (Irradiance)</h3><p>描述入射在单位面积上的辐射功率。</p>
+<p>[<br>E(\mathbf{x}) &#x3D; \frac{\mathrm{d} \Phi(\mathbf{x})}{\mathrm{d} A}<br>]</p>
+<ul>
+<li><strong>单位</strong>：W&#x2F;m² | lm&#x2F;m² &#x3D; lux</li>
+<li>方向无关，垂直投影方向的能量。</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2019.45.32.png" alt="alt text"><br><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2019.47.21.png" alt="alt text"></p>
+<h3 id="3-辐射亮度-Radiance"><a href="#3-辐射亮度-Radiance" class="headerlink" title="3. 辐射亮度 (Radiance)"></a>3. 辐射亮度 (Radiance)</h3><p>描述在某单位立体角和投影面积上沿某方向的辐射功率密度。</p>
+<p>[<br>L(\mathrm{p}, \omega) &#x3D; \frac{\mathrm{d}^2 \Phi(\mathrm{p}, \omega)}{\mathrm{d} \omega \mathrm{d} A \cos \theta}<br>]</p>
+<ul>
+<li>表示单位面积朝单位立体角方向辐射的能量密度</li>
+<li><strong>辐照度 (Irradiance)</strong> 每单位立体角的分布</li>
+<li><strong>光强度 (Intensity)</strong> 每单位投影面积的分布</li>
+<li><strong>方向性</strong>：使用方向参数 (\omega)</li>
+</ul>
+<p>是的，辐射亮度确实可以理解为能量除以时间、面积和方向。它的定义就是在一个特定方向上、单位面积内、单位时间里，物体表面或光源发出的辐射能量。具体地：<br>时间：考虑单位时间内的能量发出量；<br>面积：只关注单位表面积（通常垂直于辐射方向）内的辐射；<br>方向：用单位立体角（方向的微小空间角度）来描述辐射的方向性。</p>
+<h4 id="辐射亮度的应用："><a href="#辐射亮度的应用：" class="headerlink" title="辐射亮度的应用："></a>辐射亮度的应用：</h4><ul>
+<li><p><strong>入射辐射亮度</strong>：从某方向到达表面的辐照度。</p>
+<p>  [<br>  L(\mathrm{p}, \omega) &#x3D; \frac{\mathrm{d} E(\mathrm{p})}{\mathrm{d} \omega \cos \theta}<br>  ]</p>
+</li>
+<li><p><strong>出射辐射亮度</strong>：从表面某方向发射的光强度。</p>
+<p>  [<br>  L(\mathrm{p}, \omega) &#x3D; \frac{\mathrm{d} I(\mathrm{p}, \omega)}{\mathrm{d} A \cos \theta}<br>  ]</p>
+</li>
+</ul>
+<hr>
+<h3 id="辐照度与辐射亮度的区别"><a href="#辐照度与辐射亮度的区别" class="headerlink" title="辐照度与辐射亮度的区别"></a>辐照度与辐射亮度的区别</h3><ul>
+<li>**辐照度 (Irradiance)**：总辐射功率在单位面积上的分布</li>
+<li>**辐射亮度 (Radiance)**：单位面积在单位立体角方向上的辐射功率密度</li>
+</ul>
+<p>[<br>\begin{aligned}<br>    \mathrm{d} E(\mathrm{p}, \omega) &amp;&#x3D; L_i(\mathrm{p}, \omega) \cos \theta \mathrm{d} \omega \<br>    E(\mathrm{p}) &amp;&#x3D; \int_{H^2} L_i(\mathrm{p}, \omega) \cos \theta , \mathrm{d} \omega<br>\end{aligned}<br>]</p>
+<p>其中 (H^2) 表示半球面。</p>
+<h2 id="双向反射分布函数-BRDF"><a href="#双向反射分布函数-BRDF" class="headerlink" title="双向反射分布函数 (BRDF)"></a>双向反射分布函数 (BRDF)</h2><p>BRDF (Bidirectional Reflectance Distribution Function) 描述了光线从一个方向入射到表面某个点时，该点如何将光能反射到不同的方向上。具体而言，BRDF用于量化从入射方向 ( \omega_i ) 的辐射亮度如何被散射或反射到出射方向 ( \omega_r ) 。</p>
+<p><strong>反射机制</strong>：光线入射到某一点时部分能量被吸收，剩余部分沿着不同方向反射。入射的<strong>辐射亮度</strong>（Radiance）转化为点 ( dA ) 接收到的功率（<strong>辐照度</strong>），而功率进一步转换为沿各个出射方向的辐射亮度。</p>
+<h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ul>
+<li><strong>功率</strong>：通常描述为单位时间内的能量。</li>
+<li>**辐照度 (Irradiance)**：某点接收到的光的总能量。</li>
+<li>**辐射亮度 (Radiance)**：某点在某一方向接收到或发射的光的能量。</li>
+</ul>
+<h3 id="微分形式"><a href="#微分形式" class="headerlink" title="微分形式"></a>微分形式</h3><ul>
+<li><strong>入射微分辐照度</strong>：</li>
+</ul>
+<p>[<br>\mathrm{d} E\left(\omega_{i}\right) &#x3D; L\left(\omega_{i}\right) \cos \theta_{i} \mathrm{d} \omega_{i}<br>]</p>
+<ul>
+<li><strong>出射微分辐射亮度</strong>：</li>
+</ul>
+<p>[<br>\mathrm{d} L_{r}\left(\omega_{r}\right)<br>]</p>
+<h3 id="BRDF-的定义和公式"><a href="#BRDF-的定义和公式" class="headerlink" title="BRDF 的定义和公式"></a>BRDF 的定义和公式</h3><p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2020.01.31.png" alt="alt text"></p>
+<p>BRDF 专注于描述单个入射光源以及从该源入射的光线如何反射到各个出射方向，并因此定义了材料的反射特性：</p>
+<p>[<br>f_{r}\left(\omega_{i} \rightarrow \omega_{r}\right)&#x3D;\frac{\mathrm{d} L_{r}\left(\omega_{r}\right)}{\mathrm{d} E_{i}\left(\omega_{i}\right)}&#x3D;\frac{\mathrm{d} L_{r}\left(\omega_{r}\right)}{L_{i}\left(\omega_{i}\right) \cos \theta_{i} \mathrm{d} \omega_{i}}\left[\frac{1}{\mathrm{sr}}\right]<br>]</p>
+<ul>
+<li><strong>单位</strong>：(\left[ \frac{1}{\mathrm{sr}} \right])，表示反射后的辐射亮度与入射辐照度的比值。</li>
+</ul>
+<p>BRDF 函数描述的关键在于反射的方向性，能够刻画不同材质对光线的反射和散射特性，从而在渲染中实现物理上逼真的视觉效果。</p>
+<h2 id="反射方程-The-Reflection-Equation"><a href="#反射方程-The-Reflection-Equation" class="headerlink" title="反射方程 (The Reflection Equation)"></a>反射方程 (The Reflection Equation)</h2><p>反射方程用于计算着色点在给定观察方向 ( \omega_r ) 上的出射辐射亮度 ( L_r(\mathrm{p}, \omega_r) )。它通过积分所有可能的入射方向上的光亮度，结合 BRDF 来求出反射结果。这一方程适用于物理上真实的渲染效果，尤其是在基于路径追踪等全局光照模型的渲染中。</p>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>[<br>L_{r}\left(\mathrm{p}, \omega_{r}\right) &#x3D; \int_{H^{2}} f_{r}\left(\mathrm{p}, \omega_{i} \rightarrow \omega_{r}\right) L_{i}\left(\mathrm{p}, \omega_{i}\right) \cos \theta_{i} , \mathrm{d} \omega_{i}<br>]</p>
+<ul>
+<li><strong>(L_r(\mathrm{p}, \omega_r))</strong>：在观察方向 ( \omega_r ) 上的出射辐射亮度。</li>
+<li><strong>积分区域 ( H^2 )</strong>：指半球面内所有可能的入射方向。</li>
+<li><strong>(f_{r}(\mathrm{p}, \omega_i \rightarrow \omega_r))</strong>：从入射方向 ( \omega_i ) 到出射方向 ( \omega_r ) 的 BRDF，描述光的反射特性。</li>
+<li><strong>(L_i(\mathrm{p}, \omega_i))</strong>：在入射方向 ( \omega_i ) 上到达表面点 ( \mathrm{p} ) 的辐射亮度。</li>
+<li><strong>(\cos \theta_i)</strong>：角度因子，用于考虑入射光对表面法线的偏离程度，确保垂直入射的光对亮度影响最大。</li>
+</ul>
+<h3 id="计算挑战"><a href="#计算挑战" class="headerlink" title="计算挑战"></a>计算挑战</h3><ol>
+<li><strong>递归特性</strong>：入射亮度 ( L_i ) 不仅来自直接光源，还可能来自其他物体的反射光，从而形成递归依赖。</li>
+<li><strong>计算量大</strong>：由于需要对所有可能入射方向进行积分，且反射光本身还需继续计算光源，导致计算量随反射次数递增。</li>
+</ol>
+<p>因此，反射方程的求解往往采用蒙特卡罗积分等近似方法来进行高效的路径追踪，从而在全局光照模型下达到逼真的渲染效果。</p>
+<h2 id="渲染方程-The-Rendering-Equation"><a href="#渲染方程-The-Rendering-Equation" class="headerlink" title="渲染方程 (The Rendering Equation)"></a>渲染方程 (The Rendering Equation)</h2><p><strong>渲染方程</strong>（由 Kajiya 在 1986 年提出）描述了任意表面点在给定观察方向上发射的辐射亮度，广泛应用于物理上真实的渲染模型。该方程通过加入自发光项，使得反射方程更加普适，能够表达所有光照传播情况，包括自发光和间接光照。</p>
+<h3 id="渲染方程公式"><a href="#渲染方程公式" class="headerlink" title="渲染方程公式"></a>渲染方程公式</h3><p>[<br>L_{o}\left(p, \omega_{o}\right) &#x3D; L_{e}\left(p, \omega_{o}\right) + \int_{\Omega^{+}} L_{i}\left(p, \omega_{i}\right) f_{r}\left(p, \omega_{i}, \omega_{o}\right) \left(n \cdot \omega_{i}\right) , \mathrm{d} \omega_{i}<br>]</p>
+<ul>
+<li><strong>( L_{o}(p, \omega_{o}) )</strong>：在观察方向 ( \omega_{o} ) 上从点 ( p ) 发射的出射辐射亮度。</li>
+<li><strong>( L_{e}(p, \omega_{o}) )</strong>：自发光项，表示表面点自身在 ( \omega_{o} ) 方向上发射的光亮度。</li>
+<li><strong>( \Omega^{+} )</strong>：表示半球积分区域，涵盖所有入射方向。</li>
+<li><strong>( L_{i}(p, \omega_{i}) )</strong>：从入射方向 ( \omega_{i} ) 到达点 ( p ) 的辐射亮度。</li>
+<li><strong>( f_{r}(p, \omega_{i}, \omega_{o}) )</strong>：BRDF，描述从入射方向到出射方向的反射特性。</li>
+<li><strong>( (n \cdot \omega_{i}) )</strong>：法向量与入射方向的余弦因子，用于计算入射光的有效贡献。</li>
+</ul>
+<h3 id="方程的应用"><a href="#方程的应用" class="headerlink" title="方程的应用"></a>方程的应用</h3><ol>
+<li><strong>直接光源</strong>：对于单个点光源，可直接代入入射亮度计算出射亮度。</li>
+<li><strong>多个光源</strong>：不同光源的出射亮度可累加计算。</li>
+<li><strong>面光源</strong>：需要对面光源上各点的入射亮度进行积分。</li>
+<li><strong>间接光照</strong>：物体反射的光也可能成为其他物体的光源，导致递归光线追踪问题。</li>
+</ol>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2020.25.17.png" alt="alt text"></p>
+<h3 id="递归特性"><a href="#递归特性" class="headerlink" title="递归特性"></a>递归特性</h3><p>渲染方程中，入射亮度 ( L_i ) 不仅直接来自光源，还可能源于其他物体的反射光。因此，完整解方程需要递归求解每个光线的反射路径。</p>
+<h3 id="解析解法与离散化"><a href="#解析解法与离散化" class="headerlink" title="解析解法与离散化"></a>解析解法与离散化</h3><p>渲染方程形式上为 <strong>第二类 Fredholm 积分方程</strong>，常使用数值方法求解。例如，通过离散化简化为矩阵方程：</p>
+<p>[<br>L &#x3D; E + KL<br>]</p>
+<p>其中：</p>
+<ul>
+<li><strong>( L )</strong> 表示未知的出射亮度矢量，</li>
+<li><strong>( E )</strong> 表示自发光矢量，</li>
+<li><strong>( K )</strong> 为光传输矩阵，表示光的反射和传输关系。</li>
+</ul>
+<h3 id="光线追踪中的渲染方程展开"><a href="#光线追踪中的渲染方程展开" class="headerlink" title="光线追踪中的渲染方程展开"></a>光线追踪中的渲染方程展开</h3><p>在光线追踪中，渲染方程可以写为：</p>
+<p>[<br>L &#x3D; E + KE + K^2 E + K^3 E + \dots<br>]</p>
+<p>其中：</p>
+<ul>
+<li><strong>( E )</strong> 表示来自光源的直接辐射亮度（即自发光）。</li>
+<li><strong>( KE )</strong> 表示光源在物体表面的直接照明，即直接光照。</li>
+<li><strong>( K^2 E )</strong> 表示一次间接光照，通常指通过镜面或折射产生的单次反射。</li>
+<li><strong>( K^3 E )</strong> 表示两次间接光照，例如多次反射或折射后的光线贡献。</li>
+</ul>
+<p>各项代表的意义：</p>
+<ul>
+<li><strong>Shading in Rasterization</strong>：光栅化中的着色仅处理直接光照，通常不计算间接光照。</li>
+<li><strong>Emission directly from light sources</strong>：光源直接发出的光，仅考虑自发光项 ( E )。</li>
+<li><strong>Direct Illumination on surfaces</strong>：物体表面的直接光照，考虑一次光的传输，即 ( KE )。</li>
+<li>**Indirect Illumination (One bounce indirect)**：单次间接光照（例如镜面反射或折射的光线），即 ( K^2 E )。</li>
+<li><strong>Two bounce indirect illumination</strong>：两次间接光照，例如光线在多个物体之间的多次反射，即 ( K^3 E )。</li>
+</ul>
+<p>在实际渲染中，随着间接光照反射次数的增加，计算量也随之增长。光线追踪通过递归计算所有反射光照来逐步逼近全局光照解。</p>
+<h3 id="求解方法"><a href="#求解方法" class="headerlink" title="求解方法"></a>求解方法</h3><p>求解全局光照方程的常见方法是 <strong>蒙特卡罗路径追踪</strong>（Monte Carlo Path Tracing），通过采样和随机积分近似求解复杂的光线反射路径，最终达到全局光照效果。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/11/03/leetcode/2/">2.列表</a>
+            
+            
+            <a class="next" rel="next" href="/2024/11/01/games101/games101_lec13to14/">games_Lec 13~14(1) - Ray Tracing 光线追踪 (Whitted Style)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

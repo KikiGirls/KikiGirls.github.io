@@ -40,7 +40,44 @@
 
     
     
-        
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
     
 
 
@@ -126,12 +163,12 @@
         
 
         
-            <h3>2023</h3>
+            <h3>2024</h3>
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/11/12/LADR/05/">蓝以中高代学习笔记第六章第一节</a>
-            <span class="archive-item-date">November 12, 2023</span>
+            <a class="archive-item-link" href="/2024/04/08/Diary/Diary_011/">电子日记010周日</a>
+            <span class="archive-item-date">April 8, 2024</span>
         </article>
     
         
@@ -139,8 +176,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/11/11/LADR/04/">Linear ALgebra Done Right Chapter 1</a>
-            <span class="archive-item-date">November 11, 2023</span>
+            <a class="archive-item-link" href="/2024/04/01/other/cwffc_001/">常微分方程001</a>
+            <span class="archive-item-date">April 1, 2024</span>
         </article>
     
         
@@ -148,8 +185,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/11/11/LADR/03/">概率导论学习笔记Chapter4</a>
-            <span class="archive-item-date">November 11, 2023</span>
+            <a class="archive-item-link" href="/2024/04/01/Diary/Diary_010/">电子日记010周一</a>
+            <span class="archive-item-date">April 1, 2024</span>
         </article>
     
         
@@ -157,8 +194,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/10/24/LADR/01/">Linear ALgebra Done Right Chapter 0</a>
-            <span class="archive-item-date">October 24, 2023</span>
+            <a class="archive-item-link" href="/2024/03/30/Diary/Diary_009/">电子日记009周六</a>
+            <span class="archive-item-date">March 30, 2024</span>
         </article>
     
         
@@ -166,8 +203,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/10/20/LADR/02/">一些资源</a>
-            <span class="archive-item-date">October 20, 2023</span>
+            <a class="archive-item-link" href="/2024/03/28/Diary/Diary_008/">电子日记008周三</a>
+            <span class="archive-item-date">March 28, 2024</span>
         </article>
     
         
@@ -175,13 +212,49 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2023/10/18/LADR/00/">This is a start</a>
-            <span class="archive-item-date">October 18, 2023</span>
+            <a class="archive-item-link" href="/2024/03/27/Diary/Diary_007/">电子日记007周二</a>
+            <span class="archive-item-date">March 27, 2024</span>
+        </article>
+    
+        
+
+        
+
+        <article class="archive-item">
+            <a class="archive-item-link" href="/2024/03/26/cs61a/cs61a_book_02/">使用数据构建抽象</a>
+            <span class="archive-item-date">March 26, 2024</span>
+        </article>
+    
+        
+
+        
+
+        <article class="archive-item">
+            <a class="archive-item-link" href="/2024/03/26/Diary/Diary_006/">电子日记006周一</a>
+            <span class="archive-item-date">March 26, 2024</span>
+        </article>
+    
+        
+
+        
+
+        <article class="archive-item">
+            <a class="archive-item-link" href="/2024/03/24/cs61a/cs61a/">cs61a笔记</a>
+            <span class="archive-item-date">March 24, 2024</span>
+        </article>
+    
+        
+
+        
+
+        <article class="archive-item">
+            <a class="archive-item-link" href="/2024/03/24/Diary/Diary_004/">电子日记004周六</a>
+            <span class="archive-item-date">March 24, 2024</span>
         </article>
     
     
     <nav class="pagination">
-        <a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span>
+        <a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/archives/page/6/">6</a><a class="page-number" href="/archives/page/7/">7</a>
     </nav>
 
 </div>

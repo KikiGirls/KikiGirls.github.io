@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>4.字符串 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">4.字符串</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 8, 2024&nbsp;&nbsp;23:30:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/">代码随想录</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="字符串相关题目"><a href="#字符串相关题目" class="headerlink" title="字符串相关题目"></a>字符串相关题目</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> <ol>
+<li>反转字符串</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="2">
+<li>反转字符串II</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="3">
+<li>替换数字</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="4">
+<li>翻转字符串里的单词</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="5">
+<li>右旋转字符串</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="6">
+<li>实现 <code>strStr()</code></li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="7">
+<li>重复的子字符串</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="8">
+<li>总结篇</li>
+</ol>
+</li>
+</ul>
+<h2 id="C-char-类型"><a href="#C-char-类型" class="headerlink" title="C++ char 类型"></a>C++ <code>char</code> 类型</h2><p><code>char</code> 类型是 C++ 中用于表示单个字符的基本数据类型。以下是 <code>char</code> 类型的一些关键点：</p>
+<h3 id="1-大小"><a href="#1-大小" class="headerlink" title="1. 大小"></a>1. 大小</h3><ul>
+<li><code>char</code> 通常是 1 字节（8 位），表示一个 ASCII 字符。</li>
+<li><code>char</code> 的范围通常在 -128 到 127（有符号）或 0 到 255（无符号）。</li>
+</ul>
+<h3 id="2-有符号与无符号"><a href="#2-有符号与无符号" class="headerlink" title="2. 有符号与无符号"></a>2. 有符号与无符号</h3><ul>
+<li><code>char</code> 类型可以是有符号或无符号的，但具体默认情况取决于编译器。</li>
+<li>使用 <code>signed char</code> 或 <code>unsigned char</code> 可以明确指定。</li>
+</ul>
+<h3 id="3-字符表示"><a href="#3-字符表示" class="headerlink" title="3. 字符表示"></a>3. 字符表示</h3><ul>
+<li><code>char</code> 常量可以用单引号表示，例如 <code>&#39;A&#39;</code> 表示字符 A。</li>
+<li>特殊字符可以用转义字符表示，例如 <code>&#39;\n&#39;</code>（换行）、<code>&#39;\t&#39;</code>（制表符）、<code>&#39;\0&#39;</code>（空字符）等。</li>
+</ul>
+<h3 id="4-ASCII-和字符操作"><a href="#4-ASCII-和字符操作" class="headerlink" title="4. ASCII 和字符操作"></a>4. ASCII 和字符操作</h3><ul>
+<li><code>char</code> 类型常用于表示 ASCII 字符集，因为其范围足以表示 256 个字符。</li>
+<li>可以对 <code>char</code> 进行算术运算，例如：<code>&#39;A&#39; + 1</code> 的结果是字符 <code>B</code>。</li>
+</ul>
+<h3 id="5-字符串与字符数组"><a href="#5-字符串与字符数组" class="headerlink" title="5. 字符串与字符数组"></a>5. 字符串与字符数组</h3><ul>
+<li><code>char</code> 数组可以表示 C 风格的字符串，例如 <code>char str[] = &quot;Hello&quot;;</code>。</li>
+</ul>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> ch = <span class="string">&#x27;A&#x27;</span>;           <span class="comment">// 单个字符</span></span><br><span class="line">    cout &lt;&lt; ch &lt;&lt; endl;       <span class="comment">// 输出字符 A</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ASCII 值操作</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ASCII of &quot;</span> &lt;&lt; ch &lt;&lt; <span class="string">&quot; is &quot;</span> &lt;&lt; <span class="built_in">int</span>(ch) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无符号和有符号 char</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> uChar = <span class="number">200</span>;</span><br><span class="line">    <span class="type">signed</span> <span class="type">char</span> sChar = <span class="number">-100</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Unsigned char: &quot;</span> &lt;&lt; +uChar &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Signed char: &quot;</span> &lt;&lt; +sChar &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">++c：前置自增，先增再使用新值。</span><br><span class="line">	•	c++：后置自增，先使用旧值再增。</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = start, j = end; i &lt; j; i++, j--) &#123;</span><br><span class="line">            <span class="built_in">swap</span>(s[i], s[j]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-反转字符串"><a href="#1-反转字符串" class="headerlink" title="1. 反转字符串"></a>1. 反转字符串</h2><h2 id="2-反转字符串II"><a href="#2-反转字符串II" class="headerlink" title="2. 反转字符串II"></a>2. 反转字符串II</h2><p>s.resize(size)</p>
+<p>双指针从后面往前面遍历。</p>
+<h2 id="4-反转字符串里的单词"><a href="#4-反转字符串里的单词" class="headerlink" title="4.反转字符串里的单词"></a>4.反转字符串里的单词</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">string <span class="title">reverseWords</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 反转</span></span><br><span class="line">    <span class="keyword">auto</span> reverse =</span><br><span class="line">        [&amp;s](<span class="type">int</span> i, <span class="type">int</span> j) &#123;</span><br><span class="line">          <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">            std::<span class="built_in">swap</span>(s[i++], s[j--]);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    <span class="comment">// 删除空格</span></span><br><span class="line">    <span class="type">int</span> slow = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (s[i] != <span class="string">&#x27; &#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (slow != <span class="number">0</span>)</span><br><span class="line">          s[slow++] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; s.<span class="built_in">size</span>() &amp;&amp; s[i] != <span class="string">&#x27; &#x27;</span>) &#123;</span><br><span class="line">          s[slow++] = s[i++];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    s.<span class="built_in">resize</span>(slow);</span><br><span class="line">    <span class="built_in">reverse</span>(<span class="number">0</span>, s.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    <span class="type">int</span> begin = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= s.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (s[i] == <span class="string">&#x27; &#x27;</span> || i == s.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="built_in">reverse</span>(begin, i - <span class="number">1</span>);</span><br><span class="line">            begin = i+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>看起来你发送了一个空字符 (\u0000)，这通常是一个不可见的字符</p>
+<h2 id="右旋转字符串"><a href="#右旋转字符串" class="headerlink" title="右旋转字符串"></a>右旋转字符串</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    string s;</span><br><span class="line">    cin &gt;&gt; s;</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">auto</span> reverse = [&amp;s] (<span class="type">int</span> start, <span class="type">int</span> end) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = start, j = end; i &lt; j; i++, j--) &#123;</span><br><span class="line">            <span class="built_in">swap</span>(s[i], s[j]);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">reverse</span>(<span class="number">0</span>, s.<span class="built_in">size</span>() - <span class="number">1</span>); </span><br><span class="line">    <span class="built_in">reverse</span>(<span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">reverse</span>(n, s.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    cout &lt;&lt; s &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="重复的子字符串"><a href="#重复的子字符串" class="headerlink" title="重复的子字符串"></a>重复的子字符串</h2><p>使用双倍字符串拼接的方式通常比基于质数的算法更快，因为双倍字符串方法直接利用了字符串的重复结构，避免了复杂的数学运算。下面详细对比两者的特点：</p>
+<ol>
+<li><p>双倍字符串法</p>
+<p> •	时间复杂度：O(n)，其中 n 是字符串 s 的长度。<br> •	原理：只需构建一个双倍字符串，并检查 s 是否出现在去头尾的双倍字符串中。<br> •	优点：操作简单，代码短小，且在大多数常见情况下非常高效。<br> •	缺点：适合一般情况，对于极端大字符串可能需要稍高的内存，但一般不会出现瓶颈。</p>
+</li>
+<li><p>质数方法</p>
+</li>
+</ol>
+<p>质数方法一般利用字符串的周期性，主要步骤如下：</p>
+<pre><code>1.	遍历 s 的每个可能周期长度 k，并尝试用 k 长度的子串拼接构成 s。
+2.	为了优化，可以用质数判断 k 是否为潜在周期长度，借助字符串的长度 n 与 k 的整除关系。
+
+•	时间复杂度：在最坏情况下，质数方法会有更高的时间复杂度，约为 O(n*sqrt(n))，因为需要循环判断每个可能的周期。
+•	优点：基于质数的数学方法更具启发性，尤其适合学习和竞赛，但实现上稍复杂。
+•	缺点：由于有循环判断，对于大字符串性能可能不如双倍字符串法。
+</code></pre>
+<p>结论</p>
+<p>在实际应用中，双倍字符串方法通常比质数方法更快，因为它直接利用字符串的内存结构和查找操作，省去了周期性判断和质数检测的步骤。质数方法适合于更具挑战性的数学问题场景，但在解决字符串周期性问题时可能显得繁琐。</p>
+<p>如果重点在于速度和简单实现，推荐使用双倍字符串法。</p>
+<p>substr 是 C++ std::string 类中的一个方法，用于获取字符串的子串。它的语法如下：</p>
+<p>string substr(size_t pos &#x3D; 0, size_t len &#x3D; npos) const;</p>
+<pre><code>•	t.find(s)：在字符串 t 中查找子字符串 s。该方法返回 s 在 t 中的第一个出现位置的索引（即起始位置）。如果 s 不存在于 t 中，则返回 string::npos。
+•	string::npos：这是一个常量，表示“找不到”或“无效的位置”，通常表示查找操作失败。
+</code></pre>
+<p>什么是字符串<br>字符串是若干字符组成的有限序列，也可以理解为是一个字符数组，但是很多语言对字符串做了特殊的规定，接下来我来说一说C&#x2F;C++中的字符串。</p>
+<p>在C语言中，把一个字符串存入一个数组时，也把结束符 ‘\0’存入数组，并以此作为该字符串是否结束的标志。</p>
+<p>例如这段代码：</p>
+<p>char a[5] &#x3D; “asd”;<br>for (int i &#x3D; 0; a[i] !&#x3D; ‘\0’; i++) {<br>}<br>在C++中，提供一个string类，string类会提供 size接口，可以用来判断string类字符串是否结束，就不用’\0’来判断是否结束。</p>
+<p>例如这段代码:</p>
+<p>string a &#x3D; “asd”;<br>for (int i &#x3D; 0; i &lt; a.size(); i++) {<br>}<br>那么vector&lt; char &gt; 和 string 又有什么区别呢？</p>
+<p>其实在基本操作上没有区别，但是 string提供更多的字符串处理的相关接口，例如string 重载了+，而vector却没有。</p>
+<p>所以想处理字符串，我们还是会定义一个string类型。</p>
+<h2 id="实现kmp"><a href="#实现kmp" class="headerlink" title="实现kmp"></a>实现kmp</h2><p>要通过next数组，也就是最大公共前后缀。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">strStr</span><span class="params">(string haystack, string needle)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (needle.<span class="built_in">size</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">next</span><span class="params">(needle.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> j = <span class="number">-1</span>;</span><br><span class="line">        next[<span class="number">0</span>] = j;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span> ; i &lt; needle.<span class="built_in">size</span>(); i++)  &#123;</span><br><span class="line">            <span class="keyword">while</span> (j &gt; <span class="number">-1</span> &amp;&amp; needle[i] != needle[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                j = next[j];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (needle[i] == needle[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            next[i] = j;</span><br><span class="line">        &#125;</span><br><span class="line">        j = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i&lt; haystack.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="keyword">while</span> (j &gt; <span class="number">-1</span> &amp;&amp; haystack[i] != needle[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                j = next[j];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (haystack[i] == needle[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j == needle.<span class="built_in">size</span>() <span class="number">-1</span>) <span class="keyword">return</span> i - j;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这个要多理解，还是不太明白。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/11/10/leetcode/6/">6.栈与队列</a>
+            
+            
+            <a class="next" rel="next" href="/2024/11/04/leetcode/3/">3.哈希表</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

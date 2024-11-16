@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>3.哈希表 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">3.哈希表</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 4, 2024&nbsp;&nbsp;23:30:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/">代码随想录</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="哈希表相关题目"><a href="#哈希表相关题目" class="headerlink" title="哈希表相关题目"></a>哈希表相关题目</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> <ol>
+<li>哈希表理论基础</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="2">
+<li>有效的字母异位词</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="3">
+<li>两个数组的交集</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="4">
+<li>快乐数</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="5">
+<li>两数之和</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="6">
+<li>四数相加II</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="7">
+<li>赎金信</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="8">
+<li>三数之和</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="9">
+<li>四数之和</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="10">
+<li>总结篇</li>
+</ol>
+</li>
+</ul>
+<h2 id="哈希表理论基础"><a href="#哈希表理论基础" class="headerlink" title="哈希表理论基础"></a>哈希表理论基础</h2><p>当我们想使用哈希法来解决问题的时候，我们一般会选择如下三种数据结构。</p>
+<p>数组<br>set （集合）<br>map(映射)<br>这里数组就没啥可说的了，我们来看一下set。</p>
+<p>在C++中，set 和 map 分别提供以下三种数据结构，其底层实现以及优劣如下表所示：</p>
+<p>集合	底层实现	是否有序	数值是否可以重复	能否更改数值	查询效率	增删效率<br>std::set	红黑树	有序	否	否	O(log n)	O(log n)<br>std::multiset	红黑树	有序	是	否	O(logn)	O(logn)<br>std::unordered_set	哈希表	无序	否	否	O(1)	O(1)<br>std::unordered_set底层实现为哈希表，std::set 和std::multiset 的底层实现是红黑树，红黑树是一种平衡二叉搜索树，所以key值是有序的，但key不可以修改，改动key值会导致整棵树的错乱，所以只能删除和增加。</p>
+<p>映射	底层实现	是否有序	数值是否可以重复	能否更改数值	查询效率	增删效率<br>std::map	红黑树	key有序	key不可重复	key不可修改	O(logn)	O(logn)<br>std::multimap	红黑树	key有序	key可重复	key不可修改	O(log n)	O(log n)<br>std::unordered_map	哈希表	key无序	key不可重复	key不可修改	O(1)	O(1)<br>std::unordered_map 底层实现为哈希表，std::map 和std::multimap 的底层实现是红黑树。同理，std::map 和std::multimap 的key也是有序的（这个问题也经常作为面试题，考察对语言容器底层的理解）。</p>
+<p>当我们要使用集合来解决哈希问题的时候，优先使用unordered_set，因为它的查询和增删效率是最优的，如果需要集合是有序的，那么就用set，如果要求不仅有序还要有重复数据的话，那么就用multiset。</p>
+<p>那么再来看一下map ，在map 是一个key value 的数据结构，map中，对key是有限制，对value没有限制的，因为key的存储方式使用红黑树实现的。</p>
+<p>其他语言例如：java里的HashMap ，TreeMap 都是一样的原理。可以灵活贯通。</p>
+<p>虽然std::set和std::multiset 的底层实现基于红黑树而非哈希表，它们通过红黑树来索引和存储数据。不过给我们的使用方式，还是哈希法的使用方式，即依靠键（key）来访问值（value）。所以使用这些数据结构来解决映射问题的方法，我们依然称之为哈希法。std::map也是一样的道理。</p>
+<h2 id="有效的字母异位词"><a href="#有效的字母异位词" class="headerlink" title="有效的字母异位词"></a>有效的字母异位词</h2><p>因为字符a到字符z的ASCII是26个连续的数值，所以字符a映射为下标0，相应的字符z映射为下标25。</p>
+<p>在 C++ 中，数组的声明和初始化可以有多种不同的格式。以下是一些常见的示例：</p>
+<ol>
+<li>不初始化数组</li>
+</ol>
+<p>int record[26];</p>
+<p>这种格式仅声明一个大小为 26 的整数数组 record，但不初始化元素，因此元素的值是不确定的（可能是随机的垃圾值）。</p>
+<ol start="2">
+<li>全部初始化为特定值</li>
+</ol>
+<p>在 C++11 及之后的版本中，可以使用 std::fill 函数来初始化数组的所有元素为特定的值：</p>
+<p>int record[26];<br>std::fill(std::begin(record), std::end(record), 5); &#x2F;&#x2F; 将所有元素初始化为 5</p>
+<p>这种方法适用于希望用特定值填充整个数组的情况。</p>
+<ol start="3">
+<li>使用循环初始化每个元素</li>
+</ol>
+<p>可以在声明后使用循环为每个元素赋值：</p>
+<p>int record[26];<br>for (int i &#x3D; 0; i &lt; 26; i++) {<br>    record[i] &#x3D; i; &#x2F;&#x2F; 初始化为 0 到 25 的值<br>}</p>
+<p>这种格式在需要根据某些逻辑对元素进行初始化时非常有用。</p>
+<ol start="4">
+<li>初始化为特定的值列表</li>
+</ol>
+<p>int record[26] &#x3D; {1, 2, 3, 4, 5}; &#x2F;&#x2F; 前五个元素被初始化为 1, 2, 3, 4, 5，其他元素自动初始化为 0</p>
+<p>当你指定部分初始化值时，未指定的元素将自动初始化为 0。</p>
+<ol start="5">
+<li>使用 std::array（C++11 及更高版本）</li>
+</ol>
+<p>C++ 标准库中的 std::array 提供了更安全和功能更丰富的固定大小数组，可以使用类似的初始化方法：</p>
+<p>#include <array></p>
+<p>std::array&lt;int, 26&gt; record &#x3D; {0}; &#x2F;&#x2F; 初始化所有元素为 0</p>
+<ol start="6">
+<li>使用 memset 初始化（针对整数类型）</li>
+</ol>
+<p>memset 可以用于将数组的字节值设置为特定值（通常用于将所有字节设为 0 或 -1）：</p>
+<p>int record[26];<br>memset(record, 0, sizeof(record)); &#x2F;&#x2F; 将所有元素初始化为 0</p>
+<p>以上方法在不同场景下各有优势，具体选择可以根据需求来定。</p>
+<p>除了 record[s[i] - ‘a’] 这种方式，还有其他几种常见的格式来处理字符在数组中的位置映射，具体的选择取决于具体需求和数据结构。以下是几种常用的替代格式：</p>
+<ol>
+<li>使用 std::unordered_map 映射字符</li>
+</ol>
+<p>如果需要处理的不只是小写字母，或是字符范围不连续，可以用 std::unordered_map 将字符映射到数组位置或计数器中：</p>
+<p>#include <unordered_map><br>#include <string></p>
+<p>std::unordered_map&lt;char, int&gt; record; &#x2F;&#x2F; 字符映射到整数<br>std::string s &#x3D; “hello”;</p>
+<p>for (char c : s) {<br>    record[c]++; &#x2F;&#x2F; 直接根据字符c计数，不需要转换偏移量<br>}</p>
+<p>这种方式可以直接处理任意字符，而不仅限于小写字母。</p>
+<ol start="2">
+<li>使用 ASCII 码值作为数组下标</li>
+</ol>
+<p>如果处理 ASCII 字符集，可以定义一个大小为 128（或 256）的数组来容纳所有可能的 ASCII 字符：</p>
+<p>int record[128] &#x3D; {0}; &#x2F;&#x2F; ASCII 范围的计数器数组<br>std::string s &#x3D; “hello”;</p>
+<p>for (char c : s) {<br>    record[(int)c]++; &#x2F;&#x2F; 使用 ASCII 值作为下标<br>}</p>
+<p>这样可以处理所有 ASCII 字符，而不仅限于字母。字符的 ASCII 值可以直接用作数组下标，record[c] 即为对应字符 c 的计数。</p>
+<ol start="3">
+<li>使用字符范围映射函数</li>
+</ol>
+<p>如果字符范围不局限于字母且有某种特定的顺序要求，可以定义一个映射函数，将字符映射到合适的数组下标。</p>
+<p>int mapCharToIndex(char c) {<br>    if (c &gt;&#x3D; ‘a’ &amp;&amp; c &lt;&#x3D; ‘z’) return c - ‘a’;   &#x2F;&#x2F; 小写字母映射<br>    if (c &gt;&#x3D; ‘A’ &amp;&amp; c &lt;&#x3D; ‘Z’) return c - ‘A’ + 26; &#x2F;&#x2F; 大写字母映射到不同区域<br>    &#x2F;&#x2F; 其他字符的映射可以按需求添加<br>    return -1; &#x2F;&#x2F; 不支持的字符返回 -1<br>}</p>
+<p>int record[52] &#x3D; {0}; &#x2F;&#x2F; 包含大小写字母的计数器数组<br>std::string s &#x3D; “Hello”;</p>
+<p>for (char c : s) {<br>    int index &#x3D; mapCharToIndex(c);<br>    if (index !&#x3D; -1) {<br>        record[index]++;<br>    }<br>}</p>
+<p>在这个例子中，小写字母和大写字母分别映射到不同的数组区间，可以根据需求灵活扩展。</p>
+<ol start="4">
+<li>使用 std::vector 替代固定大小数组</li>
+</ol>
+<p>std::vector 提供了动态大小的数组，可以按需调整大小并支持更灵活的操作：</p>
+<p>#include <vector><br>#include <string></p>
+<p>std::vector<int> record(26, 0); &#x2F;&#x2F; 初始大小为26且值为0<br>std::string s &#x3D; “hello”;</p>
+<p>for (char c : s) {<br>    record[c - ‘a’]++;<br>}</p>
+<p>如果需要按需调整大小，比如在程序运行时确定字符的范围，std::vector 是更灵活的选择。</p>
+<ol start="5">
+<li>使用 std::bitset 进行布尔值存储</li>
+</ol>
+<p>在需要记录字符是否出现过（而不是计数）时，std::bitset 是一种节省空间的选择：</p>
+<p>#include <bitset><br>#include <string></p>
+<p>std::bitset&lt;26&gt; record; &#x2F;&#x2F; 仅记录a-z字母是否出现<br>std::string s &#x3D; “hello”;</p>
+<p>for (char c : s) {<br>    record.set(c - ‘a’); &#x2F;&#x2F; 将对应位设置为1，表示字符出现过<br>}</p>
+<p>if (record.test(‘h’ - ‘a’)) {<br>    &#x2F;&#x2F; 判断字母 ‘h’ 是否出现过<br>}</p>
+<p>std::bitset 非常适合布尔型的数据需求，既节省空间，也能直接利用位运算加快速度。</p>
+<p>这些格式提供了从小型固定范围到动态或灵活范围的不同选择，适用于多种字符处理场景。</p>
+<h2 id="两个数组的交集"><a href="#两个数组的交集" class="headerlink" title="两个数组的交集"></a>两个数组的交集</h2><p>std::unordered_set 是 C++ 标准库中提供的一种无序集合容器，用于存储唯一的元素，通常通过哈希表实现。它的特点是快速查找、插入和删除操作，时间复杂度接近 ￼（均摊复杂度）。</p>
+<p>基本用法</p>
+<p>std::unordered_set 可以用于存储不重复的元素，且不保证元素的顺序。常见的用法包括查找、插入和删除元素：</p>
+<p>#include <unordered_set><br>#include <iostream></p>
+<p>int main() {<br>    std::unordered_set<int> mySet;</p>
+<pre><code>// 插入元素
+mySet.insert(1);
+mySet.insert(2);
+mySet.insert(3);
+
+// 检查元素是否存在
+if (mySet.find(2) != mySet.end()) &#123;
+    std::cout &lt;&lt; &quot;Element 2 is in the set.&quot; &lt;&lt; std::endl;
+&#125;
+
+// 删除元素
+mySet.erase(1);
+
+// 遍历元素
+for (int elem : mySet) &#123;
+    std::cout &lt;&lt; elem &lt;&lt; &quot; &quot;;
+&#125;
+
+return 0;
+</code></pre>
+<p>}</p>
+<p>常用操作</p>
+<pre><code>•	插入元素：mySet.insert(value);
+</code></pre>
+<p>若集合中已存在该元素，则插入操作不会更改集合内容。<br>    •	查找元素：mySet.find(value);<br>若元素存在，返回指向该元素的迭代器，否则返回 mySet.end()。<br>    •	删除元素：mySet.erase(value);<br>删除指定元素，若元素不存在则无操作。<br>    •	检查元素是否存在：mySet.count(value);<br>若元素存在，返回 1，否则返回 0。这是另一种检查元素存在性的方式，适合需要简单布尔结果的情况。<br>    •	大小和清空：<br>    •	mySet.size() 返回集合中元素的数量。<br>    •	mySet.empty() 返回集合是否为空。<br>    •	mySet.clear() 清空集合中的所有元素。</p>
+<p>使用场景示例</p>
+<ol>
+<li>检查字符串中的唯一字符</li>
+</ol>
+<p>可以利用 std::unordered_set 检查字符串中是否有重复字符：</p>
+<p>#include <unordered_set><br>#include <string></p>
+<p>bool hasUniqueChars(const std::string&amp; s) {<br>    std::unordered_set<char> charSet;<br>    for (char c : s) {<br>        if (charSet.count(c) &gt; 0) { &#x2F;&#x2F; 如果字符已存在，说明有重复<br>            return false;<br>        }<br>        charSet.insert(c);<br>    }<br>    return true;<br>}</p>
+<ol start="2">
+<li>查找公共元素</li>
+</ol>
+<p>std::unordered_set 是 C++ 标准库中提供的一种无序集合容器，用于存储唯一的元素，通常通过哈希表实现。它的特点是快速查找、插入和删除操作，时间复杂度接近 ￼（均摊复杂度）。</p>
+<p>基本用法</p>
+<p>std::unordered_set 可以用于存储不重复的元素，且不保证元素的顺序。常见的用法包括查找、插入和删除元素：</p>
+<p>#include <unordered_set><br>#include <iostream></p>
+<p>int main() {<br>    std::unordered_set<int> mySet;</p>
+<pre><code>// 插入元素
+mySet.insert(1);
+mySet.insert(2);
+mySet.insert(3);
+
+// 检查元素是否存在
+if (mySet.find(2) != mySet.end()) &#123;
+    std::cout &lt;&lt; &quot;Element 2 is in the set.&quot; &lt;&lt; std::endl;
+&#125;
+
+// 删除元素
+mySet.erase(1);
+
+// 遍历元素
+for (int elem : mySet) &#123;
+    std::cout &lt;&lt; elem &lt;&lt; &quot; &quot;;
+&#125;
+
+return 0;
+</code></pre>
+<p>}</p>
+<p>常用操作</p>
+<pre><code>•	插入元素：mySet.insert(value);
+</code></pre>
+<p>若集合中已存在该元素，则插入操作不会更改集合内容。<br>    •	查找元素：mySet.find(value);<br>若元素存在，返回指向该元素的迭代器，否则返回 mySet.end()。<br>    •	删除元素：mySet.erase(value);<br>删除指定元素，若元素不存在则无操作。<br>    •	检查元素是否存在：mySet.count(value);<br>若元素存在，返回 1，否则返回 0。这是另一种检查元素存在性的方式，适合需要简单布尔结果的情况。<br>    •	大小和清空：<br>    •	mySet.size() 返回集合中元素的数量。<br>    •	mySet.empty() 返回集合是否为空。<br>    •	mySet.clear() 清空集合中的所有元素。</p>
+<p>使用场景示例</p>
+<ol>
+<li>检查字符串中的唯一字符</li>
+</ol>
+<p>可以利用 std::unordered_set 检查字符串中是否有重复字符：</p>
+<p>#include <unordered_set><br>#include <string></p>
+<p>bool hasUniqueChars(const std::string&amp; s) {<br>    std::unordered_set<char> charSet;<br>    for (char c : s) {<br>        if (charSet.count(c) &gt; 0) { &#x2F;&#x2F; 如果字符已存在，说明有重复<br>            return false;<br>        }<br>        charSet.insert(c);<br>    }<br>    return true;<br>}</p>
+<ol start="2">
+<li>查找公共元素</li>
+</ol>
+<p>使用两个集合的交集来查找两个数组中的公共元素：</p>
+<p>#include <unordered_set><br>#include <vector><br>#include <iostream></p>
+<p>std::unordered_set<int> findCommonElements(const std::vector<int>&amp; v1, const std::vector<int>&amp; v2) {<br>    std::unordered_set<int> set1(v1.begin(), v1.end());<br>    std::unordered_set<int> commonElements;<br>    for (int num : v2) {<br>        if (set1.count(num) &gt; 0) { &#x2F;&#x2F; 若存在于第一个集合中<br>            commonElements.insert(num);<br>        }<br>    }<br>    return commonElements;<br>}</p>
+<p>特点总结</p>
+<pre><code>•	无序：std::unordered_set 不保证元素的顺序，若需要顺序，使用 std::set（有序集合）。
+•	效率高：插入、删除和查找的时间复杂度在均摊情况下接近 ￼。
+•	唯一性：元素在集合中是唯一的，重复插入相同元素不会改变集合内容。
+</code></pre>
+<p>std::unordered_set 非常适合于需要快速查找和唯一元素存储的场景。<br>return vector<int>(result_set.begin(), result_set.end());</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">intersection</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; res_set;</span><br><span class="line">        <span class="type">bool</span> hash[<span class="number">1005</span>] = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> nums : nums1) &#123;</span><br><span class="line">            hash[nums] = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> nums : nums2) &#123;</span><br><span class="line">            <span class="keyword">if</span> (hash[nums]) &#123;</span><br><span class="line">                res_set.<span class="built_in">insert</span>(nums);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt; (res_set.<span class="built_in">begin</span>(), res_set.<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="快乐数"><a href="#快乐数" class="headerlink" title="快乐数"></a>快乐数</h2><p>编写一个算法来判断一个数 n 是不是快乐数。</p>
+<p>「快乐数」 定义为：</p>
+<p>对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。<br>然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。<br>如果这个过程 结果为 1，那么这个数就是快乐数。<br>如果 n 是 快乐数 就返回 true ；不是，则返回 false 。</p>
+<p>#include <iostream><br>#include <string></p>
+<p>int main() {<br>    &#x2F;&#x2F; 字符转为数字<br>    char ch &#x3D; ‘7’;<br>    int num &#x3D; ch - ‘0’;<br>    std::cout &lt;&lt; “字符 ‘7’ 转为数字：” &lt;&lt; num &lt;&lt; std::endl;</p>
+<pre><code>// 数字转为字符
+int num2 = 3;
+char ch2 = num2 + &#39;0&#39;;
+std::cout &lt;&lt; &quot;数字 3 转为字符：&quot; &lt;&lt; ch2 &lt;&lt; std::endl;
+
+// ASCII 值转换
+int asciiValue = 66;
+char ch3 = static_cast&lt;char&gt;(asciiValue);
+std::cout &lt;&lt; &quot;ASCII 66 转为字符：&quot; &lt;&lt; ch3 &lt;&lt; std::endl;
+
+// 使用 std::to_string 和 std::stoi
+int num3 = 456;
+std::string str = std::to_string(num3);
+std::cout &lt;&lt; &quot;数字 456 转为字符串：&quot; &lt;&lt; str &lt;&lt; std::endl;
+
+std::string str2 = &quot;789&quot;;
+int num4 = std::stoi(str2);
+std::cout &lt;&lt; &quot;字符串 \&quot;789\&quot; 转为数字：&quot; &lt;&lt; num4 &lt;&lt; std::endl;
+
+return 0;
+</code></pre>
+<p>}</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isHappy</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; tmp;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            std::string nums = std::<span class="built_in">to_string</span>(n);</span><br><span class="line">            n = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">                n += <span class="built_in">pow</span>(nums[i] - <span class="string">&#x27;0&#x27;</span>, <span class="number">2</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (n == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (tmp.<span class="built_in">contains</span>(n)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            tmp.<span class="built_in">insert</span>(n);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="两数之和"><a href="#两数之和" class="headerlink" title="两数之和"></a>两数之和</h2><p>class Solution {<br>public:<br>    vector<int> twoSum(vector<int>&amp; nums, int target) {<br>        std::unordered_map&lt;int, int&gt; map;<br>        for (int i &#x3D; 0; i &lt; nums.size(); i++)   {<br>            if (map.count(target - nums[i])) {<br>                return vector<int>{i, map[target - nums[i]]};<br>            }<br>            map[nums[i]] &#x3D; i;<br>        }<br>        return {};</p>
+<pre><code>&#125;
+</code></pre>
+<p>};</p>
+<pre><code>1.	变量 i 未初始化：在 for 循环中，int i 没有初始化，导致 i 的值是未定义的。应该初始化 i 为 0。
+2.	错误的 vector&lt;int&gt;(i, map[target - nums[i]])：这行代码不正确。构造 vector&lt;int&gt; 时应该传入两个元素的列表，而不是范围。应该改为 &#123;map[target - nums[i]], i&#125;。
+</code></pre>
+<h2 id="四数之和"><a href="#四数之和" class="headerlink" title="四数之和"></a>四数之和</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">fourSumCount</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2, vector&lt;<span class="type">int</span>&gt;&amp; nums3, vector&lt;<span class="type">int</span>&gt;&amp; nums4)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; map;</span><br><span class="line">        <span class="type">int</span> n = nums1.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                map[nums1[i] + nums2[j]]++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line"></span><br><span class="line">                    ans += map[-nums3[i] - nums4[j]];</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<pre><code>1.	自动初始化为 0：在 unordered_map 中，如果访问的 key 不存在，C++ 会自动插入一个 key 并将 value 初始化为 0。
+2.	自增操作：umap[a + b]++ 相当于 umap[a + b] = umap[a + b] + 1。当 a + b 的值第一次出现时，umap[a + b] 会自动初始化为 0，然后进行加 1 操作。因此，不需要显式初始化。
+
+for (const auto&amp; pair : mapA) &#123;
+std::cout &lt;&lt; &quot;Key: &quot; &lt;&lt; pair.first &lt;&lt; &quot;, Value: &quot; &lt;&lt; pair.second &lt;&lt; std::endl;
+</code></pre>
+<p>}</p>
+<p>condition ? expr_if_true : expr_if_false;</p>
+<h2 id="赎金信"><a href="#赎金信" class="headerlink" title="赎金信"></a>赎金信</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">canConstruct</span><span class="params">(string ransomNote, string magazine)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ransomNote.<span class="built_in">size</span>() &gt; magazine.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> array[<span class="number">26</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; magazine.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            array[magazine[i] - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>;i &lt; ransomNote.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            </span><br><span class="line">            array[ransomNote[i] - <span class="string">&#x27;a&#x27;</span>] --;</span><br><span class="line">            <span class="keyword">if</span> (array[ransomNote[i] - <span class="string">&#x27;a&#x27;</span>] &lt; <span class="number">0</span>) &#123;<span class="keyword">return</span> <span class="literal">false</span>;&#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三数之和"><a href="#三数之和" class="headerlink" title="三数之和"></a>三数之和</h2><p>双指针法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt; &gt; <span class="built_in">threeSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt; &gt; res;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>() - <span class="number">2</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; nums[i] == nums[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> res;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> fst = i + <span class="number">1</span>;</span><br><span class="line">            <span class="type">int</span> end = nums.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (fst &lt; end) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (nums[i] + nums[fst] + nums[end] == <span class="number">0</span>) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(&#123;nums[i], nums[fst], nums[end]&#125;);</span><br><span class="line">                <span class="keyword">while</span> (fst &lt; end &amp;&amp; nums[fst] == nums[fst + <span class="number">1</span>]) fst ++;</span><br><span class="line">                <span class="keyword">while</span> (fst &lt; end &amp;&amp; nums[end] == nums[end - <span class="number">1</span>]) end --;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                fst++;</span><br><span class="line">                end--; </span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] + nums[fst] + nums[end] &gt; <span class="number">0</span>) end--;</span><br><span class="line">            <span class="keyword">else</span> fst++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四数之和-1"><a href="#四数之和-1" class="headerlink" title="四数之和"></a>四数之和</h2><p>剪枝挺重要的</p>
+<p>同样也是双指针</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt; &gt; <span class="built_in">fourSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (nums.<span class="built_in">size</span>() &lt; <span class="number">4</span>) <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>() - <span class="number">3</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; nums[i] == nums[i<span class="number">-1</span>]) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> ((<span class="type">long</span>) nums[i] + nums[i + <span class="number">1</span>] + nums[i+<span class="number">2</span>] + nums[i+<span class="number">3</span>] &gt; target) <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span> ((<span class="type">long</span>) nums[i] + nums[nums.<span class="built_in">size</span>() - <span class="number">1</span>] + nums[nums.<span class="built_in">size</span>() - <span class="number">2</span>] + nums[nums.<span class="built_in">size</span>() - <span class="number">3</span>] &lt; target) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; nums.<span class="built_in">size</span>() - <span class="number">2</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (j &gt; i + <span class="number">1</span> &amp;&amp; nums[j] == nums[j - <span class="number">1</span>]) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ((<span class="type">long</span>) nums[i] + nums[j] + nums[j+<span class="number">1</span>] + nums[j+<span class="number">2</span>] &gt; target) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span> ((<span class="type">long</span>)nums[i] + nums[nums.<span class="built_in">size</span>() - <span class="number">1</span>] + nums[nums.<span class="built_in">size</span>() - <span class="number">2</span>] + nums[j] &lt; target) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                <span class="type">int</span> left = j + <span class="number">1</span>;</span><br><span class="line">                <span class="type">int</span> right = nums.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">                </span><br><span class="line">                 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ((<span class="type">long</span>)nums[i] + nums[j] + nums[left] + nums[right] == target) &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(&#123;nums[i], nums[j], nums[left], nums[right]&#125;);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">while</span> (left &lt; right &amp;&amp; nums[left] == nums[left + <span class="number">1</span>]) left++;</span><br><span class="line">                    <span class="keyword">while</span> (left &lt; right &amp;&amp; nums[right] == nums[right - <span class="number">1</span>]) right--;</span><br><span class="line"></span><br><span class="line">                    left++;</span><br><span class="line">                    right--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((<span class="type">long</span>)nums[i] + nums[j] + nums[left] + nums[right] &gt; target) right--;</span><br><span class="line">                <span class="keyword">else</span> left++;</span><br><span class="line">            &#125;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一般来说哈希表都是用来快速判断一个元素是否出现集合里</p>
+<p>对于哈希表，要知道哈希函数和哈希碰撞在哈希表中的作用。</p>
+<p>哈希函数是把传入的key映射到符号表的索引上。</p>
+<p>哈希碰撞处理有多个key映射到相同索引上时的情景，处理碰撞的普遍方式是拉链法和线性探测法。</p>
+<p>接下来是常见的三种哈希结构：</p>
+<p>数组<br>set（集合）<br>map（映射）<br>在C++语言中，set 和 map 都分别提供了三种数据结构，每种数据结构的底层实现和用途都有所不同，在关于哈希表，你该了解这些！ (opens new window)中我给出了详细分析，这一知识点很重要！</p>
+<p>例如什么时候用std::set，什么时候用std::multiset，什么时候用std::unordered_set，都是很有考究的。</p>
+<p>只有对这些数据结构的底层实现很熟悉，才能灵活使用，否则很容易写出效率低下的程序。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/11/08/leetcode/4/">4.字符串</a>
+            
+            
+            <a class="next" rel="next" href="/2024/11/03/leetcode/2/">2.列表</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_lec04Transformation Cont(3D变换的 视图变换和投影变换) | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_lec04Transformation Cont(3D变换的 视图变换和投影变换)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 19, 2024&nbsp;&nbsp;0:21:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="1-Viewing变换。"><a href="#1-Viewing变换。" class="headerlink" title="1.Viewing变换。"></a>1.Viewing变换。</h1><p>在我们开始正是内容钱我们需要先引入一个概念：</p>
+<p>旋转矩阵的逆矩阵等于它的转置矩阵。</p>
+<p>在数学上，一个矩阵的逆等于它的转置矩阵我们称其为正交矩阵，也就是相互垂直且长度为单位长度。</p>
+<h2 id="1-1-Viewing-Transformation"><a href="#1-1-Viewing-Transformation" class="headerlink" title="1.1 Viewing Transformation"></a>1.1 Viewing Transformation</h2><p>我们知道我们需要将三维空间中摄像机看到的场景最终变为一张2D的图片给显示在screen上，我们来了解具体发生了什么变换。具体是去了解如何从3D 变为 2D</p>
+<p>其中的过程类似于拍照片：</p>
+<ul>
+<li>Model Transformation: 让人们集合在一起并摆好资质（设置好场景）</li>
+<li>View Transformation : 找到一个拍摄的角度（设置好camera位置和看的方向）</li>
+<li>Projection Transformation: 拍照（将camera看向的3D内容变为2D照片）</li>
+</ul>
+<p>我们主要对第二步进行讲解。</p>
+<p>首先我们需要定义好Camera：</p>
+<p>设置好相机的位置<br>设置好相机看向的方向，即look-at &#x2F; gaze direction<br>我们除了相机指向的方向我们还要设置一个up-direction，因为我们需要从不同角度看向场景，就像你拿着手机倾斜45度或者反着拍，最后的照片是不一样的。</p>
+<p><img src="/img/games101/lec04/image.png" alt="alt text"></p>
+<p>至此我们通过一个点，两个向量将相机给固定下来了<br>我们知道，当相机和物体没有进行相对运动时，不论怎么移动二者，我们看到的结果是一样的。</p>
+<p>因此我们将相机始从原来位置移动到原点位置，使得其gaze direction看向-z方向，up-direction是y正半轴。相机移动后，物体&#x2F;场景跟着相机进行相同的移动，这样虽然进行了移动，但二者最后得到的结果是相同的。</p>
+<p>这样做是因为可以简化很多操作，相机在(0,0,0)位置有很多的好处。</p>
+<p>假设我们现在有一个相机，在e点上，gaze direction是向量g，up direction是t，我们要把点e给变成原点，向量g在-z轴上，t在y正半轴上。(这里有一点就是t和g是垂直的)。</p>
+<p><img src="/img/games101/lec04/image%20copy.png" alt="alt text"></p>
+<p>其基本思想是：</p>
+<ol>
+<li><p>进行平移，将e点移到原点。</p>
+</li>
+<li><p>旋转g到-z方向上。</p>
+</li>
+<li><p>旋转t到+y方向上。</p>
+</li>
+<li><p>旋转 g 叉乘 t 得到的向量到+x方向上。</p>
+</li>
+</ol>
+<p><img src="/img/games101/lec04/image%20copy%202.png" alt="alt text"></p>
+<p>这个变化矩阵可以写为：</p>
+<p>$$<br>\mathbf{M}<em>{view} &#x3D; \mathbf{R}</em>{view} \mathbf{T}_{view}<br>$$</p>
+<p>平移矩阵非常好写。但是旋转就有点麻烦了。于是我们通过写旋转矩阵的逆矩阵来转置得到旋转矩阵。</p>
+<p><strong>作用</strong></p>
+<ul>
+<li>移动camera，使其位于world space的坐标原点，同样的将其余场景也进行相同的变换使其到应到的位置。</li>
+<li>旋转camera，使其朝向z轴正方向，也就是视线由原点指向z轴负方向。</li>
+</ul>
+<h2 id="1-2Projection-Transformation"><a href="#1-2Projection-Transformation" class="headerlink" title="1.2Projection Transformation"></a>1.2Projection Transformation</h2><ol>
+<li>Orthographic projection (正交投影） ：多用于工程制图</li>
+<li>Perspective projection（透视投影）：符合人眼的成像，会产生近大远小的效果，看起来平行线不会平行，延长的话会相交。</li>
+</ol>
+<p><img src="/img/games101/lec04/image%20copy%203.png" alt="alt text"></p>
+<p>正交投影和透视投影本质的区别就是：是否有近大远小的效果。</p>
+<h3 id="1-2-1-正交投影"><a href="#1-2-1-正交投影" class="headerlink" title="1.2.1 正交投影"></a>1.2.1 正交投影</h3><p><strong>正交投影的思想：</strong></p>
+<p>1.我们设置camera于原点，看向-Z方向，向上是Y轴</p>
+<p>2.然后我们舍弃Z轴也就是让所有物体都Z都等于0，从而我们实现了所有物体只在X轴和Y轴上</p>
+<p>3.将其挤压到【-1，1】X 【-1，1】这么一个正方形内.</p>
+<p><strong>图形学中的实际操作：</strong></p>
+<p>我们定义一个立方体，left,right bottom,top far,near（但是注意我们是看向-Z方向的，far的Z轴值小，near的值大，这就是OPENGL使用左手坐标系的原因）</p>
+<p>然后将其的中心平移到原点出，最后将其给拉成一个【-1，1】的正则立方体。</p>
+<p><img src="/img/games101/lec04/image%20copy%204.png" alt="alt text"></p>
+<p><img src="/img/games101/lec04/%E6%88%AA%E5%B1%8F2024-10-19%2008.59.34.png"></p>
+<p>我们来理解一下这个矩阵，首先是右边的平移矩阵，立方体的中心坐标为(…..),我们需要将其移动到原点处，因此需要反向平移。</p>
+<p>再来另一个矩阵，我们知道我们最后要的是一个正则立方体，也就是它的边长是2，而立方体的各边长为 …. 因此我们需要乘一个缩放因子使其最后结果均为2。</p>
+<h3 id="1-2-2-透视投影"><a href="#1-2-2-透视投影" class="headerlink" title="1.2.2 透视投影"></a>1.2.2 透视投影</h3><p><strong>透视投影的思想</strong>：</p>
+<ol>
+<li><p>将frustum给挤压成一个长方体，也就是将远平面压的和近平面一个大小。</p>
+</li>
+<li><p>做一次正交投影，将长方体的中心移到原点并将其压缩成-1，1的正方体。</p>
+</li>
+</ol>
+<p><img src="/img/games101/lec04/image%20copy%205.png" alt="alt text"></p>
+<p><strong>注意：</strong></p>
+<ol>
+<li><p>在挤压的过程中，近平面永远不会发生变化。</p>
+</li>
+<li><p>在挤压过程中，远平面上的Z值不会发生变化。</p>
+</li>
+<li><p>挤压过程中，远平面的中心点也不会发生变化。</p>
+</li>
+</ol>
+<p>我们知道如何做正交投影，那么接下来来讨论挤压这个frustum的矩阵如何求。</p>
+<p><img src="/img/games101/lec04/image%20copy%206.png" alt="alt text"></p>
+<p>通过相似三角形形得到边与边的关系。</p>
+<p><img src="/img/games101/lec04/%E6%88%AA%E5%B1%8F2024-10-19%2009.10.33.png" alt="alt text"></p>
+<p>相应的点变换为</p>
+<p><img src="/img/games101/lec04/%E6%88%AA%E5%B1%8F2024-10-19%2009.13.26.png" alt="alt text"></p>
+<p>那么我们如何求这个矩阵呢</p>
+<p><img src="/img/games101/lec04/image%20copy%207.png" alt="alt text"></p>
+<p>通过比较从而我们求出了第三行以外的内容，接下来我们求第三行，但我们需要记住两点：</p>
+<ol>
+<li><p>近平面上的任意一点都不会因变换而改变。</p>
+</li>
+<li><p>远平面上的任意一点的Z值都不会因变化而改变。</p>
+</li>
+</ol>
+<p>也就是</p>
+<p>$$<br>\begin{bmatrix} x \ y \ n \ 1 \\end{bmatrix} \to \begin{bmatrix} x \ y \ n \ 1 \\end{bmatrix}<br>\ \begin{bmatrix} x \ y \ f \ 1 \\end{bmatrix} \to \begin{bmatrix} \frac{nx}{f} \ \frac{ny}{f} \ f \ 1 \\end{bmatrix}<br>$$</p>
+<p>首先来看第一个条件，也就是</p>
+<p>$$<br>\begin{bmatrix} ? &amp; ? &amp; ? &amp; ? \\end{bmatrix} \begin{bmatrix} x \ y \ n \ 1 \\end{bmatrix} &#x3D; n<br>$$</p>
+<p>可以得到前面两个为0</p>
+<p>然后再看第二个条件</p>
+<p>$$<br>\begin{bmatrix} 0 &amp; 0 &amp; A &amp; B \\end{bmatrix}\begin{bmatrix} x \ y \ f \ 1 \\end{bmatrix} &#x3D; f<br>$$</p>
+<p>得到两个公式</p>
+<p>$$<br>nA + B &#x3D; n\<br>fA + B &#x3D; f<br>$$</p>
+<p>在这里我也没看懂为什么可以这样</p>
+<p><img src="/img/games101/lec04/image%20copy%208.png" alt="alt text"></p>
+<p><img src="/img/games101/lec04/image%20copy%209.png" alt="alt text"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/10/19/games101/games101_lec05/">games_lec05Rasterization(光栅化)</a>
+            
+            
+            <a class="next" rel="next" href="/2024/10/19/games101/games101_lec03/">games_lec03Transformation(变换)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_Lec 10~12 - 几何 Geometry 隐式与显式 曲线与曲面 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_Lec 10~12 - 几何 Geometry 隐式与显式 曲线与曲面</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 30, 2024&nbsp;&nbsp;0:23:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="几何的表达方式"><a href="#几何的表达方式" class="headerlink" title="几何的表达方式"></a>几何的表达方式</h2><h3 id="隐式表达"><a href="#隐式表达" class="headerlink" title="隐式表达"></a>隐式表达</h3><ul>
+<li>基于 <strong>点的分类</strong></li>
+<li>采样可能较难</li>
+<li>内外测试简单</li>
+</ul>
+<h4 id="种类"><a href="#种类" class="headerlink" title="种类"></a>种类</h4><ul>
+<li><p><strong>代数曲面 (Algebraic Surface)</strong></p>
+<ul>
+<li>最直接的，用数学公式</li>
+<li>不直观</li>
+</ul>
+</li>
+<li><p><strong>构造实体几何 (Constructive Solid Geometry, CSG)</strong></p>
+<ul>
+<li>基本形状的布尔操作组合成复杂形状</li>
+<li>通过布尔运算结合隐式几何</li>
+</ul>
+</li>
+<li><p><strong>距离函数 (Distance Functions)</strong></p>
+<ul>
+<li>相关概念：带符号的距离场 (Signed Distance Field)</li>
+<li>解析形式表达</li>
+</ul>
+</li>
+<li><p><strong>水平集 (Level Sets)</strong></p>
+<ul>
+<li>用网格的方式描述距离</li>
+<li>例子：CT扫描</li>
+</ul>
+</li>
+<li><p><strong>分形 (Fractals)</strong></p>
+<ul>
+<li>自相似性</li>
+<li>递归定义</li>
+</ul>
+</li>
+<li><p><strong>…</strong></p>
+</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>紧凑的描述方式（如用一个函数）</li>
+<li>某些查询简单（如对象内外部、到表面的距离）</li>
+<li>适用于光线-表面交点计算（稍后详细讨论）</li>
+<li>对于简单形状，提供精确描述 &#x2F; 无采样误差</li>
+<li>易于处理拓扑结构变化（如流体）</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>难以表示复杂形状</li>
+</ul>
+<hr>
+<h3 id="Explicit-表达"><a href="#Explicit-表达" class="headerlink" title="Explicit 表达"></a>Explicit 表达</h3><ul>
+<li>所有点都直接给出或通过参数映射给出</li>
+<li>采样简单</li>
+<li>内外测试较难</li>
+</ul>
+<h4 id="种类-1"><a href="#种类-1" class="headerlink" title="种类"></a>种类</h4><ul>
+<li><p><strong>点云 (Point Cloud)</strong></p>
+<ul>
+<li>一堆点，可以表示任意几何</li>
+<li>适合超大数据集（远超每像素一个点）</li>
+<li>常转换为多边形网格</li>
+<li>在欠采样区域难以绘制</li>
+</ul>
+</li>
+<li><p><strong>三角形&#x2F;多边形网格 (Triangle&#x2F;Polygon Mesh)</strong></p>
+<ul>
+<li>存储顶点和多边形（通常为三角形或四边形）</li>
+<li>数据结构较复杂</li>
+<li>图形学中最常用的表示方式之一</li>
+<li>例子：<code>.obj</code> 格式<ul>
+<li>一种文本文件格式，指定顶点、法线、纹理坐标及其连接关系</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>细分曲面、NURBS</strong></p>
+</li>
+<li><p><strong>贝塞尔曲面 (Bezier Surfaces)</strong></p>
+</li>
+<li><p><strong>细分曲面 (Subdivision Surfaces)</strong></p>
+</li>
+<li><p><strong>NURBS</strong></p>
+</li>
+</ul>
+<hr>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>没有“最佳”表达方式，每种选择都最适合不同的任务或几何类型</p>
+<p>在计算机图形学中还有更多的隐式表示方法</p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.02.36.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.03.11.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.03.31.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.03.31.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.04.01.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.04.30.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.04.44.png" alt="alt text"><br><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.05.04.png" alt="alt text"></p>
+<h2 id="曲线-Curve"><a href="#曲线-Curve" class="headerlink" title="曲线 Curve"></a>曲线 Curve</h2><h3 id="Bezier-Curves-贝塞尔曲线"><a href="#Bezier-Curves-贝塞尔曲线" class="headerlink" title="Bézier Curves  贝塞尔曲线"></a>Bézier Curves  贝塞尔曲线</h3><p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.06.38.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.08.37.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.09.01.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.10.40.png" alt="alt text"></p>
+<ul>
+<li>仿射变换前后统一</li>
+<li>凸包性质：形成的曲线一定在控制点形成的凸包内</li>
+</ul>
+<h2 id="高阶贝塞尔曲线的控制难题"><a href="#高阶贝塞尔曲线的控制难题" class="headerlink" title="高阶贝塞尔曲线的控制难题"></a>高阶贝塞尔曲线的控制难题</h2><p>高阶贝塞尔曲线较难控制，因为任何一个控制点的移动都会影响整个曲线的形状。</p>
+<h3 id="改进方案：分段贝塞尔曲线-Piecewise-Bezier-Curves"><a href="#改进方案：分段贝塞尔曲线-Piecewise-Bezier-Curves" class="headerlink" title="改进方案：分段贝塞尔曲线 (Piecewise Bézier Curves)"></a>改进方案：分段贝塞尔曲线 (Piecewise Bézier Curves)</h3><ul>
+<li>通过拼接多个低阶贝塞尔曲线来简化控制</li>
+<li>例如：分段三次贝塞尔曲线 (Piecewise Cubic Bézier)<ul>
+<li>每段由四个控制点定义</li>
+</ul>
+</li>
+</ul>
+<h3 id="光滑性保证"><a href="#光滑性保证" class="headerlink" title="光滑性保证"></a>光滑性保证</h3><ul>
+<li>保证曲线的光滑性（切线连续）：<ul>
+<li>在连接处，内部控制点的前后切线点需要共线，以避免切线的突变</li>
+</ul>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html">贝塞尔曲线编辑</a></li>
+</ul>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.12.17.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.12.37.png" alt="alt text"></p>
+<h2 id="连续性的定义"><a href="#连续性的定义" class="headerlink" title="连续性的定义"></a>连续性的定义</h2><ul>
+<li><strong>C^0 连续</strong>：无断点</li>
+<li><strong>C^1 连续</strong>：无突变</li>
+</ul>
+<hr>
+<h2 id="样条曲线-Spline"><a href="#样条曲线-Spline" class="headerlink" title="样条曲线 (Spline)"></a>样条曲线 (Spline)</h2><p><strong>样条</strong>是一种连续曲线，其构造方式使其能够通过给定的一组点，并且拥有一定数量的连续导数。（一种受控的曲线）</p>
+<hr>
+<h2 id="B样条-B-splines"><a href="#B样条-B-splines" class="headerlink" title="B样条 (B-splines)"></a>B样条 (B-splines)</h2><ul>
+<li><strong>基函数样条 (Basis Splines)</strong><ul>
+<li>以伯恩斯坦多项式 (Bernstein Polynomial) 作为基函数</li>
+<li>满足<strong>局部性</strong>，即改变一个控制点只影响局部区域</li>
+<li>是图形学中较复杂的一部分</li>
+<li>可以视为贝塞尔曲线的超集</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="拓展：B样条和NURBS"><a href="#拓展：B样条和NURBS" class="headerlink" title="拓展：B样条和NURBS"></a>拓展：B样条和NURBS</h2><ul>
+<li>B样条（B-splines）</li>
+<li>NURBS（非均匀有理B样条）</li>
+</ul>
+<p><strong>进一步学习</strong>：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av66548502">B样条和NURBS简介</a></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.14.04.png" alt="alt text"></p>
+<p><em>连续</em></p>
+<h2 id="曲面"><a href="#曲面" class="headerlink" title="曲面"></a>曲面</h2><h3 id="贝塞尔曲面-Bezier-Surfaces"><a href="#贝塞尔曲面-Bezier-Surfaces" class="headerlink" title="贝塞尔曲面 (Bézier Surfaces)"></a>贝塞尔曲面 (Bézier Surfaces)</h3><p>贝塞尔曲面通过两个不同的参数 ( t ) 和 ( u, v ) 控制：</p>
+<ul>
+<li>采用 4x4 个控制点，形成四条贝塞尔曲线，每条包含 4 个控制点</li>
+<li>在相同参数 ( u ) 处取四个控制点，再通过参数 ( v ) 确定曲面上的最终点</li>
+</ul>
+<hr>
+<h3 id="网格-Mesh"><a href="#网格-Mesh" class="headerlink" title="网格 (Mesh)"></a>网格 (Mesh)</h3><p>更广泛使用的是网格表示法。</p>
+<h4 id="网格操作：几何处理-Geometry-Processing"><a href="#网格操作：几何处理-Geometry-Processing" class="headerlink" title="网格操作：几何处理 (Geometry Processing)"></a>网格操作：几何处理 (Geometry Processing)</h4><ul>
+<li><strong>网格细分 (Mesh Subdivision)</strong> - 上采样<ul>
+<li>提高分辨率</li>
+</ul>
+</li>
+<li><strong>网格简化 (Mesh Simplification)</strong> - 下采样<ul>
+<li>降低分辨率</li>
+<li>尽量保持形状和外观</li>
+</ul>
+</li>
+<li><strong>网格正规化 (Mesh Regularization)</strong><ul>
+<li>避免出现特别奇怪的三角形</li>
+<li>调整采样分布以提高网格质量</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.15.54.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.16.16.png" alt="alt text"></p>
+<h2 id="Loop细分-Loop-Subdivision"><a href="#Loop细分-Loop-Subdivision" class="headerlink" title="Loop细分 (Loop Subdivision)"></a>Loop细分 (Loop Subdivision)</h2><p>细分的一个典型应用场景是**位移贴图 (Displacement Mapping)**，需要模型足够细致，因此需要细分（最好是动态细分）。</p>
+<p><strong>Loop细分的“Loop”指的是发明者的名字，与循环无关。</strong></p>
+<h3 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h3><ul>
+<li>适用于三角形网格 (Triangle Mesh)</li>
+</ul>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.20.27.png" alt="alt text"></p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p><strong>创建更多的三角形（顶点）</strong></p>
+<ul>
+<li>将每个三角形分割为四个较小的三角形</li>
+</ul>
+</li>
+<li><p><strong>调整顶点位置（形状需要发生改变）</strong></p>
+<ul>
+<li>根据权重分配新的顶点位置</li>
+<li>新增的顶点和原有的顶点以不同的方式更新</li>
+</ul>
+</li>
+</ol>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-10-30%2017.21.21.png" alt="alt text"></p>
+<h2 id="Catmull-Clark细分-Catmull-Clark-Subdivision"><a href="#Catmull-Clark细分-Catmull-Clark-Subdivision" class="headerlink" title="Catmull-Clark细分 (Catmull-Clark Subdivision)"></a>Catmull-Clark细分 (Catmull-Clark Subdivision)</h2><p>适用于通用网格 (General Mesh)</p>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><ul>
+<li>**非四边形面 (Non-quad face)**：非四边形的面</li>
+<li>**奇异点 (Extraordinary Vertex)**：指度数不等于4的点（degree ≠ 4）</li>
+</ul>
+<h3 id="每次细分步骤"><a href="#每次细分步骤" class="headerlink" title="每次细分步骤"></a>每次细分步骤</h3><ol>
+<li>在每个面中添加一个顶点</li>
+<li>在每条边的中点处添加一个顶点</li>
+<li>将所有新顶点连接</li>
+</ol>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-11-01%2018.31.01.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-11-01%2018.31.20.png" alt="alt text"></p>
+<p>奇异点在第一次细分增加[非四边形面数量]，后续不变；所有非四边形面在第一次细分都会消失</p>
+<p>计算方法 (Quad Mesh)：</p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-11-01%2018.32.59.png" alt="alt text"></p>
+<h2 id="网格简化-Mesh-Simplification"><a href="#网格简化-Mesh-Simplification" class="headerlink" title="网格简化 (Mesh Simplification)"></a>网格简化 (Mesh Simplification)</h2><p><strong>目标</strong>：在保持整体形状的前提下减少网格元素的数量</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>移动端渲染</li>
+<li>远距离视角 (如LOD系统)</li>
+</ul>
+<h3 id="几何的层次结构"><a href="#几何的层次结构" class="headerlink" title="几何的层次结构"></a>几何的层次结构</h3><p>**边收缩 (Edge Collapse)**：合并顶点</p>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-11-01%2018.35.58.png" alt="alt text"></p>
+<ul>
+<li><strong>哪些边需要合并？如何合并？</strong><ul>
+<li>使用**二次误差度量 (Quadric Error Metrics)**，将顶点放置在使误差之和最小的位置</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../img/games101/lec10/%E6%88%AA%E5%B1%8F2024-11-01%2018.38.02.png" alt="alt text"></p>
+<hr>
+<h3 id="使用二次误差进行简化"><a href="#使用二次误差进行简化" class="headerlink" title="使用二次误差进行简化"></a>使用二次误差进行简化</h3><ul>
+<li><strong>提出者</strong>：Garland &amp; Heckbert, 1997</li>
+<li><strong>方法</strong>：迭代地合并具有最小分数的边<ul>
+<li>合并一条边会影响其他边，需要更新数据结构</li>
+<li>使用优先队列或堆来组织边</li>
+</ul>
+</li>
+<li><strong>特点</strong>：贪心算法，非全局最优，但能有效降低误差</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/11/01/games101/games101_lec13to14/">games_Lec 13~14(1) - Ray Tracing 光线追踪 (Whitted Style)</a>
+            
+            
+            <a class="next" rel="next" href="/2024/10/29/leetcode/1/">1.数组</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

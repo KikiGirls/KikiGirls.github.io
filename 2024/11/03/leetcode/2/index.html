@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>2.列表 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">2.列表</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 3, 2024&nbsp;&nbsp;23:30:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/">代码随想录</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="链表相关题目"><a href="#链表相关题目" class="headerlink" title="链表相关题目"></a>链表相关题目</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> <ol>
+<li>链表理论基础</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="2">
+<li>移除链表元素</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="3">
+<li>设计链表</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="4">
+<li>翻转链表</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="5">
+<li>两两交换链表中的节点</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="6">
+<li>删除链表的倒数第N个节点</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="7">
+<li>链表相交</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="8">
+<li>环形链表II</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <ol start="9">
+<li>总结篇</li>
+</ol>
+</li>
+</ul>
+<h2 id="链表理论基础"><a href="#链表理论基础" class="headerlink" title="链表理论基础"></a>链表理论基础</h2><p>数组是在内存中是连续分布的，但是链表在内存中可不是连续分布的。</p>
+<p>链表是通过指针域的指针链接在内存中各个节点。</p>
+<p>所以链表中的节点在内存中不是连续分布的 ，而是散乱分布在内存中的某地址上，分配机制取决于操作系统的内存管理</p>
+<h2 id="移除链表元素"><a href="#移除链表元素" class="headerlink" title="移除链表元素"></a>移除链表元素</h2><p>#203.移除链表元素<br>力扣题目链接(opens new window)</p>
+<p>题意：删除链表中等于给定值 val 的所有节点。</p>
+<p>示例 1： 输入：head &#x3D; [1,2,6,3,4,5,6], val &#x3D; 6 输出：[1,2,3,4,5]</p>
+<p>示例 2： 输入：head &#x3D; [], val &#x3D; 1 输出：[]</p>
+<p>示例 3： 输入：head &#x3D; [7,7,7,7], val &#x3D; 7 输出：[]</p>
+<p>在原始的错误代码中，removeElements 函数被定义为返回一个 ListNode* 类型的值，这意味着它应该返回一个指向 ListNode 类型的指针。然而，在函数的实现中，当 head-&gt;val 不等于 val 时，函数尝试返回一个 ListNode 类型的值，而不是 ListNode* 类型的值。这导致了编译错误，因为函数的返回类型与实际返回的值类型不匹配。</p>
+<p>修复后的代码通过在返回语句中添加 new 关键字来解决这个问题。new ListNode(head-&gt;val, removeElements(head-&gt;next, val)) 创建了一个新的 ListNode 对象，并将其地址返回，这与函数声明的返回类型 ListNode* 相匹配。这样，无论 head-&gt;val 是否等于 val，函数都将返回一个指向 ListNode 类型的指针，从而避免了编译错误。</p>
+<p>总结来说，错误的原因是函数的返回类型与实际返回的值类型不匹配，修复方法是确保返回的是一个指针类型，而不是一个对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function">ListNode* <span class="title">removeElements</span><span class="params">(ListNode* head, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (head-&gt;val == val) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">removeElements</span>(head-&gt;next, val);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">ListNode</span>(head-&gt;val, <span class="built_in">removeElements</span>(head-&gt;next, val));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="设计链表"><a href="#设计链表" class="headerlink" title="设计链表"></a>设计链表</h2><p>力扣题目链接(opens new window)</p>
+<p>题意：</p>
+<p>在链表类中实现这些功能：</p>
+<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
+<p>在C++中，struct（结构体）和class（类）非常相似，它们都可以包含数据成员和成员函数。然而，它们之间有一些关键的区别：</p>
+<p>默认访问权限：在struct中，成员的默认访问权限是public，而在class中，成员的默认访问权限是private。</p>
+<p>继承：struct和class都可以被继承，但在struct中，默认的继承方式是public继承，而在class中，默认的继承方式是private继承。</p>
+<p>模板参数：struct可以作为模板参数，而class也可以，但在某些情况下，struct作为模板参数可能更常见。</p>
+<p>历史用法：在C++的早期版本中，struct主要用于定义简单的数据结构，而class则用于定义更复杂的对象。然而，随着C++的发展，这种区别已经变得不那么明显了。</p>
+<p>在这段代码中，while (index– &gt;&#x3D; 0) 是一个循环语句，它的作用是从 index 开始，每次循环将 index 减一，直到 index 小于 0 时停止循环。</p>
+<p>这个错误是由于在 MyLinkedList::addAtTail 函数中，cur 变量在函数返回后被销毁，但是在销毁后仍然被访问，导致了栈使用后返回的错误。具体来说，在 addAtTail 函数中，cur 是一个局部变量，它在函数返回时被销毁。但是，在 deleteAtIndex 函数中，cur 的 next 和 prev 指针仍然被引用，这导致了访问已销毁的变量的内存地址，从而引发了错误。</p>
+<p>修复的方法是确保在 deleteAtIndex 函数中，只访问在 addAtTail 函数中创建的 cur 变量的 next 和 prev 指针，而不是访问 cur 变量本身。这可以通过在 addAtTail 函数中返回 cur 变量的地址，并在 deleteAtIndex 函数中使用这个地址来实现</p>
+<pre><code>动态分配节点：在 addAtHead、addAtTail 和 addAtIndex 中使用 new ListNode 来创建新节点，以避免局部变量销毁导致的错误。
+2.	修复 get 方法索引：将 while (index-- &gt;= 0) 改为 while (index-- &gt; 0)，确保正确找到目标位置。
+3.	删除节点：在 deleteAtIndex 中，删除节点后调用 delete cur 释放内存，防止内存泄漏。
+</code></pre>
+<h2 id="翻转链表"><a href="#翻转链表" class="headerlink" title="翻转链表"></a>翻转链表</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        ListNode* pre = <span class="literal">nullptr</span>;</span><br><span class="line">        ListNode* cur = head;</span><br><span class="line">        ListNode* tmp;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            tmp = cur -&gt; next;</span><br><span class="line">            cur -&gt; next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = tmp;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">是一个虚拟节点（也称为哨兵节点），它通常用于简化链表操作。在单链表中，头节点的处理可能会比较麻烦，因为它没有前导节点。使用虚拟节点可以避免对头节点的特殊处理，使得代码更加简洁和统一。</span><br><span class="line">temp 通常是一个临时变量，用于在操作过程中存储中间结果。在单链表的反转操作中，temp 可以用来保存当前节点的下一个节点，以便在反转当前节点的指针后，能够继续处理下一个节点。</span><br></pre></td></tr></table></figure>
+
+<h2 id="两两交换链表中的节点"><a href="#两两交换链表中的节点" class="headerlink" title="两两交换链表中的节点"></a>两两交换链表中的节点</h2><p>给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。</p>
+<p>你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">swapPairs</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">nullptr</span> || head-&gt;next == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode* cur = head;</span><br><span class="line">        ListNode* nex = head-&gt;next;</span><br><span class="line"></span><br><span class="line">        cur-&gt;next = <span class="built_in">swapPairs</span>(nex-&gt;next);</span><br><span class="line">        nex-&gt;next = cur;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> nex;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除链表的倒数第N个节点"><a href="#删除链表的倒数第N个节点" class="headerlink" title="删除链表的倒数第N个节点"></a>删除链表的倒数第N个节点</h2><p>给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。</p>
+<p>你的代码错误提示显示在返回成员的引用时使用了错误的操作符。通常在C++中，如果访问的是指针类型的成员，我们使用 -&gt;，而如果是对象本身，我们应该使用 . 操作符。</p>
+<p>在你的代码中，由于 ListNode 对象 cur 是直接创建的（而不是指针），因此应该使用 . 来访问成员变量，而不是 -&gt;。</p>
+<p>首先这里我推荐大家使用虚拟头结点，这样方便处理删除实际头结点的逻辑，</p>
+<h2 id="链表相交"><a href="#链表相交" class="headerlink" title="链表相交"></a>链表相交</h2><p>把他们尾部对齐一起循环</p>
+<h2 id="环形链表"><a href="#环形链表" class="headerlink" title="环形链表"></a>环形链表</h2><p>快慢指针。从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        ListNode *fast = head;</span><br><span class="line">        ListNode *slow = head;</span><br><span class="line">        <span class="keyword">while</span> (fast -&gt; next != <span class="literal">nullptr</span> &amp;&amp; fast -&gt; next -&gt; next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            fast = fast -&gt; next -&gt; next;</span><br><span class="line">            slow = slow -&gt; next;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                fast = head;</span><br><span class="line">                <span class="keyword">while</span> (fast != slow) &#123;</span><br><span class="line">                    fast = fast -&gt; next;</span><br><span class="line">                    slow = slow -&gt; next;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> fast;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>链表的种类主要为：单链表，双链表，循环链表<br>链表的存储方式：链表的节点在内存中是分散存储的，通过指针连在一起。<br>链表是如何进行增删改查的。<br>数组和链表在不同场景下的性能分析。</p>
+<p>链表的一大问题就是操作当前节点必须要找前一个节点才能操作。这就造成了，头结点的尴尬，因为头结点没有前一个节点了。</p>
+<p>每次对应头结点的情况都要单独处理，所以使用虚拟头结点的技巧，就可以解决这个问题。</p>
+<pre><code>1.	确保使用 . 操作符访问 ListNode 类型的对象成员。
+2.	使用 -&gt; 访问指针类型的 ListNode 成员。
+</code></pre>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/11/04/leetcode/3/">3.哈希表</a>
+            
+            
+            <a class="next" rel="next" href="/2024/11/01/games101/games101_lec13to142/">games_Lec 14(2)-15(1) - 光的传播理论, Basic Radiometry 辐射度量学, 路径追踪与全局光照</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

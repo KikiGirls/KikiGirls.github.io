@@ -40,7 +40,44 @@
 
     
     
-        
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
     
 
 
@@ -130,8 +167,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/29/Diary/Diary_024/">电子日记024周日</a>
-            <span class="archive-item-date">September 29, 2024</span>
+            <a class="archive-item-link" href="/2024/11/16/ue_lec/01/"></a>
+            <span class="archive-item-date">November 16, 2024</span>
         </article>
     
         
@@ -139,8 +176,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/28/cs61b/cs61bbj/">cs61b</a>
-            <span class="archive-item-date">September 28, 2024</span>
+            <a class="archive-item-link" href="/2024/11/10/leetcode/5/">5.字符串</a>
+            <span class="archive-item-date">November 10, 2024</span>
         </article>
     
         
@@ -148,8 +185,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/23/cs61b/javatips/">语法之类的</a>
-            <span class="archive-item-date">September 23, 2024</span>
+            <a class="archive-item-link" href="/2024/11/10/leetcode/6/">6.栈与队列</a>
+            <span class="archive-item-date">November 10, 2024</span>
         </article>
     
         
@@ -157,8 +194,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/23/cs61b/proj1/">cs61b_proj1</a>
-            <span class="archive-item-date">September 23, 2024</span>
+            <a class="archive-item-link" href="/2024/11/08/leetcode/4/">4.字符串</a>
+            <span class="archive-item-date">November 8, 2024</span>
         </article>
     
         
@@ -166,8 +203,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/17/cs61b/proj0/">cs61b_proj0</a>
-            <span class="archive-item-date">September 17, 2024</span>
+            <a class="archive-item-link" href="/2024/11/04/leetcode/3/">3.哈希表</a>
+            <span class="archive-item-date">November 4, 2024</span>
         </article>
     
         
@@ -175,8 +212,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/16/Diary/Diary_023/">电子日记023周一</a>
-            <span class="archive-item-date">September 16, 2024</span>
+            <a class="archive-item-link" href="/2024/11/03/leetcode/2/">2.列表</a>
+            <span class="archive-item-date">November 3, 2024</span>
         </article>
     
         
@@ -184,8 +221,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/16/cs61b/Style%20Guide/">Style Guide</a>
-            <span class="archive-item-date">September 16, 2024</span>
+            <a class="archive-item-link" href="/2024/11/01/games101/games101_lec13to142/">games_Lec 14(2)-15(1) - 光的传播理论, Basic Radiometry 辐射度量学, 路径追踪与全局光照</a>
+            <span class="archive-item-date">November 1, 2024</span>
         </article>
     
         
@@ -193,8 +230,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/09/16/cs61b/cs61b/">cs61b</a>
-            <span class="archive-item-date">September 16, 2024</span>
+            <a class="archive-item-link" href="/2024/11/01/games101/games101_lec13to14/">games_Lec 13~14(1) - Ray Tracing 光线追踪 (Whitted Style)</a>
+            <span class="archive-item-date">November 1, 2024</span>
         </article>
     
         
@@ -202,8 +239,8 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/05/27/Diary/Diary_022/">电子日记022周日</a>
-            <span class="archive-item-date">May 27, 2024</span>
+            <a class="archive-item-link" href="/2024/10/30/games101/games101_lec10to12/">games_Lec 10~12 - 几何 Geometry 隐式与显式 曲线与曲面</a>
+            <span class="archive-item-date">October 30, 2024</span>
         </article>
     
         
@@ -211,13 +248,13 @@
         
 
         <article class="archive-item">
-            <a class="archive-item-link" href="/2024/05/11/Diary/Diary_021/">电子日记020周四</a>
-            <span class="archive-item-date">May 11, 2024</span>
+            <a class="archive-item-link" href="/2024/10/29/leetcode/1/">1.数组</a>
+            <span class="archive-item-date">October 29, 2024</span>
         </article>
     
     
     <nav class="pagination">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/2024/page/2/">2</a><a class="page-number" href="/archives/2024/page/3/">3</a><a class="page-number" href="/archives/2024/page/4/">4</a>
+        <span class="page-number current">1</span><a class="page-number" href="/archives/2024/page/2/">2</a><a class="page-number" href="/archives/2024/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2024/page/6/">6</a>
     </nav>
 
 </div>

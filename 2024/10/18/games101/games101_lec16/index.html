@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_Lec 16 - Monte Carlo Path Tracing(蒙罗卡特近似) | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_Lec 16 - Monte Carlo Path Tracing(蒙罗卡特近似)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 18, 2024&nbsp;&nbsp;0:20:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="蒙特卡罗积分（Monte-Carlo-Integration）"><a href="#蒙特卡罗积分（Monte-Carlo-Integration）" class="headerlink" title="蒙特卡罗积分（Monte Carlo Integration）"></a>蒙特卡罗积分（Monte Carlo Integration）</h2><p>在计算复杂的定积分时，解析解可能难以获得，此时可以借助数值方法，如蒙特卡罗积分。蒙特卡罗积分通过随机采样来近似积分值，特别适合在多维积分和计算量大的全局光照模型中使用。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>蒙特卡罗积分的核心思想是使用随机样本来估计积分的结果。对于难以解析计算的函数 ( f(x) )，我们通过生成一系列样本 ( X_i ) 并计算其加权平均来获得近似积分值。其实就是对X进行采样。</p>
+<h4 id="蒙特卡罗积分公式"><a href="#蒙特卡罗积分公式" class="headerlink" title="蒙特卡罗积分公式"></a>蒙特卡罗积分公式</h4><p>[<br>F_{N} &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^{N} \frac{f\left(X_{i}\right)}{p\left(X_{i}\right)}<br>]</p>
+<ul>
+<li><strong>( F_{N} )</strong>：积分结果的近似值。</li>
+<li><strong>( N )</strong>：采样数，样本数量越多，估计结果越精确。</li>
+<li><strong>( p(X_i) )</strong>：采样分布的概率密度函数（PDF）。</li>
+<li><strong>( X_i \sim p(x) )</strong>：样本 ( X_i ) 按照概率密度函数 ( p(x) ) 随机生成。</li>
+</ul>
+<h3 id="采样的选择"><a href="#采样的选择" class="headerlink" title="采样的选择"></a>采样的选择</h3><h3 id="1-与被积函数匹配（重要性采样）"><a href="#1-与被积函数匹配（重要性采样）" class="headerlink" title="1. 与被积函数匹配（重要性采样）"></a>1. 与被积函数匹配（重要性采样）</h3><ul>
+<li><p><strong>目标</strong>：选择一个与被积函数 ( f(x) ) 形状相似的采样函数，以减少方差。</p>
+</li>
+<li><p><strong>方法</strong>：在函数值较大的区域增加采样密度。<br>不同的 PDF 会影响采样效率：</p>
+</li>
+<li><p><strong>Uniform Distribution</strong>：均匀分布。常用的情况为 ( p(x) &#x3D; \frac{1}{b - a} )，即在区间 ([a, b]) 上均匀分布采样。</p>
+<p>其对应的积分近似公式为：</p>
+<p>[<br>\int f(x) , \mathrm{d}x \approx \frac{b - a}{N} \sum_{i&#x3D;1}^{N}{p(X_i)}<br>]</p>
+</li>
+</ul>
+<h4 id="2-易于采样"><a href="#2-易于采样" class="headerlink" title="2. 易于采样"></a>2. 易于采样</h4><ul>
+<li><strong>目标</strong>：确保采样函数便于生成随机样本，避免增加计算成本。</li>
+<li><strong>常用分布</strong>：均匀分布、高斯分布、指数分布等简单分布。</li>
+</ul>
+<h4 id="3-覆盖主要贡献区域"><a href="#3-覆盖主要贡献区域" class="headerlink" title="3. 覆盖主要贡献区域"></a>3. 覆盖主要贡献区域</h4><ul>
+<li><strong>目标</strong>：采样函数应能覆盖被积函数的主要贡献区域，以提高估计精度。</li>
+<li><strong>应用</strong>：如光线追踪中的反射函数，可根据特定方向增加采样密度。</li>
+</ul>
+<h4 id="4-分层采样或多重重要性采样"><a href="#4-分层采样或多重重要性采样" class="headerlink" title="4. 分层采样或多重重要性采样"></a>4. 分层采样或多重重要性采样</h4><ul>
+<li><strong>目标</strong>：对于复杂函数，使用多个采样函数覆盖不同区域。</li>
+<li><strong>方法</strong>：将积分区域划分，或采用多种采样函数并结合结果。</li>
+</ul>
+<h4 id="5-平衡计算复杂度"><a href="#5-平衡计算复杂度" class="headerlink" title="5. 平衡计算复杂度"></a>5. 平衡计算复杂度</h4><ul>
+<li><strong>目标</strong>：在采样效果和计算效率之间找到平衡，避免过高的计算资源消耗。</li>
+</ul>
+<h3 id="准确性提升"><a href="#准确性提升" class="headerlink" title="准确性提升"></a>准确性提升</h3><ul>
+<li>增加样本数量 ( N ) 可以减少估计误差，提高积分结果的精确度。</li>
+<li>注意采样范围需与积分范围匹配，例如在 ( x ) 上采样的样本用于对 ( x ) 的积分。</li>
+</ul>
+<p>蒙特卡罗积分在路径追踪和光照计算中尤为有用，通过随机采样逼近复杂的光照传播路径，实现高效、逼真的物理渲染效果。</p>
+<h2 id="路径追踪-Path-Tracing"><a href="#路径追踪-Path-Tracing" class="headerlink" title="路径追踪 (Path Tracing)"></a>路径追踪 (Path Tracing)</h2><h3 id="动机：Whitted-Style-光线追踪的局限性"><a href="#动机：Whitted-Style-光线追踪的局限性" class="headerlink" title="动机：Whitted-Style 光线追踪的局限性"></a>动机：Whitted-Style 光线追踪的局限性</h3><p>在传统的 Whitted-Style 光线追踪中：</p>
+<ul>
+<li>光线会一直跟踪镜面反射或折射</li>
+<li>一旦到达漫反射表面就停止反弹</li>
+<li>这导致了光照效果的简化，尤其在处理漫反射与半镜面材料时，效果不够真实。例如：<ul>
+<li>半镜面材料应反射到某个方向的周围而非单一方向</li>
+<li>漫反射表面应继续产生反射，否则会缺少诸如颜色扩散 (Color Bleeding) 的效果</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.28.00.png" alt="alt text"></p>
+<h3 id="渲染方程-Rendering-Equation"><a href="#渲染方程-Rendering-Equation" class="headerlink" title="渲染方程 (Rendering Equation)"></a>渲染方程 (Rendering Equation)</h3><p>渲染方程是计算物体表面上光照强度的核心公式，它描述了光线在所有可能的入射方向 ( \omega_i ) 的积分。基本方程如下：</p>
+<p>[<br>L_{o}(p, \omega_{o}) &#x3D; L_{e}(p, \omega_{o}) + \int_{\Omega^{+}} L_{i}(p, \omega_{i}) f_{r}(p, \omega_{i}, \omega_{o})(n \cdot \omega_{i}) , d\omega_{i}<br>]</p>
+<ul>
+<li>其中包括：<ul>
+<li><strong>直接光源</strong> ( L_e )：场景中直接发光的部分</li>
+<li><strong>半球面积分</strong>：入射光照 ( L_i ) 和反射率函数 ( f_r ) 的乘积在所有可能的方向上求和</li>
+</ul>
+</li>
+</ul>
+<p>由于该积分难以解析求解，我们使用蒙特卡罗积分来近似。</p>
+<h3 id="简化情况：直接光照和非光源"><a href="#简化情况：直接光照和非光源" class="headerlink" title="简化情况：直接光照和非光源"></a>简化情况：直接光照和非光源</h3><p>在最简单的情况下，我们只考虑直接光照，不计算间接光源。直接光照近似公式如下：</p>
+<p>[<br>L_{o}(p, \omega_{o}) \approx \frac{1}{N} \sum_{i&#x3D;1}^{N} \frac{L_{i}(p, \omega_{i}) f_{r}(p, \omega_{i}, \omega_{o})(n \cdot \omega_{i})}{p(\omega_{i})}<br>]</p>
+<h3 id="完整情况：递归路径追踪"><a href="#完整情况：递归路径追踪" class="headerlink" title="完整情况：递归路径追踪"></a>完整情况：递归路径追踪</h3><p>考虑间接光照时，我们使用递归的路径追踪计算光线反弹过程。然而，这会导致光线数量指数级增加，极大地增加了计算量。</p>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.31.28.png" alt="alt text"></p>
+<p>问题：</p>
+<ul>
+<li>光线数量爆炸</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.32.26.png" alt="alt text"></p>
+<p>解决方式：每次只打出一条光线</p>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.31.54.png" alt="alt text"></p>
+<ul>
+<li>但是会很noisy<ul>
+<li>解决方案：每个像素取多个不同路径计算 → Ray Generation</li>
+<li>这种方法的缺点是它会造成图像中的噪点，因为每个像素的光线路径数量有限，导致某些路径遗漏光源或间接光线信息。</li>
+</ul>
+</li>
+</ul>
+<p>减少噪点，可以采用多路径采样（Multiple Path Sampling per Pixel），即每个像素生成多条不同的路径，采样不同的方向，从而更全面地捕获光照信息。这种方法平衡了计算成本和图像质量，每个像素的多路径采样结果会平均成最终颜色，降低噪点，获得更平滑的图像。<br><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.39.48.png" alt="alt text"><br><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.37.43.png" alt="alt text"></p>
+<p>路径选择的关键在于通过重要性采样方向选择，使每次反射都最大程度接近对图像有贡献的光源或区域：</p>
+<p>问题2: 停不下来解决方案2-1: 层数</p>
+<ul>
+<li>缺陷：结果能量会损失</li>
+</ul>
+<p>解决方案2-2：Russian Roulette (RR)</p>
+<ul>
+<li>With probability 0 &lt; P &lt; 1, you are fine，继续发出光线，<strong>return the shading result divided by P: Lo &#x2F; P</strong> ; With probability 1 - P, otherwise 停止计算，返回0</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.44.56.png" alt="alt text"></p>
+<ul>
+<li>但是很不高效<ul>
+<li>原因：均匀采样导致，环境当中光线的来源往往不是均匀的。a lot of rays are “wasted” if we uniformly sample the hemisphere at the shading point.</li>
+<li>解决方案1: Sampling the Light<ul>
+<li>蒙特卡洛允许任何方式的采样，只要喂对应的x和p就行</li>
+<li>对光源积分是个很高效的想法，但是积分的对象和”Sample on x &amp; integrate on x”的要求不匹配→只需要找到光源对应$\omega_i$的关系就行→改变积分域</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.47.27.png" alt="alt text"></p>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.47.46.png" alt="alt text"></p>
+<p>对光进行采样 42 之前，我们假设光是通过均匀半球采样“意外”射出的 现在我们考虑来自两部分的辐射亮度： 1. 光源（直接，无需 RR） 2. 其他反射器（间接，RR） ）</p>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.50.48.png" alt="alt text"></p>
+<p>但是还要考虑是否有物体遮挡。</p>
+<p><img src="/../../img/games101/lec13/%E6%88%AA%E5%B1%8F2024-11-01%2021.51.54.png" alt="alt text"></p>
+<h3 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h3><ol>
+<li><p><strong>Russian Roulette（RR）</strong>：在光线递归计算中，以概率 ( P ) 决定是否继续反射光线。每次继续时将结果除以 ( P ) 来保证期望值不变，否则返回 0，终止递归。</p>
+<ul>
+<li>适用于处理漫反射表面的计算效率，但会产生噪声。</li>
+</ul>
+</li>
+<li><p><strong>光源采样</strong>：直接针对光源采样，避免在所有方向上均匀采样。通过以下步骤改进采样效率：</p>
+<ul>
+<li>将积分域转换为光源所在区域来简化计算</li>
+<li>结合直接光源（无 RR）和间接反射器（RR）的路径追踪</li>
+</ul>
+</li>
+</ol>
+<h3 id="进一步优化：重要性采样"><a href="#进一步优化：重要性采样" class="headerlink" title="进一步优化：重要性采样"></a>进一步优化：重要性采样</h3><p>环境中的光源分布并不均匀，均匀采样会浪费大量光线。重要性采样可以帮助我们更有效地分配采样点，使采样集中在对渲染效果影响最大的方向上。</p>
+<h3 id="路径追踪难点"><a href="#路径追踪难点" class="headerlink" title="路径追踪难点"></a>路径追踪难点</h3><p>路径追踪是一门综合物理、概率和微积分的技术。它以物理上逼真的方式实现真实的光照效果，是现代图形学的基础。</p>
+<h3 id="光线追踪概念的现代区别"><a href="#光线追踪概念的现代区别" class="headerlink" title="光线追踪概念的现代区别"></a>光线追踪概念的现代区别</h3><ul>
+<li>过去：光线追踪等同于 Whitted-style 光线追踪</li>
+<li>现代：光线追踪涵盖了光线传输的通用解法，包括：<ul>
+<li>单向和双向路径追踪</li>
+<li>光子映射</li>
+<li>Metropolis 光传输</li>
+<li>联合体积采样等</li>
+</ul>
+</li>
+</ul>
+<h3 id="补充概念"><a href="#补充概念" class="headerlink" title="补充概念"></a>补充概念</h3><ul>
+<li><strong>半球采样</strong>：如何均匀采样半球表面？(采样理论)</li>
+<li><strong>蒙特卡罗积分中的任意概率分布</strong>：如何选择最优概率分布？(重要性采样)</li>
+<li><strong>随机数的质量</strong>：如低差异序列（例如蓝噪声）对结果的影响</li>
+<li><strong>多重重要性采样</strong>：如何结合半球和光源的采样</li>
+<li><strong>像素重构滤波器</strong>：像素的辐亮度是所有穿过它的光路径的辐亮度的平均值</li>
+<li><strong>伽马校正</strong>：辐亮度并非像素的颜色 (HDR 和颜色空间校正)</li>
+</ul>
+<hr>
+<p><em>补充</em></p>
+<h2 id="路径追踪中的路径选择"><a href="#路径追踪中的路径选择" class="headerlink" title="路径追踪中的路径选择"></a>路径追踪中的路径选择</h2><p>路径追踪中，为了计算间接光照，需要在每次光线与表面相交时选择一个新的反射或折射方向。这一过程通常采用<strong>重要性采样</strong>（importance sampling）来提高效率，使得采样的光线方向更可能贡献较多光能，从而减少计算量并降低图像噪点。</p>
+<h3 id="1-避免光线数量爆炸"><a href="#1-避免光线数量爆炸" class="headerlink" title="1. 避免光线数量爆炸"></a>1. 避免光线数量爆炸</h3><p>在递归路径追踪中，每次反射生成次级光线会导致光线数量呈指数增长。为避免光线数量爆炸，通常采用<strong>单路径光线</strong>的策略，即每个像素只追踪一条路径。这减少了递归开销，但会产生图像噪点。为此，采用以下两种策略：</p>
+<ul>
+<li><strong>单路径光线</strong>：每像素只追踪一条路径，减少递归带来的计算量。</li>
+<li><strong>多路径光线生成</strong>：每像素生成多条不同路径，通过平均采样结果降低噪点，生成更平滑的图像。</li>
+</ul>
+<h3 id="2-路径选择方法"><a href="#2-路径选择方法" class="headerlink" title="2. 路径选择方法"></a>2. 路径选择方法</h3><p>路径选择的关键在于通过重要性采样方向选择，使每次反射都最大程度接近对图像有贡献的光源或区域：</p>
+<ol>
+<li><p><strong>随机采样半球面方向</strong></p>
+<ul>
+<li><strong>漫反射表面</strong>：使用<strong>余弦加权采样</strong>（cosine-weighted sampling），增加表面法线方向附近的采样概率。</li>
+<li><strong>镜面表面</strong>：直接选择精确的镜面反射方向，保证光线沿镜面反射方向。</li>
+<li><strong>光滑或模糊表面</strong>：使用基于材质的采样（例如 Phong 或 GGX BRDF），采样靠近镜面反射的区域以更好地模拟散射效果。</li>
+</ul>
+</li>
+<li><p><strong>光源采样与BRDF采样</strong></p>
+<ul>
+<li><strong>光源采样</strong>：直接采样可见光源方向，用于计算直接光照，有效减少噪点。</li>
+<li><strong>BRDF采样</strong>：根据材质的反射属性选择反射方向。适合粗糙表面，因为它可以更好地捕捉漫反射。</li>
+</ul>
+</li>
+<li><p><strong>递归路径采样与俄轮算法</strong></p>
+<ul>
+<li>每次反射或折射时，递归追踪路径，直到达到递归深度限制。</li>
+<li>使用<strong>Russian Roulette</strong>（俄轮算法）按概率随机决定是否终止路径追踪，从而避免路径无限延续。一般在反射次数较多时使用，提高计算效率。</li>
+</ul>
+</li>
+<li><p><strong>多重重要性采样（Multiple Importance Sampling, MIS）</strong></p>
+<ul>
+<li>结合<strong>光源采样</strong>和<strong>BRDF采样</strong>，通过多重重要性采样分配权重给高贡献方向，降低噪点，提升图像质量。</li>
+</ul>
+</li>
+</ol>
+<h3 id="路径选择的原则"><a href="#路径选择的原则" class="headerlink" title="路径选择的原则"></a>路径选择的原则</h3><ul>
+<li><strong>重要性采样</strong>：优先采样对光照贡献大的方向。</li>
+<li><strong>材质特性</strong>：根据表面材质（镜面、漫反射、模糊等）选择采样方法。</li>
+<li><strong>递归深度控制</strong>：设定最大反射深度或使用俄轮算法限制路径长度，保证计算效率。</li>
+</ul>
+<p>这些路径选择策略的合理组合，是路径追踪算法在生成高质量图像时有效控制计算量的核心。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/10/18/games101/games101_lec02/">games_lec02Linear Algebra(线性代数)</a>
+            
+            
+            <a class="next" rel="next" href="/2024/09/29/Diary/Diary_024/">电子日记024周日</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="王思懿">
+
+
+
+
+
+<title>games_lec05Rasterization(光栅化) | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">KikiGirls&#39;blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">KikiGirls&#39;blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">games_lec05Rasterization(光栅化)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">王思懿</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 19, 2024&nbsp;&nbsp;0:22:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/games101/">games101</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>上节课我们讲了MVP变换，其过程可以理解为照相过程：</p>
+<p>1）Model transformation(placing objects) &#x3D; 找好一个场景，让人物摆好姿势</p>
+<p>2）View transformation(placing camera) &#x3D; 放置好照相机</p>
+<p>利用camera和物体的相对运动关系，始终让camera从任一位置变换到原点看向-z方向且向上为y,其余物体也跟着camera做相同的变换，从而保证model transformation应用到每一个model上，并且view transformation也应用到了每一个model上。<br>3）Projection transformation &#x3D; 按下快门，将三维物体表现在二维平面上</p>
+<p>在view transformation之后我们知道场景中的所有物体都是由一个标准位置的camera看过去的，接着将所看到的东西从3D投影成2D的一张照片。又分为正交投影（忽略深度信息）和透视投影（拥有近打远小的效果）。<br>经过mvp变换矩阵之后的所有东西都会在一个[-1,1]的立方体里，那么下一步该干什么呢？</p>
+<p>答案就是将其画在屏幕上，也就是今天的光栅化（Rasterization ）</p>
+<h1 id="0-通过fov和aspect求一个frustum"><a href="#0-通过fov和aspect求一个frustum" class="headerlink" title="0.通过fov和aspect求一个frustum"></a>0.通过fov和aspect求一个frustum</h1><p><img src="/../../img/games101/lec05/image.png" alt="alt text"></p>
+<p>aspect是宽高比，打csgo的都知道4:3,16:9等，这就是aspect。</p>
+<p>而FOV则是从camera,点A处，往上下两边的中点各连一条线，而两条线的夹角叫垂直可视角度。</p>
+<p>同理也可以求出水平可视角度</p>
+<p><img src="/../../img/games101/lec05/image%20copy.png" alt="alt text"></p>
+<p>从侧面看去，我们可以知道垂直可视角度的一半是 t是屏幕最高点，那么屏幕最低点自然而然是-t，从而求出了垂直方向上的。</p>
+<p>水平方向上我们用aspect来求，我们知道了高度为t,那么水平宽度我们可以通过 t * aspect 来求到宽度。</p>
+<p><strong>接下来我们来了解如何将【-1，1】的立方体画在屏幕上：</strong></p>
+<h1 id="1-光栅化概念导入"><a href="#1-光栅化概念导入" class="headerlink" title="1.光栅化概念导入"></a>1.光栅化概念导入</h1><h2 id="1-1-屏幕"><a href="#1-1-屏幕" class="headerlink" title="1.1 屏幕"></a>1.1 屏幕</h2><p>对于图形学来说，我们抽象的将屏幕定义为一个二维的数组，数组中的每一个元素是一个像素（an array of pixelx）。</p>
+<p>(tips:例如1920 * 1080分辨率，就是说长为1920个像素点，宽为1080个像素点，总像素为1920 * 1080个像素，也叫做1080P。)</p>
+<p>屏幕是一个典型的光栅成像设备。</p>
+<p>Raster的由来是德语中屏幕的意思，而光栅化（Rasterize）就是把东西画在屏幕上的意思。所以把东西画在屏幕上的过程就是光栅化的过程。</p>
+<h2 id="1-2-像素"><a href="#1-2-像素" class="headerlink" title="1.2 像素"></a>1.2 像素</h2><p>像素名字的由来是picture element，我们将其缩写为pixel</p>
+<p>在图形学中我们将像素看为：</p>
+<ol>
+<li>是一个一个的小的方块.</li>
+<li>每个方块内的颜色是完全一致的，像素就是最小的单位了，像素内部不会再发生变化。</li>
+<li>我们用256个等级0-255来表示灰度（如等级0表示是黑的，等级255表示是白的）,一个像素内的颜色可以用rgb（red,green,blue）三个值来定义，用红绿蓝的各种组合来表示每一种红色蓝色绿色的密度，例如红色是(255,0,0),白色是（255,255,255）。</li>
+<li>一个像素内颜色不会发生任何差异。</li>
+</ol>
+<h2 id="1-3-屏幕空间"><a href="#1-3-屏幕空间" class="headerlink" title="1.3 屏幕空间"></a>1.3 屏幕空间</h2><p><img src="/../../img/games101/lec05/image%20copy%202.png" alt="alt text"></p>
+<ol>
+<li>用(x,y)表示像素的位置。（蓝色像素表示为（2,1）坐标来表示，从0开始数。）</li>
+<li>如果一个屏幕分辨率为width * height，那么我们定义像素下标从（0，0）到（width - 1，height - 1），且(x,y)像素的中心在（x + 0.5, y + 0.5），如蓝色像素的中心为（2.5,1.5）。</li>
+<li>屏幕范围从（0，0）到（width，height）</li>
+</ol>
+<p>我们需要把这个中心在坐标原点，【-1，1】的立方体显示在长为height、宽为width的屏幕中，如下图所示：</p>
+<p><img src="/../../img/games101/lec05/image%20copy%203.png" alt="alt text"></p>
+<p>第二步的具体操作是进行一次视口变换(viewport），准确地说是通过缩放与平移变换将原本的 $[-1,1]^{2}$ 拉伸到屏幕空间中并将中心移动到屏幕空间中心，视口变换矩阵（viewport transform matrix）如下</p>
+<p><img src="/../../img/games101/lec05/image%20copy%204.png" alt="alt text"></p>
+<p>蓝色的3x3矩阵表示将2 x 2的正方形拉伸为width x height的图形,width&#x2F;2,height&#x2F;2分别代表width和height需要缩放的倍数。<br>缩放之后我们会发现其中心在原点（0，0）处因此需要将其移动到屏幕空间的中心，红色的表示将中心由（0，0）移动到（width&#x2F;2,height&#x2F;2）处。</p>
+<p><strong>至此我们得到了一张映射在屏幕空间的2D场景图，接下来我们要将场景中的多边形其离散成一系列的像素画在屏幕空间上</strong>。</p>
+<h1 id="2-Rasterization"><a href="#2-Rasterization" class="headerlink" title="2.Rasterization"></a>2.Rasterization</h1><h2 id="2-1三角形"><a href="#2-1三角形" class="headerlink" title="2.1三角形"></a>2.1三角形</h2><p>光栅化的过程实际上就是将多边形拆分成一系列的像素，从而将3D空间中的多边形或多边形的顶点变换到屏幕空间上去。</p>
+<p>一般将图像拆分成许多不同的三角形 进行显示，之所以选择三角形是<strong>因为：</strong></p>
+<ul>
+<li>三角形是最最基础的多边形。</li>
+<li>任何多边形均可以拆解成多个三角形。</li>
+</ul>
+<p><strong>三角形具有不错的性质：</strong></p>
+<p>三角形的三个点连接在一起，其三点一定在一个平面上。<br>三角形的内外部定义的很清楚，可以通过向量的叉积判断点是否在三角形内部。<br>三角形可以通过顶点插值求出三角形内任意一点的信息。（用来之后求重心坐标的方法）</p>
+<h2 id="2-2-A-Simple-Approach-Sampling（采样）"><a href="#2-2-A-Simple-Approach-Sampling（采样）" class="headerlink" title="2.2 A Simple Approach: Sampling（采样）"></a>2.2 A Simple Approach: Sampling（采样）</h2><p>经过MVP变换和视口变换之后我们可以得到顶点在屏幕空间的左边，现在我们需要将变换后的图形变成真正的像素，以三角型为例</p>
+<p><img src="/../../img/games101/lec05/image%20copy%205.png" alt="alt text"></p>
+<p>因为计算机包括一切显示设备，都是离散化的。我们无法表示出一个连续的图像或者函数，所以我们就需要进行采样。用来近似表达连续的东西。</p>
+<p><em>采样：采样就是把一个函数给离散化的过程,可以理解为给你一个连续的函数，在不同地方问此处的函数值是多少,这就是采样.</em></p>
+<p><em>我们这里的采样是通过利用像素中心对屏幕空间进行采样，也就是算出定义在屏幕空间上的某一函数在不同像素中心的值是多少。</em></p>
+<p>采样是图形学的核心理念，可以采样的：时间（1D）、面积（2D）、方向（2D）、体积（3D）等。</p>
+<h2 id="2-3-用像素中心进行采样"><a href="#2-3-用像素中心进行采样" class="headerlink" title="2.3 用像素中心进行采样"></a>2.3 用像素中心进行采样</h2><p><img src="/../../img/games101/lec05/image%20copy%206.png" alt="alt text"></p>
+<p>给你一个三角形，我们需要在像素中心来判断其是否在三角形内，,我们利用像素中心来进行采样就是指算出需要某一个定义在屏幕空间内的函数在不同的像素中心的值是多少。比如我们在这里采样的就是在屏幕空间中定义的inside函数在不同像素中心的值，在不同像素中心采样到的结果是1则在三角形内，是0则在三角形外，通过这个值我们来判断此像素是否在三角形内.</p>
+<p>这个函数具体是如何判断像素点在不在三角形内部则是通过向量运算得到的。</p>
+<h2 id="2-4-判断点在三角形内部还是外部"><a href="#2-4-判断点在三角形内部还是外部" class="headerlink" title="2.4 判断点在三角形内部还是外部"></a>2.4 判断点在三角形内部还是外部</h2><p>通过我们之前学的向量叉乘来判断。</p>
+<p><img src="/img/games101/lec05/image%20copy%207.png"></p>
+<p>这三个叉乘结果符号是否一致，如果一致（均为正或者均为负）则代表点Q在三角形内部，若有一个不一致则代表点Q在三角形外部，从而我们可以判断一点是否在三角形内部，再结合着采样的函数我们可以判断任意一点是否在三角形内部。</p>
+<p>如果这一点刚好处于三角形的边上:</p>
+<ul>
+<li>不做处理（本堂课采用），自己定义在边界上的点是否属于三角形内。</li>
+<li>做特殊处理。<br>注：<em>图形学的第三方库API如OpenGL和DirectX对边界点有严格的规定。即中心点在三角形的上边&#x2F;左边，则算作在三角形内部；若 点在三角形的下边&#x2F;右边，则不属于三角形内部。</em></li>
+</ul>
+<h2 id="2-5-遍历像素"><a href="#2-5-遍历像素" class="headerlink" title="2.5 遍历像素"></a>2.5 遍历像素</h2><p>接下来就可以遍历屏幕像素将三角形显示在屏幕中了</p>
+<p>有两种较为高效的扫描遍历策略Bounding Box和Incremental Triangle Traversal。 </p>
+<h3 id="Bounding-Box"><a href="#Bounding-Box" class="headerlink" title="Bounding Box"></a>Bounding Box</h3><p><img src="/../../img/games101/lec05/image%20copy%208.png" alt="alt text"></p>
+<p>(Bounding Box) 检测像素的步骤：</p>
+<ol>
+<li><p>首先通过三角形三个顶点的 x,y 的坐标从最小值到最大值选出包围盒（Bounding Box）。即蓝色包围部分，去掉第一列白色部分。</p>
+</li>
+<li><p>严格来说这个又叫做轴向包围盒&#x3D;AABB包围盒(Axis-aligned bounding box)</p>
+</li>
+<li><p>在蓝色区域内进行采样，使用inside函数确定像素中心点的值。</p>
+</li>
+</ol>
+<h3 id="Incremental-Triangle-Traversal"><a href="#Incremental-Triangle-Traversal" class="headerlink" title="Incremental Triangle Traversal"></a>Incremental Triangle Traversal</h3><p><img src="/../../img/games101/lec05/image%20copy%209.png" alt="alt text"></p>
+<p>（Incremental Triangle Traversal）增量三角形遍历：</p>
+<p>对三角形所覆盖的区域每一行找覆盖的最左和最右，相当于在每一行确定一个包围盒。</p>
+<p>这种方法适用于实际上覆盖了很少的像素但AABB包围盒范围却很大的情况，也就是一个窄长三角形经历了旋转的情况下。</p>
+<p>最终我们采样信号显示为：<br>我们找到了那些像素是在三角形内部的，接着我们对其进行颜色填充。</p>
+<p><img src="/../../img/games101/lec05/image%20copy%2010.png" alt="alt text"></p>
+<h2 id="2-6-锯齿"><a href="#2-6-锯齿" class="headerlink" title="2.6 锯齿"></a>2.6 锯齿</h2><p>在像素内进行颜色填充之后会变为下图，我们称这种情况为锯齿（Jaggies）现象。出现的原因是 因为像素本身具有大小，采样率不高，从而信号走样（Aliasing）。</p>
+<p><img src="/../../img/games101/lec05/image%20copy%2011.png" alt="alt text"></p>
+<p>锯齿一直是图形学在不断改进的问题，下节课将介绍如何解决“锯齿”问题，引入抗锯齿和反走样的概念。</p>
+<p>光栅化的过程其实就是我们将3D空间的多边形离散成屏幕空间一系列的点（像素的中心点），并通过采样某一定义在屏幕空间的函数的结果判断那些像素需要着色从而将多边形显示在屏幕空间上。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>王思懿</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span><strong>白鸟青山鸣，迷途何复归</strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/10/19/games101/games101_lec06/">games_lec06Antialiasing and Z-Buffering(反走样)</a>
+            
+            
+            <a class="next" rel="next" href="/2024/10/19/games101/games101_lec04/">games_lec04Transformation Cont(3D变换的 视图变换和投影变换)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 王思懿 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
